@@ -2,7 +2,7 @@ import { Assets, Sprite } from 'pixi.js';
 
 import { sound } from '@pixi/sound';
 
-const Penguin = async ({ app, no = 1 }) => {
+const Penguin = async ({ core: { app }, no = 1 }) => {
   const { textures } = await Assets.load('./assets/sprites/atlas.json');
   const sprite = new Sprite(textures[`pen${no}.svg`]);
   sound.add('chicken', './assets/sound/chicken.mp3');
