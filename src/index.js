@@ -1,13 +1,10 @@
 import './app.css';
 
-import Core from './logic/core';
-
-const setup = async _ => {
-    const core = new Core({ isShowStats: true });
-    await core.Start();
-}
+import Core from './logic/Core';
 
 const init = async _ => {
-    await setup();
+    const core = new Core({ isShowStats: true });
+    if (await core.Load())
+        await core.Start();
 };
 init();
