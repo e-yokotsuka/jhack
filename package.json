@@ -14,7 +14,8 @@
   "scripts": {
     "start": "webpack serve --config webpack.config.js",
     "build": "cross-env NODE_ENV=production webpack --mode=production --config webpack.config.js",
-    "debug-build": "cross-env NODE_ENV=development webpack --config webpack.config.js"
+    "debug-build": "cross-env NODE_ENV=development webpack --config webpack.config.js",
+    "sprite-pack": "node_modules/.bin/spritesmith --rc ./resource/.spritesmith.js"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
@@ -27,6 +28,8 @@
     "html-webpack-harddisk-plugin": "^2.0.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.7.2",
+    "spritesmith-cli": "^1.1.2",
+    "spritesmith-texturepacker": "^1.1.0",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.6",
     "webpack": "^5.75.0",
