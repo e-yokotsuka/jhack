@@ -1,7 +1,9 @@
 import { Application, Assets, Text } from 'pixi.js';
 
+import Player from '../model/Player';
 import Stats from 'stats.js';
 import Tile from '../sprites/Tile';
+import UI_Status from '../UI/UI_Status';
 
 const CANVAS_WIDTH = 32 * 25;
 const CANVAS_HEIGHT = 32 * 15;
@@ -24,6 +26,10 @@ class Core {
     }
     dom.appendChild(this.app.view);
     this.loaded = false;
+    this.player = new Player({
+      hp: 15, maxHp: 15,
+      mp: 10, maxMp: 10,
+    });
   }
 
   Load = async _ => {
@@ -54,9 +60,12 @@ class Core {
     app.stage.addChild(text);
     text.y = CANVAS_HEIGHT;
     text.x = (CANVAS_WIDTH - text.width) / 2;
+    const uiStatus = new UI_Status({ core: this });
+    app.stage.addChild(uiStatus.getPrim());
     app.ticker.add((delta) => {
       stats.begin();
       app.stage.addChild(text);
+      uiStatus.update();
       text.y -= delta * 0.2;
       text.y = Math.max(text.y, 0);
       stats.end();
