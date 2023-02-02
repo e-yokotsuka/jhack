@@ -10,12 +10,21 @@ class MP_AutoMap {
     this.mapContainer = new Container();
     stage.addChild(this.mapContainer);
     this.fill("blank");
+    this.fillRect({ x: 1, y: 1, width: 4, height: 5, cellName: "black" });
     this.reset();
   }
 
   fill = (cellName) => {
     const { width, height } = this;
     this.map = [...Array(height)].map(_ => Array(width).fill(cellName));
+  }
+
+  fillRect = ({ x, y, width, height, cellName }) => {
+    for (let ny = y; ny < (y + height); ny++)
+      for (let nx = x; nx < (x + width); nx++) {
+        this.map[ny][nx] = cellName;
+      }
+    this.reset();
   }
 
   reset = _ => {
