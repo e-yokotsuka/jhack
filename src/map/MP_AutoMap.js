@@ -2,7 +2,7 @@ import { Container } from 'pixi.js';
 import SP_Tile from "../sprites/SP_Tile";
 
 class MP_AutoMap {
-  constructor({ core, width = 200, height = 100 }) {
+  constructor({ core, width = 100, height = 50 }) {
     this.core = core;
     this.width = width;
     this.height = height;
@@ -38,6 +38,15 @@ class MP_AutoMap {
         mapContainer.addChild(t);
       })
     })
+  }
+
+  update = delta => {
+    const { core: { input }, mapContainer } = this;
+    const step = 4 * delta;
+    if (input.isDown('w')) mapContainer.y -= step;
+    if (input.isDown('s')) mapContainer.y += step;
+    if (input.isDown('a')) mapContainer.x -= step;
+    if (input.isDown('d')) mapContainer.x += step;
   }
 }
 export default MP_AutoMap;

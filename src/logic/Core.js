@@ -44,7 +44,7 @@ class Core {
   Start = async _ => {
     const { app, stats, loaded } = this;
     console.assert(loaded, 'Resource not loaded.');
-    new MP_AutoMap({ core: this });
+    this.mainMap = new MP_AutoMap({ core: this });
     const text = new Text('よくぞいらした。\nここムーリダヤ・メタインでは\n恐ろしき魔物との戦いが数千年にわたって繰り広げられている。', {
       fontSize: 24,
       fill: 0xffffff,
@@ -69,6 +69,7 @@ class Core {
     app.ticker.add((delta) => {
       stats.begin();
       this.input.update();
+      this.mainMap.update(delta);
       keytext.text = this.input.getDebugString(['w', 'a', 'd', 's']);
       app.stage.addChild(text);
       uiStatus.update();

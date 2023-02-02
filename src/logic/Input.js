@@ -26,7 +26,7 @@ class Input {
     }
   }
 
-  isDown = key => this.snapshot[key].down;
+  isDown = key => this.snapshot[key]?.down;
 
   getDebugString = (keys) => {
     let s = "";
