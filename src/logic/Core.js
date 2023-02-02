@@ -1,5 +1,6 @@
 import { Application, Assets, Text } from 'pixi.js';
 
+import Input from './Input';
 import MP_AutoMap from '../map/MP_AutoMap';
 import Player from '../model/MD_Player';
 import Stats from 'stats.js';
@@ -52,10 +53,23 @@ class Core {
     app.stage.addChild(text);
     text.y = CANVAS_HEIGHT;
     text.x = (CANVAS_WIDTH - text.width) / 2;
+
+    const keytext = new Text('debug key string', {
+      fontSize: 20,
+      fill: 0xffffff,
+      align: 'center',
+    });
+    app.stage.addChild(keytext);
+    keytext.x = 0;
+    keytext.y = 0;
+
     const uiStatus = new UI_Status({ core: this });
     app.stage.addChild(uiStatus.getPrim());
+    this.input = new Input();
     app.ticker.add((delta) => {
       stats.begin();
+      this.input.update();
+      keytext.text = this.input.getDebugString(['w', 'a', 'd', 's']);
       app.stage.addChild(text);
       uiStatus.update();
       text.y -= delta * 0.2;
@@ -63,6 +77,10 @@ class Core {
       stats.end();
     });
   }
+
+  isKeyDown = key => this.input.isDown(key);
+  isKeyUp = key => !this.input.isDown(key);
+
 }
 
 export default Core;
