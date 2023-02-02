@@ -1,7 +1,7 @@
 import MS_Gender from "../data/MS_Gender";
 import MS_Race from "../data/MS_Race";
 
-const Status = ({
+const MD_Status = ({
   lv = 1,
   exp = 0,
   hp = 0,
@@ -47,4 +47,4 @@ const Status = ({
   }
   return s;
 }
-export default Status;
+export default MD_Status;

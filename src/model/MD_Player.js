@@ -1,8 +1,8 @@
-import Actor from "./Actor";
+import MD_Actor from "./MD_Actor";
 import MS_Gender from "../data/MS_Gender";
 import MS_Race from "../data/MS_Race";
 
-class Player extends Actor {
+class MD_Player extends MD_Actor {
   constructor() {
     super({
       lv: 1,
@@ -15,4 +15,4 @@ class Player extends Actor {
     });
   }
 }
-export default Player;
+export default MD_Player;

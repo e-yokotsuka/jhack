@@ -1,8 +1,8 @@
 import { Application, Assets, Text } from 'pixi.js';
 
-import Player from '../model/Player';
+import MP_AutoMap from '../map/MP_AutoMap';
+import Player from '../model/MD_Player';
 import Stats from 'stats.js';
-import Tile from '../sprites/Tile';
 import UI_Status from '../UI/UI_Status';
 
 const CANVAS_WIDTH = 32 * 25;
@@ -37,21 +37,13 @@ class Core {
     const { textures } = await Assets.load('./assets/sprites/main.json', p => console.info(p));
     this.textures = {};
     this.textures["tx_main"] = textures;
-    console.dir(this.textures["tx_main"]);
     return this.loaded;
   }
 
   Start = async _ => {
     const { app, stats, loaded } = this;
     console.assert(loaded, 'Resource not loaded.');
-
-    for (let x = 0; x < 25; x++)
-      for (let y = 0; y < 19; y++) {
-        const t = Tile({ core: this, name: `floor_vines_${(x % 7)}` });
-        t.x = x * t.width;
-        t.y = y * t.height;
-        app.stage.addChild(t);
-      }
+    new MP_AutoMap({ core: this });
     const text = new Text('よくぞいらした。\nここムーリダヤ・メタインでは\n恐ろしき魔物との戦いが数千年にわたって繰り広げられている。', {
       fontSize: 24,
       fill: 0xffffff,
