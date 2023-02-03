@@ -70,7 +70,7 @@ class Core {
       stats.begin();
       this.input.update();
       this.mainMap.update(delta);
-      keytext.text = this.input.getDebugString(['w', 'a', 'd', 's']);
+      keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z']);
       app.stage.addChild(text);
       uiStatus.update();
       text.y -= delta * 0.2;

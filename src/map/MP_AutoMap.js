@@ -1,6 +1,6 @@
 import { Container } from 'pixi.js';
+import MapSplitter from '../tools/MapSpliter';
 import SP_Tile from "../sprites/SP_Tile";
-
 class MP_AutoMap {
   constructor({ core, width = 100, height = 50 }) {
     this.core = core;
@@ -10,7 +10,15 @@ class MP_AutoMap {
     this.mapContainer = new Container();
     stage.addChild(this.mapContainer);
     this.fill("blank");
-    this.fillRect({ x: 1, y: 1, width: 4, height: 5, cellName: "black" });
+    this.makeAutomap();
+  }
+
+  makeAutomap = _ => {
+    const rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
+    const tileName = ['acidic_floor_0', 'dirt_0', 'frozen_0', 'green_bones_9', 'ice_2', 'infernal_14', 'limestone_0', 'white_marble_0', 'snake-a_0', 'dirt_full', 'demonic_red_7'];
+    rectArray.forEach(({ x, y, width, height }, n) => {
+      this.fillRect({ x, y, width, height, cellName: `${tileName[n]}` });
+    });
     this.reset();
   }
 
@@ -30,6 +38,8 @@ class MP_AutoMap {
   reset = _ => {
     const { map, mapContainer, core } = this;
     mapContainer.removeChildren();
+    mapContainer.scale.x = 0.2;
+    mapContainer.scale.y = 0.2;
     map.forEach((row, y) => {
       row.forEach((chellName, x) => {
         const t = SP_Tile({ core, name: chellName });
@@ -40,6 +50,19 @@ class MP_AutoMap {
     })
   }
 
+  mapText = _ => {
+    const { map } = this;
+    let rowLog = "";
+    map.forEach((row) => {
+      let line = "";
+      row.forEach((chellName) => {
+        line = `${line}|${chellName}`;
+      })
+      rowLog = `${rowLog}${line}\n`;
+    })
+    console.log(rowLog);
+  }
+
   update = delta => {
     const { core: { input }, mapContainer } = this;
     const step = 4 * delta;
@@ -47,6 +70,8 @@ class MP_AutoMap {
     if (input.isDown('s')) mapContainer.y += step;
     if (input.isDown('a')) mapContainer.x -= step;
     if (input.isDown('d')) mapContainer.x += step;
+    if (input.isDown('z')) this.makeAutomap();
   }
+
 }
 export default MP_AutoMap;
