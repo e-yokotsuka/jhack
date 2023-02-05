@@ -6,10 +6,10 @@ const createRoomRect = (inRect, retry = 0) => {
   if (retry > RETRY_SIZE) {
     return [inRect];
   }
-  const addX = Math.round(Math.random() * ROOM_SPAN) + 1;
-  const addY = Math.round(Math.random() * ROOM_SPAN) + 1;
-  const subWidth = Math.round((0.8 + Math.random() / 5) * inRect.width) - 1;
-  const subHeight = Math.round((0.8 + Math.random() / 5) * inRect.height) - 1;
+  const addX = Math.round(Math.random() * ROOM_SPAN) + 2;
+  const addY = Math.round(Math.random() * ROOM_SPAN) + 2;
+  const subWidth = Math.round((0.8 + Math.random() / 5) * inRect.width) - 2;
+  const subHeight = Math.round((0.8 + Math.random() / 5) * inRect.height) - 2;
   const rect = {
     x: inRect.x + addX,
     y: inRect.y + addY,
