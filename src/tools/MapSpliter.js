@@ -80,7 +80,6 @@ const getSplitRectArray = ({
 };
 
 const MapSplitter = ({ map, maxRoom = 6 }) => {
-  console.log(`maxRoom:${maxRoom}`)
   const height = map.length;
   const width = map[0].length;
   let rectArray = [{

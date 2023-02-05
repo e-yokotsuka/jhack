@@ -1,5 +1,6 @@
 import { Container } from 'pixi.js';
 import MapSplitter from '../tools/MapSpliter';
+import RoadRectCreater from '../tools/RoadReactCreater';
 import RoomRectCreater from '../tools/RoomRectCreater';
 import SP_Tile from "../sprites/SP_Tile";
 class MP_AutoMap {
@@ -17,11 +18,15 @@ class MP_AutoMap {
     this.fill("blank");
     const rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
     const roomArray = RoomRectCreater(rectArray);
+    const roadArray = RoadRectCreater(rectArray, roomArray);
     const tileName = ['acidic_floor_0', 'dirt_0', 'frozen_0', 'green_bones_9', 'ice_2', 'infernal_14', 'limestone_0', 'white_marble_0', 'snake-a_0', 'dirt_full', 'demonic_red_7'];
-    // rectArray.forEach(({ x, y, width, height }, n) => {
-    //   this.fillRect({ x, y, width, height, cellName: `${tileName[n]}` });
-    // });
+    rectArray.forEach(({ x, y, width, height }, n) => {
+      this.fillRect({ x, y, width, height, cellName: `${tileName[(n + 5) % 7]}` });
+    });
     roomArray.forEach(({ x, y, width, height }, n) => {
+      this.fillRect({ x, y, width, height, cellName: `${tileName[n]}` });
+    });
+    roadArray.forEach(({ x, y, width, height }, n) => {
       this.fillRect({ x, y, width, height, cellName: `${tileName[n]}` });
     });
     this.reset();
