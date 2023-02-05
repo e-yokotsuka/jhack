@@ -26,8 +26,8 @@ class MP_AutoMap {
     roomArray.forEach(({ x, y, width, height }, n) => {
       this.fillRect({ x, y, width, height, cellName: `${tileName[n]}` });
     });
-    roadArray.forEach(({ x, y, width, height }, n) => {
-      this.fillRect({ x, y, width, height, cellName: `${tileName[n]}` });
+    roadArray.forEach(({ x, y, width, height }) => {
+      this.fillRect({ x, y, width, height, cellName: `circle` });
     });
     this.reset();
   }
