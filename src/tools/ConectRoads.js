@@ -11,13 +11,11 @@ const isRoomCollision = (roadRect, roomArray) => {
 
 //境界線に沿っているか？
 const isRectEdge = (roadRect, rectArray) => {
-  rectArray.forEach(({ x, y, width, height }) => {
+  for (const { x, y } of rectArray) {
     if (roadRect.x === x
-      || roadRect.y === y
-      || (roadRect.x + roadRect.width) === x + width
-      || (roadRect.y + roadRect.height) === y + height
-    ) return true;
-  });
+      || roadRect.y === y)
+      return true;
+  }
   return false;
 }
 
@@ -50,7 +48,7 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
           height: max - min,
           type: 'v'
         };
-        if (!isRoomCollision(r, roomArray) && !isRectEdge(r, rectArray)) roads.push(r);
+        if (!isRoomCollision(r, roomArray) && isRectEdge(r, rectArray)) roads.push(r);
       }
     }
   })
@@ -81,7 +79,7 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
           height: 1,
           type: 'h'
         };
-        if (!isRoomCollision(r, roomArray) && !isRectEdge(r, rectArray)) roads.push(r);
+        if (!isRoomCollision(r, roomArray) && isRectEdge(r, rectArray)) roads.push(r);
       }
     }
   })

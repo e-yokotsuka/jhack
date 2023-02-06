@@ -9,7 +9,7 @@ class RectUtil {
 
   contains = ({ x: x2, y: y2, width: width2, height: height2 }) => {
     const { x: x1, y: y1, width: width1, height: height1 } = this;
-    return x2 < (x1 + width1) && x1 < (x2 + width2) && y2 < (y1 + height1) && y1 < (y2 + height2);
+    return x2 <= (x1 + width1) && x1 <= (x2 + width2) && y2 <= (y1 + height1) && y1 <= (y2 + height2);
   };
 
   isTop({ y: y2, height: height2 }) {
