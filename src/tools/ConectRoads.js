@@ -14,8 +14,8 @@ const isRectEdge = (roadRect, rectArray) => {
   rectArray.forEach(({ x, y, width, height }) => {
     if (roadRect.x === x
       || roadRect.y === y
-      || roadRect.x + roadRect.width === x + width
-      || roadRect.y + roadRect.height === x + height
+      || (roadRect.x + roadRect.width) === x + width
+      || (roadRect.y + roadRect.height) === y + height
     ) return true;
   });
   return false;
