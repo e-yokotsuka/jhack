@@ -26,7 +26,7 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
   const hArray = roadArray.filter(({ type }) => type === 'h');
   hArray.forEach(({ x: x1, y: y1, width: width1 }, i) => {
     let min = y1;
-    let max = y1 + 1;
+    let max = y1;
     let flag = false;
     const right = x1 + width1;
     hArray.forEach(({ x: x2, y: y2 }, ii) => {
@@ -45,7 +45,7 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
           x: right,
           y: min,
           width: 1,
-          height: max - min,
+          height: max - min + 1,
           type: 'v'
         };
         if (!isRoomCollision(r, roomArray) && isRectEdge(r, rectArray)) roads.push(r);
@@ -57,7 +57,7 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
   const vArray = roadArray.filter(({ type }) => type === 'v');
   vArray.forEach(({ x: x1, y: y1, height: height1 }, i) => {
     let min = x1;
-    let max = x1 + 1;
+    let max = x1;
     let flag = false;
     const bottom = y1 + height1;
     vArray.forEach(({ x: x2, y: y2 }, ii) => {
@@ -75,7 +75,7 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
         const r = {
           x: min,
           y: bottom,
-          width: max - min,
+          width: max - min + 1,
           height: 1,
           type: 'h'
         };
