@@ -19,6 +19,30 @@ const getRoomAttribute = rectArray => {
   return roomAttributeArray;
 }
 
+const createHorizontalRoad = (x, y, x2, height) => {
+  const yLength = height - 3; //壁分の幅を削除
+  const randY = y + Math.round(Math.random() * yLength) + 1;
+  return {
+    x,
+    width: x2 - x,
+    y: randY,
+    height: 1, // 道幅
+    type: "h"// 横の道
+  }
+}
+
+const createVerticalRoad = (x, y, y2, width) => {
+  const xLength = width - 3; //壁分の幅を削除
+  const randX = x + Math.round(Math.random() * xLength) + 1;
+  return {
+    x: randX,
+    width: 1,// 道幅
+    y: y,
+    height: y2 - y,
+    type: "v" //縦の道
+  }
+}
+
 const RoadRectCreater = (rectArray, roomArray) => {
   const roads = [];
   const roomAttributeArray = getRoomAttribute(rectArray);
@@ -29,50 +53,22 @@ const RoadRectCreater = (rectArray, roomArray) => {
     if (attribute.isRight) {
       const x = room.x + room.width;
       const x2 = rect.x + rect.width;
-      const yLength = room.height - 2; //壁分の幅を削除
-      const randY = room.y + Math.round(Math.random() * yLength) + 1;
-      roads.push({
-        x,
-        width: x2 - x,
-        y: randY,
-        height: 1 // 道幅
-      })
+      roads.push(createHorizontalRoad(x, room.y, x2, room.height));
     }
     if (attribute.isLeft) {
       const x = rect.x;
       const x2 = room.x;
-      const yLength = room.height - 2; //壁分の幅を削除
-      const randY = room.y + Math.round(Math.random() * yLength) + 1;
-      roads.push({
-        x,
-        width: x2 - x,
-        y: randY,
-        height: 1 // 道幅
-      })
+      roads.push(createHorizontalRoad(x, room.y, x2, room.height));
     }
     if (attribute.isTop) {
       const y = rect.y;
       const y2 = room.y;
-      const xLength = room.width - 2; //壁分の幅を削除
-      const randX = room.x + Math.round(Math.random() * xLength) + 1;
-      roads.push({
-        x: randX,
-        width: 1,// 道幅
-        y: y,
-        height: y2 - y
-      })
+      roads.push(createVerticalRoad(room.x, y, y2, room.width));
     }
     if (attribute.isBottom) {
       const y = room.y + room.height;
       const y2 = rect.y + rect.height;
-      const xLength = room.width - 2; //壁分の幅を削除
-      const randX = room.x + Math.round(Math.random() * xLength) + 1;
-      roads.push({
-        x: randX,
-        width: 1,// 道幅
-        y: y,
-        height: y2 - y
-      })
+      roads.push(createVerticalRoad(room.x, y, y2, room.width));
     }
   })
 

@@ -1,3 +1,4 @@
+import ConectRoads from '../tools/ConectRoads';
 import { Container } from 'pixi.js';
 import MapSplitter from '../tools/MapSpliter';
 import RoadRectCreater from '../tools/RoadReactCreater';
@@ -19,6 +20,7 @@ class MP_AutoMap {
     const rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
     const roomArray = RoomRectCreater(rectArray);
     const roadArray = RoadRectCreater(rectArray, roomArray);
+    const roadArray2 = ConectRoads(roadArray, roomArray);
     const tileName = ['acidic_floor_0', 'dirt_0', 'frozen_0', 'green_bones_9', 'ice_2', 'infernal_14', 'limestone_0', 'white_marble_0', 'snake-a_0', 'dirt_full', 'demonic_red_7'];
     rectArray.forEach(({ x, y, width, height }, n) => {
       this.fillRect({ x, y, width, height, cellName: `${tileName[(n + 5) % 7]}` });
@@ -26,7 +28,7 @@ class MP_AutoMap {
     roomArray.forEach(({ x, y, width, height }, n) => {
       this.fillRect({ x, y, width, height, cellName: `${tileName[n]}` });
     });
-    roadArray.forEach(({ x, y, width, height }) => {
+    roadArray2.forEach(({ x, y, width, height }) => {
       this.fillRect({ x, y, width, height, cellName: `circle` });
     });
     this.reset();
@@ -49,8 +51,8 @@ class MP_AutoMap {
   reset = _ => {
     const { map, mapContainer, core } = this;
     mapContainer.removeChildren();
-    mapContainer.scale.x = 0.2;
-    mapContainer.scale.y = 0.2;
+    mapContainer.scale.x = 0.25;
+    mapContainer.scale.y = 0.25;
     map.forEach((row, y) => {
       row.forEach(({ cellName }, x) => {
         const t = SP_Tile({ core, name: cellName });
