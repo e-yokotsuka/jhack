@@ -19,7 +19,7 @@ const getRoomAttribute = rectArray => {
   return roomAttributeArray;
 }
 
-const createHorizontalRoad = (x, y, x2, height) => {
+const createHorizontalRoad = (x, y, x2, height, direction) => {
   const yLength = height - 3; //壁分の幅を削除
   const randY = y + Math.round(Math.random() * yLength) + 1;
   return {
@@ -27,11 +27,12 @@ const createHorizontalRoad = (x, y, x2, height) => {
     width: x2 - x,
     y: randY,
     height: 1, // 道幅
-    type: "h"// 横の道
+    type: "h",// 横の道
+    direction
   }
 }
 
-const createVerticalRoad = (x, y, y2, width) => {
+const createVerticalRoad = (x, y, y2, width, direction) => {
   const xLength = width - 3; //壁分の幅を削除
   const randX = x + Math.round(Math.random() * xLength) + 1;
   return {
@@ -39,7 +40,8 @@ const createVerticalRoad = (x, y, y2, width) => {
     width: 1,// 道幅
     y: y,
     height: y2 - y,
-    type: "v" //縦の道
+    type: "v", //縦の道
+    direction
   }
 }
 
@@ -53,22 +55,22 @@ const RoadRectCreater = (rectArray, roomArray) => {
     if (attribute.isRight) {
       const x = room.x + room.width;
       const x2 = rect.x + rect.width;
-      roads.push(createHorizontalRoad(x, room.y, x2, room.height));
+      roads.push(createHorizontalRoad(x, room.y, x2, room.height, 'r'));
     }
     if (attribute.isLeft) {
       const x = rect.x;
       const x2 = room.x;
-      roads.push(createHorizontalRoad(x, room.y, x2, room.height));
+      roads.push(createHorizontalRoad(x, room.y, x2, room.height, 'l'));
     }
     if (attribute.isTop) {
       const y = rect.y;
       const y2 = room.y;
-      roads.push(createVerticalRoad(room.x, y, y2, room.width));
+      roads.push(createVerticalRoad(room.x, y, y2, room.width, 't'));
     }
     if (attribute.isBottom) {
       const y = room.y + room.height;
       const y2 = rect.y + rect.height;
-      roads.push(createVerticalRoad(room.x, y, y2, room.width));
+      roads.push(createVerticalRoad(room.x, y, y2, room.width, 'b'));
     }
   })
 

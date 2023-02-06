@@ -1,5 +1,6 @@
 import ConectRoads from '../tools/ConectRoads';
 import { Container } from 'pixi.js';
+import EntranceCreater from '../tools/EntranceCreater';
 import MapSplitter from '../tools/MapSpliter';
 import RoadRectCreater from '../tools/RoadReactCreater';
 import RoomRectCreater from '../tools/RoomRectCreater';
@@ -20,6 +21,7 @@ class MP_AutoMap {
     const rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
     const roomArray = RoomRectCreater(rectArray);
     const roadArray = RoadRectCreater(rectArray, roomArray);
+    const entranceArray = EntranceCreater(roadArray);
     const roadArray2 = ConectRoads(roadArray, roomArray);
     const tileName = ['acidic_floor_0', 'dirt_0', 'frozen_0', 'green_bones_9', 'ice_2', 'infernal_14', 'limestone_0', 'white_marble_0', 'snake-a_0', 'dirt_full', 'demonic_red_7'];
     rectArray.forEach(({ x, y, width, height }, n) => {
@@ -30,6 +32,9 @@ class MP_AutoMap {
     });
     roadArray2.forEach(({ x, y, width, height }) => {
       this.fillRect({ x, y, width, height, cellName: `circle` });
+    });
+    entranceArray.forEach(({ x, y, width, height }) => {
+      this.fillRect({ x, y, width, height, cellName: `bars_red_1` });
     });
     this.reset();
   }
