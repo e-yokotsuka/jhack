@@ -4,6 +4,7 @@ import EntranceCreater from '../tools/EntranceCreater';
 import MapSplitter from '../tools/MapSpliter';
 import RoadRectCreater from '../tools/RoadReactCreater';
 import RoomRectCreater from '../tools/RoomRectCreater';
+import RoomWallCreater from '../tools/RoomWallCreater';
 import SP_Tile from "../sprites/SP_Tile";
 class MP_AutoMap {
   constructor({ core, width = 100, height = 50 }) {
@@ -20,6 +21,7 @@ class MP_AutoMap {
     this.fill("blank");
     const rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
     const roomArray = RoomRectCreater(rectArray);
+    const roomWallArray = RoomWallCreater(roomArray);
     const roadArray = RoadRectCreater(rectArray, roomArray);
     const entranceArray = EntranceCreater(roadArray);
     const roadArray2 = ConectRoads(roadArray, roomArray, rectArray);
@@ -29,6 +31,9 @@ class MP_AutoMap {
     });
     roomArray.forEach(({ x, y, width, height }, n) => {
       this.fillRect({ x, y, width, height, cellName: `${tileName[n]}` });
+    });
+    roomWallArray.forEach(({ x, y, width, height }) => {
+      this.fillRect({ x, y, width, height, cellName: `crystal_wall_lightmagenta` });
     });
     roadArray2.forEach(({ x, y, width, height }) => {
       this.fillRect({ x, y, width, height, cellName: `circle` });
