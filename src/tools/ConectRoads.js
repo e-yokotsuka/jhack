@@ -1,14 +1,27 @@
 import RectUtil from "./RectUtil";
 
-const isRoomCollision = (rect, roomArray) => {
-  rect = new RectUtil(rect);
+// 部屋を貫いていないか？
+const isRoomCollision = (roadRect, roomArray) => {
+  const rect = new RectUtil(roadRect);
   roomArray.forEach((rectRoom) => {
     if (rect.contains(rectRoom)) return true;
   });
   return false;
 }
 
-const ConectRoads = (roadArray, roomArray) => {
+//境界線に沿っているか？
+const isRectEdge = (roadRect, rectArray) => {
+  rectArray.forEach(({ x, y, width, height }) => {
+    if (roadRect.x === x
+      || roadRect.y === y
+      || roadRect.x + roadRect.width === x + width
+      || roadRect.y + roadRect.height === x + height
+    ) return true;
+  });
+  return false;
+}
+
+const ConectRoads = (roadArray, roomArray, rectArray) => {
   const roads = [...roadArray];
 
   //横に縦道を繋ぐ
@@ -37,7 +50,7 @@ const ConectRoads = (roadArray, roomArray) => {
           height: max - min,
           type: 'v'
         };
-        if (!isRoomCollision(r, roomArray)) roads.push(r);
+        if (!isRoomCollision(r, roomArray) && !isRectEdge(r, rectArray)) roads.push(r);
       }
     }
   })
@@ -68,7 +81,7 @@ const ConectRoads = (roadArray, roomArray) => {
           height: 1,
           type: 'h'
         };
-        if (!isRoomCollision(r, roomArray)) roads.push(r);
+        if (!isRoomCollision(r, roomArray) && !isRectEdge(r, rectArray)) roads.push(r);
       }
     }
   })

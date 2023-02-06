@@ -22,7 +22,7 @@ class MP_AutoMap {
     const roomArray = RoomRectCreater(rectArray);
     const roadArray = RoadRectCreater(rectArray, roomArray);
     const entranceArray = EntranceCreater(roadArray);
-    const roadArray2 = ConectRoads(roadArray, roomArray);
+    const roadArray2 = ConectRoads(roadArray, roomArray, rectArray);
     const tileName = ['acidic_floor_0', 'dirt_0', 'frozen_0', 'green_bones_9', 'ice_2', 'infernal_14', 'limestone_0', 'white_marble_0', 'snake-a_0', 'dirt_full', 'demonic_red_7'];
     rectArray.forEach(({ x, y, width, height }, n) => {
       this.fillRect({ x, y, width, height, cellName: `${tileName[(n + 5) % 7]}` });
