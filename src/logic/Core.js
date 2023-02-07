@@ -27,8 +27,10 @@ class Core {
     }
     dom.appendChild(this.app.view);
     this.loaded = false;
-    this.mainScale = 0.25;
+    this.mainScale = 1;
   }
+
+  getCanvasSize = _ => ({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT })
 
   Load = async _ => {
     this.loaded = true;

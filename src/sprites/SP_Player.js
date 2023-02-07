@@ -29,6 +29,7 @@ class SP_Player {
     const { x, y } = this.mainMap.getRespawnPosition();
     this.playerData.status.mapX = x;
     this.playerData.status.mapY = y;
+    this.mainMap.center(this.playerData.status.mapX, this.playerData.status.mapY);
   }
 
   update = (/*delta*/) => {
@@ -53,11 +54,13 @@ class SP_Player {
     if (!mainMap.isBlocked(nx, ny)) {
       this.playerData.status.mapX = nx;
       this.playerData.status.mapY = ny;
+      this.mainMap.center(nx, ny);
     }
     this.sprite.scale.x = core.mainScale;
     this.sprite.scale.y = core.mainScale;
-    this.sprite.x = this.playerData.status.mapX * 32 * core.mainScale;
-    this.sprite.y = this.playerData.status.mapY * 32 * core.mainScale;
+
+    this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32 * core.mainScale;
+    this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32 * core.mainScale;
   }
 
 }

@@ -118,6 +118,11 @@ class MP_AutoMap {
     return { x, y };
   }
 
-
+  center = (mapX, mapY) => {
+    const { core, mapContainer } = this;
+    const { width, height } = core.getCanvasSize();
+    mapContainer.x = -(mapX * 32) + (width / 2);
+    mapContainer.y = -(mapY * 32) + (height / 2);
+  }
 }
 export default MP_AutoMap;
