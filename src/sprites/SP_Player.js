@@ -13,6 +13,9 @@ class SP_Player {
     this.mainMap = mainMap;
     this.mx = 0;
     this.my = 0;
+    this.mainMap.addResetCallback(_ => {
+      this.respawn();
+    });
   }
 
   respawn = _ => {
@@ -27,10 +30,10 @@ class SP_Player {
     const { mx, my } = this;
     let nx = mx;
     let ny = my;
-    if (input.isDown('w')) ny -= 1;
-    if (input.isDown('s')) ny += 1;
-    if (input.isDown('a')) nx -= 1;
-    if (input.isDown('d')) nx += 1;
+    if (input.isSingleDown('w')) ny -= 1;
+    if (input.isSingleDown('s')) ny += 1;
+    if (input.isSingleDown('a')) nx -= 1;
+    if (input.isSingleDown('d')) nx += 1;
     if (!mainMap.isBlocked(nx, ny)) {
       this.mx = nx;
       this.my = ny;

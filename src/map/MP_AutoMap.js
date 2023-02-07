@@ -8,10 +8,11 @@ import RoomWallCreater from '../tools/RoomWallCreater';
 import SP_Tile from "../sprites/SP_Tile";
 class MP_AutoMap {
   constructor({ core, width = 100, height = 50 }) {
-    this.isDebugViewCollision = true;
+    this.isDebugViewCollision = false;
     this.core = core;
     this.width = width;
     this.height = height;
+    this.resetCallback = [];
     const { stage } = this.core.app;
     this.mapContainer = new Container();
     stage.addChild(this.mapContainer);
@@ -60,6 +61,10 @@ class MP_AutoMap {
     this.reset();
   }
 
+  addResetCallback = callback => {
+    this.resetCallback.push(callback);
+  }
+
   reset = _ => {
     const { map, mapContainer, core, isDebugViewCollision } = this;
     mapContainer.removeChildren();
@@ -76,6 +81,7 @@ class MP_AutoMap {
         mapContainer.addChild(t);
       })
     })
+    this.resetCallback.forEach(func => func())
   }
 
   _debugMapText = _ => {
