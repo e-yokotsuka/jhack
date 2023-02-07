@@ -3,6 +3,7 @@ import { Application, Assets, Text } from 'pixi.js';
 import Input from './Input';
 import MP_AutoMap from '../map/MP_AutoMap';
 import Player from '../model/MD_Player';
+import SP_Player from '../sprites/SP_Player';
 import Stats from 'stats.js';
 import UI_Status from '../UI/UI_Status';
 
@@ -31,6 +32,7 @@ class Core {
       hp: 15, maxHp: 15,
       mp: 10, maxMp: 10,
     });
+    this.mainScale = 0.25;
   }
 
   Load = async _ => {
@@ -66,15 +68,18 @@ class Core {
     const uiStatus = new UI_Status({ core: this });
     app.stage.addChild(uiStatus.getPrim());
     this.input = new Input();
+    app.stage.addChild(text);
+    const player = new SP_Player({ core: this });
+    player.respawn();
     app.ticker.add((delta) => {
       stats.begin();
       this.input.update();
       this.mainMap.update(delta);
       keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z']);
-      app.stage.addChild(text);
       uiStatus.update();
       text.y -= delta * 0.2;
       text.y = Math.max(text.y, 0);
+      player.update(delta);
       stats.end();
     });
   }
