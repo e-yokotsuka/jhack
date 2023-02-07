@@ -1,47 +1,63 @@
+import MD_Player from '../model/MD_Player';
 import { Sprite } from 'pixi.js';
 
 class SP_Player {
 
   constructor({ core, name = "human" }) {
+    this.playerData = new MD_Player({
+      hp: 15, maxHp: 15,
+      mp: 10, maxMp: 10,
+    });
     this.core = core;
     const { textures: { tx_main }, mainMap } = core;
+    this.mainMap = mainMap;
+    this.mainMap.addResetCallback(_ => {
+      this.respawn();
+    });
     const sprite = new Sprite(tx_main[`${name}`]);
     sprite.interactive = false;
     const { stage } = this.core.app;
     stage.addChild(sprite);
     this.sprite = sprite;
-    this.mainMap = mainMap;
-    this.mx = 0;
-    this.my = 0;
-    this.mainMap.addResetCallback(_ => {
-      this.respawn();
-    });
+    this.playerData.status.mapX = 0;
+    this.playerData.status.mapY = 0;
   }
+
+  getPlayerData = _ => this.playerData
 
   respawn = _ => {
     const { x, y } = this.mainMap.getRespawnPosition();
-    this.mx = x;
-    this.my = y;
+    this.playerData.status.mapX = x;
+    this.playerData.status.mapY = y;
   }
 
   update = (/*delta*/) => {
     const { core, mainMap } = this;
     const { core: { input } } = this;
-    const { mx, my } = this;
-    let nx = mx;
-    let ny = my;
-    if (input.isSingleDown('w')) ny -= 1;
-    if (input.isSingleDown('s')) ny += 1;
-    if (input.isSingleDown('a')) nx -= 1;
-    if (input.isSingleDown('d')) nx += 1;
+    const { mapX, mapY } = this.playerData.status;
+    let nx = mapX;
+    let ny = mapY;
+    if (input.isSingleDown('w')) {
+      ny -= 1;
+      this.playerData.status.steps++;
+    } else if (input.isSingleDown('s')) {
+      ny += 1;
+      this.playerData.status.steps++;
+    } else if (input.isSingleDown('a')) {
+      nx -= 1;
+      this.playerData.status.steps++;
+    } else if (input.isSingleDown('d')) {
+      nx += 1;
+      this.playerData.status.steps++;
+    }
     if (!mainMap.isBlocked(nx, ny)) {
-      this.mx = nx;
-      this.my = ny;
+      this.playerData.status.mapX = nx;
+      this.playerData.status.mapY = ny;
     }
     this.sprite.scale.x = core.mainScale;
     this.sprite.scale.y = core.mainScale;
-    this.sprite.x = this.mx * 32 * core.mainScale;
-    this.sprite.y = this.my * 32 * core.mainScale;
+    this.sprite.x = this.playerData.status.mapX * 32 * core.mainScale;
+    this.sprite.y = this.playerData.status.mapY * 32 * core.mainScale;
   }
 
 }

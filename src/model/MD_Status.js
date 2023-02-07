@@ -43,7 +43,8 @@ const MD_Status = ({
     magic: {
       black: {},
       white: {}
-    }
+    },
+    steps: 0,//歩数
   }
   return s;
 }
