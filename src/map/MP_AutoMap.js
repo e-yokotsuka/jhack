@@ -27,7 +27,7 @@ class MP_AutoMap {
     this.roadArray = RoadRectCreater(this.rectArray, this.roomArray);
     this.entranceArray = EntranceCreater(this.roadArray);
     this.roadArray2 = ConectRoads(this.roadArray, this.roomArray, this.rectArray);
-    const tileName = ['acidic_floor_0', 'dirt_0', 'frozen_0', 'green_bones_9', 'ice_2', 'infernal_14', 'limestone_0', 'white_marble_0', 'snake-a_0', 'dirt_full', 'demonic_red_7'];
+    const tileName = ['floor_vines0', 'floor_vines1', 'floor_vines2', 'floor_vines3', 'floor_vines4', 'floor_vines5', 'floor_vines6', 'floor_sand_stone0', 'floor_sand_stone1', 'floor_sand_stone2', 'floor_sand_stone3'];
     this.rectArray.forEach(({ x, y, width, height }) => {
       // this.fillRectWithAttributes({ x, y, width, height, cellName: `${tileName[(n + 5) % 7]}` });
       this.fillRectWithAttributes({ x, y, width, height, cellName: `blank` });
@@ -36,13 +36,13 @@ class MP_AutoMap {
       this.fillRectWithAttributes({ x, y, width, height, cellName: `${tileName[n]}`, attributes: { isBlocked: false } });
     });
     this.roomWallArray.forEach(({ x, y, width, height }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `crystal_wall_lightmagenta` });
+      this.fillRectWithAttributes({ x, y, width, height, cellName: `stone_brick1` });
     });
     this.roadArray2.forEach(({ x, y, width, height }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `circle`, attributes: { isBlocked: false } });
+      this.fillRectWithAttributes({ x, y, width, height, cellName: `floor_vines4`, attributes: { isBlocked: false } });
     });
     this.entranceArray.forEach(({ x, y, width, height }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `bars_red_1`, attributes: { isBlocked: false } });
+      this.fillRectWithAttributes({ x, y, width, height, cellName: `dngn_closed_door`, attributes: { isBlocked: false } });
     });
     this.reset();
   }
@@ -121,8 +121,8 @@ class MP_AutoMap {
   center = (mapX, mapY) => {
     const { core, mapContainer } = this;
     const { width, height } = core.getCanvasSize();
-    mapContainer.x = -(mapX * 32) + (width / 2);
-    mapContainer.y = -(mapY * 32) + (height / 2);
+    mapContainer.x = (-(mapX * 32) + (width / 2));
+    mapContainer.y = (-(mapY * 32) + (height / 2));
   }
 }
 export default MP_AutoMap;

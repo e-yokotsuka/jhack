@@ -58,9 +58,8 @@ class SP_Player {
     }
     this.sprite.scale.x = core.mainScale;
     this.sprite.scale.y = core.mainScale;
-
-    this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32 * core.mainScale;
-    this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32 * core.mainScale;
+    this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32;
+    this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32;
   }
 
 }
