@@ -1,11 +1,14 @@
 import ConectRoads from '../tools/ConectRoads';
 import { Container } from 'pixi.js';
 import EntranceCreater from '../tools/EntranceCreater';
+import MS_Item from "../data/MS_Item";
 import MapSplitter from '../tools/MapSpliter';
+import PlaceTreasureBox from '../tools/PlaceTreasureBox';
 import RoadRectCreater from '../tools/RoadReactCreater';
 import RoomRectCreater from '../tools/RoomRectCreater';
 import RoomWallCreater from '../tools/RoomWallCreater';
 import SP_Tile from "../sprites/SP_Tile";
+
 class MP_AutoMap {
   constructor({ core, width = 100, height = 50 }) {
     this.isDebugViewCollision = false;
@@ -27,6 +30,7 @@ class MP_AutoMap {
     this.roadArray = RoadRectCreater(this.rectArray, this.roomArray);
     this.entranceArray = EntranceCreater(this.roadArray);
     this.roadArray2 = ConectRoads(this.roadArray, this.roomArray, this.rectArray);
+    this.tresureBoxes = PlaceTreasureBox(this.roomArray, this.entranceArray, MS_Item);
     const tileName = ['floor_vines0', 'floor_vines1', 'floor_vines2', 'floor_vines3', 'floor_vines4', 'floor_vines5', 'floor_vines6', 'floor_sand_stone0', 'floor_sand_stone1', 'floor_sand_stone2', 'floor_sand_stone3'];
     this.rectArray.forEach(({ x, y, width, height }) => {
       // this.fillRectWithAttributes({ x, y, width, height, cellName: `${tileName[(n + 5) % 7]}` });
@@ -42,7 +46,10 @@ class MP_AutoMap {
       this.fillRectWithAttributes({ x, y, width, height, cellName: `floor_vines4`, attributes: { isBlocked: false } });
     });
     this.entranceArray.forEach(({ x, y, width, height }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `dngn_closed_door`, attributes: { isBlocked: false } });
+      this.fillRectWithAttributes({ x, y, width, height, cellName: `dngn_open_door`, attributes: { isBlocked: false } });
+    });
+    this.tresureBoxes.forEach(({ x, y, item }) => {
+      this.fillRectWithAttributes({ x, y, width: 1, height: 1, cellName: `chest2_closed`, attributes: { isBlocked: true, item } });
     });
     this.reset();
   }
@@ -124,5 +131,7 @@ class MP_AutoMap {
     mapContainer.x = (-(mapX * 32) + (width / 2));
     mapContainer.y = (-(mapY * 32) + (height / 2));
   }
+
 }
 export default MP_AutoMap;
+
