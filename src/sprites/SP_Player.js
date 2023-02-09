@@ -55,7 +55,17 @@ class SP_Player {
     if (blockedTile) {
       // 何かに衝突した
       console.log(blockedTile);
-      this.core.addText(`${blockedTile.cellName}に衝突した！`);
+      const { type = 'unknown', item, open = _ => { } } = blockedTile;
+      if (type === 'chest') {
+        if (item) {
+          this.playerData.status.items.push(item);
+          this.core.addText(`${item.itemName}をGETした！`);
+          open();
+        } else {
+          this.core.addText(`からっぽだ！`);
+        }
+      }
+      blockedTile
     } else {
       this.playerData.status.mapX = nx;
       this.playerData.status.mapY = ny;

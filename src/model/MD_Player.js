@@ -17,6 +17,7 @@ class MD_Player extends MD_Actor {
         y: 0
       },
       steps: 0,//歩数
+      items: []
     });
   }
 }

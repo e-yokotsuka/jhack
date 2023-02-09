@@ -4,7 +4,9 @@ const PlaceTreasureBox = (roomArray,
   entranceArray,
   itemsList = [],
   maxBoxes = 5,
-  probability = 0.3) => {
+  probability = 0.3,
+  emptyProbability = 0.05
+) => {
   if (!itemsList?.length) return [];
   const isEntranceSide = (x, y) => {
     entranceArray.forEach(({ x: ex, y: ey }) => {
@@ -26,7 +28,8 @@ const PlaceTreasureBox = (roomArray,
       const y = Math.floor(Math.random() * (room.height - 2)) + 1 + room.y;
       if (isEntranceSide(x, y)) continue; // 入り口の横には配置されない。
       const itemIndex = Math.floor(Math.random() * itemsList.length);
-      treasureBoxes.push({ x, y, item: itemsList[itemIndex] });
+      const item = (Math.random() > emptyProbability) ? itemsList[itemIndex] : null;
+      treasureBoxes.push({ x, y, item });
     }
   });
   return treasureBoxes;

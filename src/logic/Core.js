@@ -89,6 +89,7 @@ class Core {
   isKeyUp = key => !this.input.isDown(key);
 
   addText = text => this.uiMessageBox.addText(text);
+  getTexture = texName => this.textures.tx_main[texName];
 }
 
 export default Core;

@@ -49,7 +49,15 @@ class MP_AutoMap {
       this.fillRectWithAttributes({ x, y, width, height, cellName: `dngn_open_door`, attributes: { isBlocked: false } });
     });
     this.tresureBoxes.forEach(({ x, y, item }) => {
-      this.fillRectWithAttributes({ x, y, width: 1, height: 1, cellName: `chest2_closed`, attributes: { isBlocked: true, item } });
+      this.fillRectWithAttributes({
+        x, y, width: 1, height: 1, cellName: item ? `chest2_closed` : `chest2_open`, attributes: {
+          type: 'chest', isBlocked: true, item, open: _ => {
+            this.map[y][x].cellName = 'chest2_open';
+            this.map[y][x].item = null;
+            this.map[y][x].prim.texture = this.core.getTexture(`chest2_open`);
+          }
+        }
+      });
     });
     this.reset();
   }
@@ -85,6 +93,7 @@ class MP_AutoMap {
         const t = SP_Tile({ core, name: cellName });
         t.x = x * t.width;
         t.y = y * t.height;
+        map[y][x].prim = t;
         mapContainer.addChild(t);
       })
     })
@@ -117,12 +126,14 @@ class MP_AutoMap {
     if (input.isDown('z')) this.makeAutomap();
   }
 
-  getRespawnPosition = _ => {
+  getRespawnPosition = (retry = 0) => {
     const { roomArray } = this;
     // 部屋の抽選
     const room = roomArray[Math.floor(Math.random() * roomArray.length)];
     const x = room.x + Math.floor(Math.random() * (room.width - 2)) + 1;
     const y = room.y + Math.floor(Math.random() * (room.height - 2)) + 1;
+    // 100回リトライしてダメだったら諦める（殆どないはず）
+    if (this.map[y][x].isBlocked && retry < 100) return this.getRespawnPosition(retry + 1);
     return { x, y };
   }
 
