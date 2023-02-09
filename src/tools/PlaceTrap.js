@@ -1,0 +1,32 @@
+
+
+const PlaceTrap = (roomArray,
+  xorArray,
+  trapList = [],
+  maxTraps = 2,
+  probability = 0.3,
+) => {
+  if (!trapList?.length) return [];
+  const isItemTile = (x, y) => {
+    xorArray.forEach(({ x: ex, y: ey }) => {
+      if (ex === x && ey === y) return true;
+    });
+    return false;
+  }
+  const numBoxes = Math.floor(Math.random() * maxTraps);
+  const trapes = [];
+  roomArray.forEach(room => {
+    for (let i = 0; i < numBoxes; i++) {
+      if (Math.random() > probability) continue;
+      const x = Math.floor(Math.random() * (room.width - 2)) + 1 + room.x;
+      const y = Math.floor(Math.random() * (room.height - 2)) + 1 + room.y;
+      if (isItemTile(x, y)) continue; // 既にアイテムタイルがある箇所はうわがかない。
+      const trapIndex = Math.floor(Math.random() * trapList.length);
+      const trap = trapList[trapIndex];
+      trapes.push({ x, y, trap });
+    }
+  });
+  return trapes;
+}
+
+export default PlaceTrap;

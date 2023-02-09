@@ -2,7 +2,9 @@ import ConectRoads from '../tools/ConectRoads';
 import { Container } from 'pixi.js';
 import EntranceCreater from '../tools/EntranceCreater';
 import MS_Item from "../data/MS_Item";
+import MS_Trap from '../data/MS_Trap';
 import MapSplitter from '../tools/MapSpliter';
+import PlaceTrap from '../tools/PlaceTrap';
 import PlaceTreasureBox from '../tools/PlaceTreasureBox';
 import RoadRectCreater from '../tools/RoadReactCreater';
 import RoomRectCreater from '../tools/RoomRectCreater';
@@ -31,6 +33,7 @@ class MP_AutoMap {
     this.entranceArray = EntranceCreater(this.roadArray);
     this.roadArray2 = ConectRoads(this.roadArray, this.roomArray, this.rectArray);
     this.tresureBoxes = PlaceTreasureBox(this.roomArray, this.entranceArray, MS_Item);
+    this.traps = PlaceTrap(this.roomArray, this.tresureBoxes, MS_Trap);
     const tileName = ['floor_vines0', 'floor_vines1', 'floor_vines2', 'floor_vines3', 'floor_vines4', 'floor_vines5', 'floor_vines6', 'floor_sand_stone0', 'floor_sand_stone1', 'floor_sand_stone2', 'floor_sand_stone3'];
     this.rectArray.forEach(({ x, y, width, height }) => {
       // this.fillRectWithAttributes({ x, y, width, height, cellName: `${tileName[(n + 5) % 7]}` });
@@ -56,6 +59,13 @@ class MP_AutoMap {
             this.map[y][x].item = null;
             this.map[y][x].prim.texture = this.core.getTexture(`chest2_open`);
           }
+        }
+      });
+    });
+    this.traps.forEach(({ x, y, trap }) => {
+      this.fillRectWithAttributes({
+        x, y, width: 1, height: 1, cellName: `dngn_trap_magical`, attributes: {
+          type: 'trap', isBlocked: false, trap
         }
       });
     });
