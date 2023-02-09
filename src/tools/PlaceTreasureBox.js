@@ -8,7 +8,12 @@ const PlaceTreasureBox = (roomArray,
   if (!itemsList?.length) return [];
   const isEntranceSide = (x, y) => {
     entranceArray.forEach(({ x: ex, y: ey }) => {
-      if (ex + 1 === x || ex - 1 === x || ey + 1 === y || ey - 1 === y) return true;
+      if (
+        (ex + 1 === x && ey === y) ||//右
+        (ex - 1 === x && ey === y) ||//左
+        (ex === x && ey + 1 === y) ||//下
+        (ex === x && ey - 1 === y)//上
+      ) return true;
     });
     return false;
   }
