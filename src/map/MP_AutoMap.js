@@ -105,6 +105,7 @@ class MP_AutoMap {
   }
 
   isBlocked = (x, y) => this.map[y][x].isBlocked;
+  isBlockedTile = (x, y) => this.map[y][x].isBlocked ? this.map[y][x] : false;
 
   update = _ => {
     const { core: { input }/*, mapContainer */ } = this;

@@ -51,7 +51,12 @@ class SP_Player {
       nx += 1;
       this.playerData.status.steps++;
     }
-    if (!mainMap.isBlocked(nx, ny)) {
+    const blockedTile = mainMap.isBlockedTile(nx, ny);
+    if (blockedTile) {
+      // 何かに衝突した
+      console.log(blockedTile);
+      this.core.addText(`${blockedTile.cellName}に衝突した！`);
+    } else {
       this.playerData.status.mapX = nx;
       this.playerData.status.mapY = ny;
       this.mainMap.center(nx, ny);

@@ -4,7 +4,8 @@ import Input from './Input';
 import MP_AutoMap from '../map/MP_AutoMap';
 import SP_Player from '../sprites/SP_Player';
 import Stats from 'stats.js';
-import UI_Status from '../UI/UI_Status';
+import UI_MessageBox from '../ui/UI_MessageBox'
+import UI_Status from '../ui/UI_Status';
 
 const CANVAS_WIDTH = 32 * 50;
 const CANVAS_HEIGHT = 32 * 30;
@@ -64,6 +65,8 @@ class Core {
     this.player.respawn();
     const uiStatus = new UI_Status({ core: this });
     app.stage.addChild(uiStatus.getPrim());
+    this.uiMessageBox = new UI_MessageBox({ core: this });
+    app.stage.addChild(this.uiMessageBox.getPrim());
     app.stage.addChild(text);
     text.y = CANVAS_HEIGHT;
     text.x = (CANVAS_WIDTH - text.width) / 2;
@@ -77,6 +80,7 @@ class Core {
       text.y -= delta * 0.2;
       text.y = Math.max(text.y, 0);
       this.player.update(delta);
+      this.uiMessageBox.update(delta);
       stats.end();
     });
   }
@@ -84,6 +88,7 @@ class Core {
   isKeyDown = key => this.input.isDown(key);
   isKeyUp = key => !this.input.isDown(key);
 
+  addText = text => this.uiMessageBox.addText(text);
 }
 
 export default Core;
