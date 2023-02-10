@@ -5,7 +5,7 @@
 const PlaceTrap = (roomArray,
   xorArray,
   trapList = [],
-  maxTraps = 2,
+  maxTraps = 4,
   probability = 0.3,
 ) => {
   if (!trapList?.length) return [];

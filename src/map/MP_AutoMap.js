@@ -77,7 +77,7 @@ class MP_AutoMap {
     this.traps.forEach(({ x, y, trap }) => {
       this.fillRectWithAttributes({
         x, y, width: 1, height: 1, cellName: `dngn_trap_magical`, attributes: {
-          type: 'trap', isBlocked: false, trap
+          type: 'trap', isAction: true, isBlocked: false, trap, action: _ => { }
         }
       });
     });
@@ -137,7 +137,7 @@ class MP_AutoMap {
 
   isBlocked = (x, y) => this.map[y][x].isBlocked;
   isBlockedTile = (x, y) => this.map[y][x].isBlocked ? this.map[y][x] : false;
-
+  isActionTile = (x, y) => this.map[y][x].isAction ? this.map[y][x] : false;
   update = _ => {
     const { core: { input }/*, mapContainer */ } = this;
     // const step = 4 * delta;

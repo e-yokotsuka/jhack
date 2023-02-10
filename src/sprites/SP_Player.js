@@ -23,14 +23,38 @@ class SP_Player {
     this.playerData.status.mapY = 0;
   }
 
-  getPlayerData = _ => this.playerData
+  getPlayerData = _ => this.playerData;
 
   respawn = _ => {
     const { x, y } = this.mainMap.getRespawnPosition();
+    this.playerData.status.hp = this.playerData.status.maxHp;
     this.playerData.status.mapX = x;
     this.playerData.status.mapY = y;
     this.mainMap.center(this.playerData.status.mapX, this.playerData.status.mapY);
   }
+
+
+  diceRoll = diceText => this.core.diceRoll(diceText);
+
+  trappedIn = ({
+    dmg,
+    difficulty
+  }) => {
+    const s = this.diceRoll("1d20") + 0; //Todo
+    return (difficulty <= s) ? 0 : this.diceRoll(dmg);
+  }
+
+  hit = dmg => {
+    const hp = this.playerData.status.hp - dmg;
+    this.playerData.status.hp = Math.max(hp, 0);
+    if (hp < 1) {
+      this.core.addText(`し  ん  だ  よ`);
+      this.respawn();
+      return true;
+    }
+    return false;
+  }
+
 
   update = (/*delta*/) => {
     const { core, mainMap } = this;
@@ -51,6 +75,12 @@ class SP_Player {
       nx += 1;
       this.playerData.status.steps++;
     }
+    this.sprite.scale.x = core.mainScale;
+    this.sprite.scale.y = core.mainScale;
+    this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32;
+    this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32;
+    if (nx === mapX && ny === mapY) return;
+
     const blockedTile = mainMap.isBlockedTile(nx, ny);
     if (blockedTile) {
       // 何かに衝突した
@@ -81,12 +111,23 @@ class SP_Player {
       this.playerData.status.mapX = nx;
       this.playerData.status.mapY = ny;
       this.mainMap.center(nx, ny);
+      const actionTile = mainMap.isActionTile(nx, ny);
+      if (actionTile) {
+        const { type = 'unknown', trap } = actionTile;
+        if (type === 'trap') {
+          this.core.addText(`ウップス!!  ${trap.name}という、罠にハマった！`);
+          const dmg = this.trappedIn(trap);
+          if (dmg) {
+            this.core.addText(`いてぇ。 ${dmg} ポイントのダメージをくらった！`);
+            if (this.hit(dmg)) return;//しんだ
+          } else {
+            this.core.addText(`しかし、発動前にヒョイっと避けた！`);
+          }
+        }
+      }
     }
-    this.sprite.scale.x = core.mainScale;
-    this.sprite.scale.y = core.mainScale;
-    this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32;
-    this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32;
   }
+
 
 }
 

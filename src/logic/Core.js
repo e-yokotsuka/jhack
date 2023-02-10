@@ -6,6 +6,7 @@ import SP_Player from '../sprites/SP_Player';
 import Stats from 'stats.js';
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
+import diceRoll from '../tools/Calc';
 
 const CANVAS_WIDTH = 32 * 50;
 const CANVAS_HEIGHT = 32 * 30;
@@ -90,6 +91,9 @@ class Core {
 
   addText = text => this.uiMessageBox.addText(text);
   getTexture = texName => this.textures.tx_main[texName];
+
+  diceRoll = diceText => diceRoll(diceText);
+
 }
 
 export default Core;

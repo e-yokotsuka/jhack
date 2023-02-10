@@ -3,17 +3,20 @@
 export default [
   {
     id: "toge",
-    itemName: "とげ",
-    value: "1d4+2",
+    name: "とげ",
+    dmg: "1d4+2",
+    difficulty: "5"
   },
   {
     id: "togetoge",
-    itemName: "トゲトゲ",
-    value: "2d4+3",
+    name: "トゲトゲ",
+    dmg: "2d4+3",
+    difficulty: "10"
   },
   {
     id: "togetogetoge",
-    itemName: "棘トゲトゲ",
-    value: "3d4+4",
+    name: "棘トゲトゲ",
+    dmg: "3d4+4",
+    difficulty: "15"
   },
 ]
