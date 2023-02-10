@@ -55,17 +55,28 @@ class SP_Player {
     if (blockedTile) {
       // 何かに衝突した
       console.log(blockedTile);
-      const { type = 'unknown', item, open = _ => { } } = blockedTile;
+      const { type = 'unknown', item, open = _ => { }, hitStep = 0, close = false } = blockedTile;
       if (type === 'chest') {
-        if (item) {
-          this.playerData.status.items.push(item);
-          this.core.addText(`${item.itemName}をGETした！`);
+        if (hitStep + 1 == this.playerData.status.steps) {
+          if (item) {
+            this.playerData.status.items.push(item);
+            this.core.addText(`${item.itemName}をGETした！`);
+            open();
+          } else {
+            this.core.addText(`からっぽだ！`);
+          }
+        } else {
+          this.core.addText(`宝箱だ！`);
+        }
+      } else if (type === 'door') {
+        if (hitStep + 1 == this.playerData.status.steps && close) {
+          this.core.addText(`ドアを開けた！`);
           open();
         } else {
-          this.core.addText(`からっぽだ！`);
+          this.core.addText(`しまった！ 閉まったドアだ！`);
         }
       }
-      blockedTile
+      blockedTile.hitStep = this.playerData.status.steps;
     } else {
       this.playerData.status.mapX = nx;
       this.playerData.status.mapY = ny;

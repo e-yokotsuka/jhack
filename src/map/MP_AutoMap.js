@@ -49,12 +49,24 @@ class MP_AutoMap {
       this.fillRectWithAttributes({ x, y, width, height, cellName: `floor_vines4`, attributes: { isBlocked: false } });
     });
     this.entranceArray.forEach(({ x, y, width, height }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `dngn_open_door`, attributes: { isBlocked: false } });
+      this.fillRectWithAttributes({
+        x, y, width, height, cellName: `dngn_closed_door`, attributes: {
+          type: 'door',
+          close: true,
+          isBlocked: true, hitStep: 0, open: _ => {
+            this.map[y][x].cellName = 'dngn_open_door';
+            this.map[y][x].item = null;
+            this.map[y][x].prim.texture = this.core.getTexture(`dngn_open_door`);
+            this.map[y][x].isBlocked = false;
+            this.map[y][x].close = false;
+          }
+        }
+      });
     });
     this.tresureBoxes.forEach(({ x, y, item }) => {
       this.fillRectWithAttributes({
         x, y, width: 1, height: 1, cellName: item ? `chest2_closed` : `chest2_open`, attributes: {
-          type: 'chest', isBlocked: true, item, open: _ => {
+          type: 'chest', isBlocked: true, item, hitStep: 0, open: _ => {
             this.map[y][x].cellName = 'chest2_open';
             this.map[y][x].item = null;
             this.map[y][x].prim.texture = this.core.getTexture(`chest2_open`);
