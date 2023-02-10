@@ -15,10 +15,10 @@ const PlaceTrap = (roomArray,
     });
     return false;
   }
-  const numBoxes = Math.floor(Math.random() * maxTraps);
+  const numTraps = Math.floor(Math.random() * maxTraps);
   const trapes = [];
   roomArray.forEach(room => {
-    for (let i = 0; i < numBoxes; i++) {
+    for (let i = 0; i < numTraps; i++) {
       if (Math.random() > probability) continue;
       const x = Math.floor(Math.random() * (room.width - 2)) + 1 + room.x;
       const y = Math.floor(Math.random() * (room.height - 2)) + 1 + room.y;
