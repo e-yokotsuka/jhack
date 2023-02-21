@@ -83,8 +83,6 @@ class SP_Player {
 
     const blockedTile = mainMap.isBlockedTile(nx, ny);
     if (blockedTile) {
-      // 何かに衝突した
-      console.log(blockedTile);
       const { type = 'unknown', item, open = _ => { }, hitStep = 0, close = false } = blockedTile;
       if (type === 'chest') {
         if (hitStep + 1 == this.playerData.status.steps) {
