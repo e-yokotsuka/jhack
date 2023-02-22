@@ -24,7 +24,7 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
 
   //横に縦道を繋ぐ
   const hArray = roadArray.filter(({ type }) => type === 'h');
-  hArray.forEach(({ x: x1, y: y1, width: width1 }, i) => {
+  hArray.forEach(({ x: x1, y: y1, width: width1, cellName }, i) => {
     let min = y1;
     let max = y1;
     let flag = false;
@@ -46,7 +46,8 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
           y: min,
           width: 1,
           height: max - min + 1,
-          type: 'v'
+          type: 'v',
+          cellName
         };
         if (!isRoomCollision(r, roomArray) && isRectEdge(r, rectArray)) roads.push(r);
       }
@@ -55,7 +56,7 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
 
   //縦に横道を繋ぐ
   const vArray = roadArray.filter(({ type }) => type === 'v');
-  vArray.forEach(({ x: x1, y: y1, height: height1 }, i) => {
+  vArray.forEach(({ x: x1, y: y1, height: height1, cellName }, i) => {
     let min = x1;
     let max = x1;
     let flag = false;
@@ -77,7 +78,8 @@ const ConectRoads = (roadArray, roomArray, rectArray) => {
           y: bottom,
           width: max - min + 1,
           height: 1,
-          type: 'h'
+          type: 'h',
+          cellName
         };
         if (!isRoomCollision(r, roomArray) && isRectEdge(r, rectArray)) roads.push(r);
       }

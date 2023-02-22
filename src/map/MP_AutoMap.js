@@ -6,8 +6,8 @@ import MS_Trap from '../data/MS_Trap';
 import MapSplitter from '../tools/MapSpliter';
 import PlaceTrap from '../tools/PlaceTrap';
 import PlaceTreasureBox from '../tools/PlaceTreasureBox';
-import RoadRectCreater from '../tools/RoadReactCreater';
-import RoomRectCreater from '../tools/RoomRectCreater';
+import RoadCreater from '../tools/RoadCreater';
+import RoomCreater from '../tools/RoomCreater';
 import RoomWallCreater from '../tools/RoomWallCreater';
 import SP_Tile from "../sprites/SP_Tile";
 
@@ -27,26 +27,25 @@ class MP_AutoMap {
   makeAutomap = _ => {
     this.fill("blank");
     this.rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
-    this.roomArray = RoomRectCreater(this.rectArray);
+    this.roomArray = RoomCreater(this.rectArray);
     this.roomWallArray = RoomWallCreater(this.roomArray);
-    this.roadArray = RoadRectCreater(this.rectArray, this.roomArray);
+    this.roadArray = RoadCreater(this.rectArray, this.roomArray);
     this.entranceArray = EntranceCreater(this.roadArray);
     this.roadArray2 = ConectRoads(this.roadArray, this.roomArray, this.rectArray);
     this.tresureBoxes = PlaceTreasureBox(this.roomArray, this.entranceArray, MS_Item);
     this.traps = PlaceTrap(this.roomArray, this.tresureBoxes, MS_Trap);
-    const tileName = ['floor_vines0', 'floor_vines1', 'floor_vines2', 'floor_vines3', 'floor_vines4', 'floor_vines5', 'floor_vines6', 'floor_sand_stone0', 'floor_sand_stone1', 'floor_sand_stone2', 'floor_sand_stone3'];
     this.rectArray.forEach(({ x, y, width, height }) => {
       // this.fillRectWithAttributes({ x, y, width, height, cellName: `${tileName[(n + 5) % 7]}` });
       this.fillRectWithAttributes({ x, y, width, height, cellName: `blank` });
     });
-    this.roomArray.forEach(({ x, y, width, height }, n) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `${tileName[n]}`, attributes: { isBlocked: false } });
+    this.roomArray.forEach(({ x, y, width, height, cellName }) => {
+      this.fillRectWithAttributes({ x, y, width, height, cellName, attributes: { isBlocked: false } });
     });
-    this.roomWallArray.forEach(({ x, y, width, height }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `stone_brick1` });
+    this.roomWallArray.forEach(({ x, y, width, height, cellName }) => {
+      this.fillRectWithAttributes({ x, y, width, height, cellName });
     });
-    this.roadArray2.forEach(({ x, y, width, height }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `floor_vines4`, attributes: { isBlocked: false } });
+    this.roadArray2.forEach(({ x, y, width, height, cellName }) => {
+      this.fillRectWithAttributes({ x, y, width, height, cellName, attributes: { isBlocked: false } });
     });
     this.entranceArray.forEach(({ x, y, width, height }) => {
       this.fillRectWithAttributes({
@@ -96,6 +95,11 @@ class MP_AutoMap {
         this.map[ny][nx] = { cellName, ...attributes };
       }
     this.reset();
+  }
+
+
+  putTileWithAttributes = ({ x, y, cellName, attributes = { isBlocked: false } }) => {
+    this.map[y][x] = { cellName, ...attributes };
   }
 
   addResetCallback = callback => {

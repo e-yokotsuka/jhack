@@ -28,7 +28,8 @@ const createHorizontalRoad = (x, y, x2, height, direction) => {
     y: randY,
     height: 1, // 道幅
     type: "h",// 横の道
-    direction
+    direction,
+    cellName: 'floor_vines4'
   }
 }
 
@@ -41,11 +42,12 @@ const createVerticalRoad = (x, y, y2, width, direction) => {
     y: y,
     height: y2 - y,
     type: "v", //縦の道
-    direction
+    direction,
+    cellName: 'floor_vines4'
   }
 }
 
-const RoadRectCreater = (rectArray, roomArray) => {
+const RoadCreater = (rectArray, roomArray) => {
   const roads = [];
   const roomAttributeArray = getRoomAttribute(rectArray);
   roomArray.forEach((room, i) => {
@@ -77,6 +79,6 @@ const RoadRectCreater = (rectArray, roomArray) => {
   return roads;
 };
 
-export default RoadRectCreater;
+export default RoadCreater;
 
 
