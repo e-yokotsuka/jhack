@@ -52,7 +52,8 @@ class MP_AutoMap {
         x, y, width, height, cellName: `dngn_closed_door`, attributes: {
           type: 'door',
           close: true,
-          isBlocked: true, hitStep: 0, open: _ => {
+          isBlocked: true, hitStep: 0,
+          open: _ => {
             this.map[y][x].cellName = 'dngn_open_door';
             this.map[y][x].item = null;
             this.map[y][x].prim.texture = this.core.getTexture(`dngn_open_door`);
@@ -63,9 +64,10 @@ class MP_AutoMap {
       });
     });
     this.tresureBoxes.forEach(({ x, y, item }) => {
-      this.fillRectWithAttributes({
-        x, y, width: 1, height: 1, cellName: item ? `chest2_closed` : `chest2_open`, attributes: {
-          type: 'chest', isBlocked: true, item, hitStep: 0, open: _ => {
+      this.putTileWithAttributes({
+        x, y, cellName: item ? `chest2_closed` : `chest2_open`, attributes: {
+          type: 'chest', isBlocked: true, item, hitStep: 0,
+          open: _ => {
             this.map[y][x].cellName = 'chest2_open';
             this.map[y][x].item = null;
             this.map[y][x].prim.texture = this.core.getTexture(`chest2_open`);
@@ -74,8 +76,8 @@ class MP_AutoMap {
       });
     });
     this.traps.forEach(({ x, y, trap }) => {
-      this.fillRectWithAttributes({
-        x, y, width: 1, height: 1, cellName: `dngn_trap_magical`, attributes: {
+      this.putTileWithAttributes({
+        x, y, cellName: `floor_vines0`, attributes: {
           type: 'trap', isAction: true, isBlocked: false, trap, action: _ => { }
         }
       });
@@ -91,15 +93,15 @@ class MP_AutoMap {
   fillRectWithAttributes = ({ x, y, width, height, cellName, attributes = { isBlocked: true } }) => {
     for (let ny = y; ny < (y + height); ny++)
       for (let nx = x; nx < (x + width); nx++) {
-        // console.log(`this.map[${nx}][${ny}] ::: x:${x}/y:${y}/w:${width}/h:${height}/name:${cellName}`)
         this.map[ny][nx] = { cellName, ...attributes };
       }
-    this.reset();
   }
 
 
-  putTileWithAttributes = ({ x, y, cellName, attributes = { isBlocked: false } }) => {
-    this.map[y][x] = { cellName, ...attributes };
+  putTileWithAttributes = ({ x, y, cellName, attributes = {} }) => {
+    if (this.map[y][x].prim) this.map[y][x].prim.texture = this.core.getTexture(cellName);
+    this.map[y][x].cellName = cellName;
+    this.map[y][x] = { ...this.map[y][x], ...attributes };
   }
 
   addResetCallback = callback => {

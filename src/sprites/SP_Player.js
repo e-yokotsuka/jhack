@@ -113,6 +113,7 @@ class SP_Player {
       if (actionTile) {
         const { type = 'unknown', trap } = actionTile;
         if (type === 'trap') {
+          this.mainMap.putTileWithAttributes({ x: nx, y: ny, cellName: 'dngn_trap_magical', attributes: { type: 'floor' } })
           this.core.addText(`ウップス!!  ${trap.name}という、罠にハマった！`);
           const dmg = this.trappedIn(trap);
           if (dmg) {

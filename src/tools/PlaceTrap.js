@@ -5,8 +5,8 @@
 const PlaceTrap = (roomArray,
   xorArray,
   trapList = [],
-  maxTraps = 4,
-  probability = 0.3,
+  maxTraps = 10,
+  probability = 0.5,
 ) => {
   if (!trapList?.length) return [];
   const isItemTile = (x, y) => {

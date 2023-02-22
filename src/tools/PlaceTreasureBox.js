@@ -11,10 +11,10 @@ const PlaceTreasureBox = (roomArray,
   const isEntranceSide = (x, y) => {
     entranceArray.forEach(({ x: ex, y: ey }) => {
       if (
-        (ex + 1 === x && ey === y) ||//右
-        (ex - 1 === x && ey === y) ||//左
-        (ex === x && ey + 1 === y) ||//下
-        (ex === x && ey - 1 === y)//上
+        (ex === x + 1 && ey === y) ||//右
+        (ex === x - 1 && ey === y) ||//左
+        (ex === x && ey === y + 1) ||//下
+        (ex === x && ey === y - 1)//上
       ) return true;
     });
     return false;
