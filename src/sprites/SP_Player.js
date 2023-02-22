@@ -62,16 +62,20 @@ class SP_Player {
     const { mapX, mapY } = this.playerData.status;
     let nx = mapX;
     let ny = mapY;
-    if (input.isSingleDown('w')) {
+    if (input.isSingleDown('w') ||
+      input.isSingleDown('ArrowUp')) {
       ny -= 1;
       this.playerData.status.steps++;
-    } else if (input.isSingleDown('s')) {
+    } else if (input.isSingleDown('s') ||
+      input.isSingleDown('ArrowDown')) {
       ny += 1;
       this.playerData.status.steps++;
-    } else if (input.isSingleDown('a')) {
+    } else if (input.isSingleDown('a') ||
+      input.isSingleDown('ArrowLeft')) {
       nx -= 1;
       this.playerData.status.steps++;
-    } else if (input.isSingleDown('d')) {
+    } else if (input.isSingleDown('d') ||
+      input.isSingleDown('ArrowRight')) {
       nx += 1;
       this.playerData.status.steps++;
     }
