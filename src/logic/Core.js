@@ -94,6 +94,12 @@ class Core {
 
   diceRoll = diceText => diceRoll(diceText);
 
+  // stepが更新された
+  handleStepUpdate = (/* vx, vy*/) => {
+    console.log(`step update`);
+    //    console.log(`vx:${vx}/vy:${vy}`);
+  }
+
 }
 
 export default Core;

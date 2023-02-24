@@ -6,8 +6,13 @@ const MD_Status = ({
   exp = 0,
   hp = 0,
   mp = 0,
+  virtualX = 0,//移動先の座標
+  virtualY = 0,//移動先の座標
+  mapX = 0,//現在値のマップ座標
+  mapY = 0,//現在値のマップ座標
   maxHp = 0,
   maxMp = 0,
+  stay = false,
   str = 0,
   con = 0,
   intl = 0,
@@ -15,37 +20,37 @@ const MD_Status = ({
   cha = 0,
   gender = MS_Gender.male.value,
   race = MS_Race.human,
-}) => {
-  const s = {
-    lv,
-    exp,
-    hp,
-    mp,
-    maxHp,
-    maxMp,
-    str,
-    con,
-    intl,
-    wiz,
-    cha,
-    gender,
-    race,
-    mapX: 0,
-    mapY: 0,
-    items: [],
-    equipments: {
-      head: {},
-      body: {},
-      lefthand: {},
-      righthand: {},
-      foot: {},
-    },
-    magic: {
-      black: {},
-      white: {}
-    },
-    steps: 0,//歩数
-  }
-  return s;
-}
+}) => ({
+  lv,
+  exp,
+  hp,
+  mp,
+  maxHp,
+  maxMp,
+  stay,
+  str,
+  con,
+  intl,
+  wiz,
+  cha,
+  gender,
+  race,
+  virtualX,
+  virtualY,
+  mapX,
+  mapY,
+  items: [],
+  equipments: {
+    head: {},
+    body: {},
+    lefthand: {},
+    righthand: {},
+    foot: {},
+  },
+  magic: {
+    black: {},
+    white: {}
+  },
+  steps: 0,//歩数
+});
 export default MD_Status;

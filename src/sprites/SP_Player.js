@@ -59,35 +59,33 @@ class SP_Player {
   update = (/*delta*/) => {
     const { core, mainMap } = this;
     const { core: { input } } = this;
-    const { mapX, mapY } = this.playerData.status;
-    let nx = mapX;
-    let ny = mapY;
-    let stay = false;
-
+    this.playerData.beforeUpdate();
     if (input.isSingleDown('w') ||
       input.isSingleDown('ArrowUp')) {
-      ny -= 1;
+      this.playerData.trialMove('u');
     } else if (input.isSingleDown('s') ||
       input.isSingleDown('ArrowDown')) {
-      ny += 1;
+      this.playerData.trialMove('d');
     } else if (input.isSingleDown('a') ||
       input.isSingleDown('ArrowLeft')) {
-      nx -= 1;
+      this.playerData.trialMove('l');
     } else if (input.isSingleDown('d') ||
       input.isSingleDown('ArrowRight')) {
-      nx += 1;
+      this.playerData.trialMove('r');
     } else if (input.isSingleDown('.')) {
       // その場にとどまる。
-      stay = true;
+      this.playerData.stay();
     }
     this.sprite.scale.x = core.mainScale;
     this.sprite.scale.y = core.mainScale;
     this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32;
     this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32;
-    if (!stay && (nx === mapX && ny === mapY)) return;
+    if (!this.playerData.isMove()) return; // 動いていない
+    // 動いた
+    const { virtualX: vx, virtualY: vy } = this.playerData.status;
     this.playerData.status.steps++;
-
-    const blockedTile = mainMap.isBlockedTile(nx, ny);
+    this.core.handleStepUpdate(vx, vy);
+    const blockedTile = mainMap.isBlockedTile(vx, vy);
     if (blockedTile) {
       const { type = 'unknown', item, open = _ => { }, hitStep = 0, close = false } = blockedTile;
       if (type === 'chest') {
@@ -112,17 +110,16 @@ class SP_Player {
       }
       blockedTile.hitStep = this.playerData.status.steps;
     } else {
-      this.playerData.status.mapX = nx;
-      this.playerData.status.mapY = ny;
-      this.mainMap.center(nx, ny);
-      const actionTile = mainMap.isActionTile(nx, ny);
+      this.playerData.moveConfirmed(); //移動確定
+      this.mainMap.center(vx, vy);
+      const actionTile = mainMap.isActionTile(vx, vy);
       if (actionTile) {
         const { type = 'unknown', trap } = actionTile;
         if (type === 'trap') {
           this.core.addText(`ウップス!!  ${trap.name}という、罠にハマった！`);
           const dmg = this.trappedIn(trap);
           if (dmg) {
-            this.mainMap.putTileWithAttributes({ x: nx, y: ny, cellName: 'dngn_trap_magical', attributes: { type: 'floor' } })
+            this.mainMap.putTileWithAttributes({ x: vx, y: vy, cellName: 'dngn_trap_magical', attributes: { type: 'floor' } })
             this.core.addText(`いてぇ。 ${dmg} ポイントのダメージをくらった！`);
             if (this.hit(dmg)) return;//しんだ
           } else {
