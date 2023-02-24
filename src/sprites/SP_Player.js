@@ -62,28 +62,30 @@ class SP_Player {
     const { mapX, mapY } = this.playerData.status;
     let nx = mapX;
     let ny = mapY;
+    let stay = false;
+
     if (input.isSingleDown('w') ||
       input.isSingleDown('ArrowUp')) {
       ny -= 1;
-      this.playerData.status.steps++;
     } else if (input.isSingleDown('s') ||
       input.isSingleDown('ArrowDown')) {
       ny += 1;
-      this.playerData.status.steps++;
     } else if (input.isSingleDown('a') ||
       input.isSingleDown('ArrowLeft')) {
       nx -= 1;
-      this.playerData.status.steps++;
     } else if (input.isSingleDown('d') ||
       input.isSingleDown('ArrowRight')) {
       nx += 1;
-      this.playerData.status.steps++;
+    } else if (input.isSingleDown('.')) {
+      // その場にとどまる。
+      stay = true;
     }
     this.sprite.scale.x = core.mainScale;
     this.sprite.scale.y = core.mainScale;
     this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32;
     this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32;
-    if (nx === mapX && ny === mapY) return;
+    if (!stay && (nx === mapX && ny === mapY)) return;
+    this.playerData.status.steps++;
 
     const blockedTile = mainMap.isBlockedTile(nx, ny);
     if (blockedTile) {
