@@ -60,7 +60,9 @@ class SP_Player {
     const { core, mainMap } = this;
     const { core: { input } } = this;
     this.playerData.beforeUpdate();
-    if (input.isSingleDown('w') ||
+    if (input.isSingleDown('o')) {
+      this.playerData.isLock() ? this.playerData.unlock() : this.playerData.lock();
+    } else if (input.isSingleDown('w') ||
       input.isSingleDown('ArrowUp')) {
       this.playerData.trialMove('u');
     } else if (input.isSingleDown('s') ||

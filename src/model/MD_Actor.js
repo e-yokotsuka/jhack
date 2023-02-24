@@ -7,6 +7,7 @@ class MD_Actor {
 
   //仮の移動を行う
   trialMove = (direction = '.') => {
+    if (this.status.lock) return; //ロック中(UI表示中など)は、移動不可
     const { mapX, mapY } = this.status;
     let virtualX = mapX;
     let virtualY = mapY;
@@ -31,7 +32,14 @@ class MD_Actor {
   }
 
   // とどまる
-  stay = _ => this.status.stay = true;
+  stay = _ => this.status.lock ? null : this.status.stay = true;
+
+  //ロック
+  lock = _ => this.status.lock = true;
+  //ロック解除
+  unlock = _ => this.status.lock = false;
+  //ロック状態
+  isLock = _ => this.status.lock;
 
   // 動いたか？
   isMove = _ => (this.status.stay || this.status.virtualX !== this.status.mapX || this.status.virtualY !== this.status.mapY)

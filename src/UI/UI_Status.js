@@ -16,8 +16,8 @@ class UI_Status {
   getPrim = _ => this.prim;
 
   update = _ => {
-    const { hp, maxHp, mp, maxMp, mapX, mapY, steps } = this.player.playerData.status;
-    this.prim.text = `HP:${hp}/${maxHp} MP: ${mp}/${maxMp} STEP ${steps} : (${mapX},${mapY})`;
+    const { hp, maxHp, mp, maxMp, mapX, mapY, steps, lock } = this.player.playerData.status;
+    this.prim.text = `HP:${hp}/${maxHp} MP: ${mp}/${maxMp} STEP ${steps} : (${mapX},${mapY}) : locked:${lock} `;
   }
 
 }
