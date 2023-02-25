@@ -1,5 +1,9 @@
 import { Text } from 'pixi.js';
 
+const STATUS_ABS_X = 10;
+const STATUS_RELATIVE_Y = -40;
+
+
 class UI_Status {
 
   constructor({ core: { player, app: { screen: { height } } } }) {
@@ -10,10 +14,15 @@ class UI_Status {
       align: 'left',
     });
     this.prim.x = 10;
-    this.prim.y = height - 40;
+    this.prim.y = height + STATUS_RELATIVE_Y;
   }
 
   getPrim = _ => this.prim;
+
+  resize = (width,height)=>{
+    this.prim.x = STATUS_ABS_X;
+    this.prim.y = height + STATUS_RELATIVE_Y;
+  } 
 
   update = _ => {
     const { hp, maxHp, mp, maxMp, mapX, mapY, steps, lock } = this.player.playerData.status;

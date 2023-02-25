@@ -30,6 +30,7 @@ class Core {
     const {width,height} = this.getCanvasSize();
     console.log(`canvas w:${width}/h${height}`);
     this.app.renderer.resize(width,height);
+    this.uiStatus.resize(width,height);
     this.mainMap.center();
   }
   
@@ -46,12 +47,15 @@ class Core {
   Start = async _ => {
     const { app, stats, loaded } = this;
     console.assert(loaded, 'Resource not loaded.');
-    this.mainMap = new MP_AutoMap({ core: this });
+    this.mainMap = new MP_AutoMap({ core: this });0
+    const {height:canvasHeight} = this.getCanvasSize();
     const text = new Text('よくぞいらした。\nここムーリダヤ・メタインでは\n恐ろしき魔物との戦いが数千年にわたって繰り広げられている。', {
       fontSize: 24,
       fill: 0xffffff,
       align: 'center',
     });
+    text.y = canvasHeight;
+    console.log(`text-y:${text.y}/${canvasHeight}`)
     const keytext = new Text('debug key string', {
       fontSize: 20,
       fill: 0xffffff,
@@ -65,27 +69,25 @@ class Core {
     app.stage.addChild(text);
     this.player = new SP_Player({ core: this });
     this.player.respawn();
-    const uiStatus = new UI_Status({ core: this });
-    app.stage.addChild(uiStatus.getPrim());
+    this.uiStatus = new UI_Status({ core: this });
+    app.stage.addChild(this.uiStatus.getPrim());
     this.uiMessageBox = new UI_MessageBox({ core: this });
     app.stage.addChild(this.uiMessageBox.getPrim());
-    app.stage.addChild(text);
 
-    const {width:canvasWidth,height:canvasHeight} = this.getCanvasSize();
-    text.y = canvasHeight;
-    text.x = (canvasWidth - text.width) / 2;
 
     window.addEventListener('resize', this.resize);
     this.resize();
 
     app.ticker.add((delta) => {
       stats.begin();
+      const {width:canvasWidth} = this.getCanvasSize();
       this.input.update();
       this.mainMap.update(delta);
       keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z']);
-      uiStatus.update();
+      this.uiStatus.update();
       text.y -= delta * 0.2;
       text.y = Math.max(text.y, 0);
+      text.x = (canvasWidth - text.width) / 2;
       this.player.update(delta);
       this.uiMessageBox.update(delta);
       stats.end();
