@@ -8,19 +8,13 @@ import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
 import diceRoll from '../tools/Calc';
 
-const CANVAS_WIDTH = 32 * 50;
-const CANVAS_HEIGHT = 32 * 30;
-// const CANVAS_WIDTH_CENTER = CANVAS_WIDTH / 2;
-// const CANVAS_HEIGHT_CENTER = CANVAS_HEIGHT / 2;
-
-
 class Core {
   constructor({ isShowStats = true }) {
     const dom = document.getElementById('contents');
+    const {width,height} = this.getCanvasSize();
     this.app = new Application({
       backgroundColor: 0x000000,
-      width: CANVAS_WIDTH,
-      height: CANVAS_HEIGHT
+      width,height
     });
     if (isShowStats) {
       this.stats = new Stats();
@@ -32,7 +26,14 @@ class Core {
     this.mainScale = 1;
   }
 
-  getCanvasSize = _ => ({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT })
+  resize = _=> {
+    const {width,height} = this.getCanvasSize();
+    console.log(`canvas w:${width}/h${height}`);
+    this.app.renderer.resize(width,height);
+    this.mainMap.center();
+  }
+  
+  getCanvasSize = _ => ({ width:  Math.floor(window.innerWidth / 2) * 2, height: Math.floor(window.innerHeight / 2) * 2 })
 
   Load = async _ => {
     this.loaded = true;
@@ -69,8 +70,13 @@ class Core {
     this.uiMessageBox = new UI_MessageBox({ core: this });
     app.stage.addChild(this.uiMessageBox.getPrim());
     app.stage.addChild(text);
-    text.y = CANVAS_HEIGHT;
-    text.x = (CANVAS_WIDTH - text.width) / 2;
+
+    const {width:canvasWidth,height:canvasHeight} = this.getCanvasSize();
+    text.y = canvasHeight;
+    text.x = (canvasWidth - text.width) / 2;
+
+    window.addEventListener('resize', this.resize);
+    this.resize();
 
     app.ticker.add((delta) => {
       stats.begin();

@@ -17,6 +17,8 @@ class MP_AutoMap {
     this.core = core;
     this.width = width;
     this.height = height;
+    this.lastMapX = 0;
+    this.lastMapY = 0;
     this.resetCallback = [];
     const { stage } = this.core.app;
     this.mapContainer = new Container();
@@ -166,10 +168,14 @@ class MP_AutoMap {
   }
 
   center = (mapX, mapY) => {
+    const x = mapX? mapX:this.lastMapX;
+    const y = mapY? mapY:this.lastMapY;
     const { core, mapContainer } = this;
     const { width, height } = core.getCanvasSize();
-    mapContainer.x = (-(mapX * 32) + (width / 2));
-    mapContainer.y = (-(mapY * 32) + (height / 2));
+    mapContainer.x = (-(x * 32) + (width / 2));
+    mapContainer.y = (-(y * 32) + (height / 2));
+    this.lastMapX = x;
+    this.lastMapY = y;
   }
 
 }
