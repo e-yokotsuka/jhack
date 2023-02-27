@@ -113,8 +113,6 @@ class MP_AutoMap {
   reset = _ => {
     const { map, mapContainer, core, isDebugViewCollision } = this;
     mapContainer.removeChildren();
-    mapContainer.scale.x = core.mainScale;
-    mapContainer.scale.y = core.mainScale;
     map.forEach((row, y) => {
       row.forEach(({ cellName, isBlocked }, x) => {
         if (isDebugViewCollision && isBlocked) {
@@ -168,8 +166,8 @@ class MP_AutoMap {
   }
 
   center = (mapX, mapY) => {
-    const x = mapX? mapX:this.lastMapX;
-    const y = mapY? mapY:this.lastMapY;
+    const x = mapX ? mapX : this.lastMapX;
+    const y = mapY ? mapY : this.lastMapY;
     const { core, mapContainer } = this;
     const { width, height } = core.getCanvasSize();
     mapContainer.x = (-(x * 32) + (width / 2));

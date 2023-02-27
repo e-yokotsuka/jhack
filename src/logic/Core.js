@@ -11,10 +11,10 @@ import diceRoll from '../tools/Calc';
 class Core {
   constructor({ isShowStats = true }) {
     const dom = document.getElementById('contents');
-    const {width,height} = this.getCanvasSize();
+    const { width, height } = this.getCanvasSize();
     this.app = new Application({
       backgroundColor: 0x000000,
-      width,height
+      width, height
     });
     if (isShowStats) {
       this.stats = new Stats();
@@ -26,15 +26,15 @@ class Core {
     this.mainScale = 1;
   }
 
-  resize = _=> {
-    const {width,height} = this.getCanvasSize();
+  resize = _ => {
+    const { width, height } = this.getCanvasSize();
     console.log(`canvas w:${width}/h${height}`);
-    this.app.renderer.resize(width,height);
-    this.uiStatus.resize(width,height);
+    this.app.renderer.resize(width, height);
+    this.uiStatus.resize(width, height);
     this.mainMap.center();
   }
-  
-  getCanvasSize = _ => ({ width:  Math.floor(window.innerWidth / 2) * 2, height: Math.floor(window.innerHeight / 2) * 2 })
+
+  getCanvasSize = _ => ({ width: Math.floor(window.innerWidth / 2) * 2, height: Math.floor(window.innerHeight / 2) * 2 })
 
   Load = async _ => {
     this.loaded = true;
@@ -45,10 +45,10 @@ class Core {
   }
 
   Start = async _ => {
-    const { app, stats, loaded } = this;
+    const { app, stats, loaded, mainScale } = this;
     console.assert(loaded, 'Resource not loaded.');
-    this.mainMap = new MP_AutoMap({ core: this });0
-    const {height:canvasHeight} = this.getCanvasSize();
+    this.mainMap = new MP_AutoMap({ core: this }); 0
+    const { height: canvasHeight } = this.getCanvasSize();
     const text = new Text('よくぞいらした。\nここムーリダヤ・メタインでは\n恐ろしき魔物との戦いが数千年にわたって繰り広げられている。', {
       fontSize: 24,
       fill: 0xffffff,
@@ -80,7 +80,9 @@ class Core {
 
     app.ticker.add((delta) => {
       stats.begin();
-      const {width:canvasWidth} = this.getCanvasSize();
+      app.stage.scale.x = mainScale;
+      app.stage.scale.y = mainScale;
+      const { width: canvasWidth } = this.getCanvasSize();
       this.input.update();
       this.mainMap.update(delta);
       keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z']);

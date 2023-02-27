@@ -57,8 +57,7 @@ class SP_Player {
 
 
   update = (/*delta*/) => {
-    const { core, mainMap } = this;
-    const { core: { input } } = this;
+    const { core: { input }, mainMap } = this;
     this.playerData.beforeUpdate();
     if (input.isSingleDown('o')) {
       this.playerData.isLock() ? this.playerData.unlock() : this.playerData.lock();
@@ -78,8 +77,6 @@ class SP_Player {
       // その場にとどまる。
       this.playerData.stay();
     }
-    this.sprite.scale.x = core.mainScale;
-    this.sprite.scale.y = core.mainScale;
     this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32;
     this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32;
     if (!this.playerData.isMove()) return; // 動いていない
