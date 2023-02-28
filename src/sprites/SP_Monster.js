@@ -110,7 +110,7 @@ class SP_Monster {
       blockedTile.hitStep = this.SP_MonsterData.status.steps;
     } else {
       this.SP_MonsterData.moveConfirmed(); //移動確定
-      this.mainMap.center(vx, vy);
+      // this.mainMap.center(vx, vy);
       const actionTile = mainMap.isActionTile(vx, vy);
       if (actionTile) {
         const { type = 'unknown', trap } = actionTile;
