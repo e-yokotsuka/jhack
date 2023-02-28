@@ -2,6 +2,7 @@ import { Application, Assets, Text } from 'pixi.js';
 
 import Input from './Input';
 import MP_AutoMap from '../map/MP_AutoMap';
+import SP_Monster from '../sprites/SP_Monster';
 import SP_Player from '../sprites/SP_Player';
 import Stats from 'stats.js';
 import UI_MessageBox from '../ui/UI_MessageBox'
@@ -69,6 +70,9 @@ class Core {
     app.stage.addChild(text);
     this.player = new SP_Player({ core: this });
     this.player.respawn();
+    this.monster = new SP_Monster({ core: this });
+    this.monster.respawn();
+    
     this.uiStatus = new UI_Status({ core: this });
     app.stage.addChild(this.uiStatus.getPrim());
     this.uiMessageBox = new UI_MessageBox({ core: this });
@@ -91,6 +95,7 @@ class Core {
       text.y = Math.max(text.y, 0);
       text.x = (canvasWidth - text.width) / 2;
       this.player.update(delta);
+      this.monster.update(delta);
       this.uiMessageBox.update(delta);
       stats.end();
     });

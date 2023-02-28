@@ -1,10 +1,10 @@
-import MD_SP_Monster from '../model/MD_SP_Monster';
+import MD_Monster from '../model/MD_Monster';
 import { Sprite } from 'pixi.js';
 
 class SP_Monster {
 
-  constructor({ core, name = "human" }) {
-    this.SP_MonsterData = new MD_SP_Monster({
+  constructor({ core, name = "goblin" }) {
+    this.SP_MonsterData = new MD_Monster({
       hp: 15, maxHp: 15,
       mp: 10, maxMp: 10,
     });
@@ -30,7 +30,7 @@ class SP_Monster {
     this.SP_MonsterData.status.hp = this.SP_MonsterData.status.maxHp;
     this.SP_MonsterData.status.mapX = x;
     this.SP_MonsterData.status.mapY = y;
-    this.mainMap.center(this.SP_MonsterData.status.mapX, this.SP_MonsterData.status.mapY);
+    // this.mainMap.center(this.SP_MonsterData.status.mapX, this.SP_MonsterData.status.mapY);
   }
 
 
@@ -57,26 +57,26 @@ class SP_Monster {
 
 
   update = (/*delta*/) => {
-    const { core: { input }, mainMap } = this;
+    const { /*core: { input },*/ mainMap } = this;
     this.SP_MonsterData.beforeUpdate();
-    if (input.isSingleDown('o')) {
-      this.SP_MonsterData.isLock() ? this.SP_MonsterData.unlock() : this.SP_MonsterData.lock();
-    } else if (input.isSingleDown('w') ||
-      input.isSingleDown('ArrowUp')) {
-      this.SP_MonsterData.trialMove('u');
-    } else if (input.isSingleDown('s') ||
-      input.isSingleDown('ArrowDown')) {
-      this.SP_MonsterData.trialMove('d');
-    } else if (input.isSingleDown('a') ||
-      input.isSingleDown('ArrowLeft')) {
-      this.SP_MonsterData.trialMove('l');
-    } else if (input.isSingleDown('d') ||
-      input.isSingleDown('ArrowRight')) {
-      this.SP_MonsterData.trialMove('r');
-    } else if (input.isSingleDown('.')) {
-      // その場にとどまる。
-      this.SP_MonsterData.stay();
-    }
+    // if (input.isSingleDown('o')) {
+    //   this.SP_MonsterData.isLock() ? this.SP_MonsterData.unlock() : this.SP_MonsterData.lock();
+    // } else if (input.isSingleDown('w') ||
+    //   input.isSingleDown('ArrowUp')) {
+    //   this.SP_MonsterData.trialMove('u');
+    // } else if (input.isSingleDown('s') ||
+    //   input.isSingleDown('ArrowDown')) {
+    //   this.SP_MonsterData.trialMove('d');
+    // } else if (input.isSingleDown('a') ||
+    //   input.isSingleDown('ArrowLeft')) {
+    //   this.SP_MonsterData.trialMove('l');
+    // } else if (input.isSingleDown('d') ||
+    //   input.isSingleDown('ArrowRight')) {
+    //   this.SP_MonsterData.trialMove('r');
+    // } else if (input.isSingleDown('.')) {
+    //   // その場にとどまる。
+    //   this.SP_MonsterData.stay();
+    // }
     this.sprite.x = mainMap.mapContainer.x + this.SP_MonsterData.status.mapX * 32;
     this.sprite.y = mainMap.mapContainer.y + this.SP_MonsterData.status.mapY * 32;
     if (!this.SP_MonsterData.isMove()) return; // 動いていない
