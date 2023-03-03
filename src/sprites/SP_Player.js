@@ -57,72 +57,69 @@ class SP_Player {
 
 
   update = (/*delta*/) => {
-    const { core: { input }, mainMap } = this;
-    this.playerData.beforeUpdate();
-    if (input.isSingleDown('o')) {
-      this.playerData.isLock() ? this.playerData.unlock() : this.playerData.lock();
-    } else if (input.isSingleDown('w') ||
-      input.isSingleDown('ArrowUp')) {
-      this.playerData.trialMove('u');
-    } else if (input.isSingleDown('s') ||
-      input.isSingleDown('ArrowDown')) {
-      this.playerData.trialMove('d');
-    } else if (input.isSingleDown('a') ||
-      input.isSingleDown('ArrowLeft')) {
-      this.playerData.trialMove('l');
-    } else if (input.isSingleDown('d') ||
-      input.isSingleDown('ArrowRight')) {
-      this.playerData.trialMove('r');
-    } else if (input.isSingleDown('.')) {
-      // その場にとどまる。
-      this.playerData.stay();
-    }
-    this.sprite.x = mainMap.mapContainer.x + this.playerData.status.mapX * 32;
-    this.sprite.y = mainMap.mapContainer.y + this.playerData.status.mapY * 32;
-    if (!this.playerData.isMove()) return; // 動いていない
+    const { core: { input,handleStepUpdate,addText }, mainMap,playerData,sprite } = this;
+    playerData.beforeUpdate();
+    const inputMap = {
+      'o': _ => playerData.isLock() ? playerData.unlock() : playerData.lock(),
+      'w': _ => playerData.trialMove('u'),
+      's': _ => playerData.trialMove('d'),
+      'a': _ => playerData.trialMove('l'),
+      'd': _ => playerData.trialMove('r'),
+      '.': _ => playerData.stay(),
+      'ArrowUp': _ => playerData.trialMove('u'),
+      'ArrowDown': _ => playerData.trialMove('d'),
+      'ArrowLeft': _ => playerData.trialMove('l'),
+      'ArrowRight': _ => playerData.trialMove('r'),
+    };
+    const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
+    if (key) inputMap[key]();
+
+    sprite.x = mainMap.mapContainer.x + playerData.status.mapX * 32;
+    sprite.y = mainMap.mapContainer.y + playerData.status.mapY * 32;
+    if (!playerData.isMove()) return; // 動いていない
     // 動いた
-    const { virtualX: vx, virtualY: vy } = this.playerData.status;
-    this.playerData.status.steps++;
-    this.core.handleStepUpdate(vx, vy);
+    const { virtualX: vx, virtualY: vy } = playerData.status;
+    playerData.status.steps++;
+    handleStepUpdate(vx, vy);
     const blockedTile = mainMap.isBlockedTile(vx, vy);
     if (blockedTile) {
       const { type = 'unknown', item, open = _ => { }, hitStep = 0, close = false } = blockedTile;
       if (type === 'chest') {
-        if (hitStep + 1 == this.playerData.status.steps) {
+        if (hitStep + 1 == playerData.status.steps) {
           if (item) {
-            this.playerData.status.items.push(item);
-            this.core.addText(`${item.itemName}をGETした！`);
+            playerData.status.items.push(item);
+            addText(`${item.itemName}をGETした！`);
             open();
           } else {
-            this.core.addText(`からっぽだ！`);
+            addText(`からっぽだ！`);
           }
         } else {
-          this.core.addText(`宝箱だ！`);
+          addText(`宝箱だ！`);
         }
       } else if (type === 'door') {
-        if (hitStep + 1 == this.playerData.status.steps && close) {
-          this.core.addText(`ドアを開けた！`);
+        if (hitStep + 1 == playerData.status.steps && close) {
+          addText(`ドアを開けた！`);
           open();
         } else {
           this.core.addText(`しまった！ 閉まったドアだ！`);
         }
       }
-      blockedTile.hitStep = this.playerData.status.steps;
+      blockedTile.hitStep = playerData.status.steps;
     } else {
-      this.playerData.moveConfirmed(); //移動確定
-      this.mainMap.center(vx, vy);
+      playerData.moveConfirmed(); //移動確定
+      mainMap.center(vx, vy);
       const actionTile = mainMap.isActionTile(vx, vy);
       if (actionTile) {
         const { type = 'unknown', trap } = actionTile;
         if (type === 'trap') {
-          this.core.addText(`ウップス!!  ${trap.name}という、罠にハマった！`);
+          addText(`ウップス!!  ${trap.name}という、罠にハマった！`);
           const dmg = this.trappedIn(trap);
           if (dmg) {
-            this.mainMap.putTileWithAttributes({ x: vx, y: vy, cellName: 'dngn_trap_magical', attributes: { type: 'floor' } })
-            this.core.addText(`いてぇ。 ${dmg} ポイントのダメージをくらった！`);
+            mainMap.putTileWithAttributes({ x: vx, y: vy, cellName: 'dngn_trap_magical', attributes: { type: 'floor' } })
+            addText(`いてぇ。 ${dmg} ポイントのダメージをくらった！`);
             if (this.hit(dmg)) return;//しんだ
           } else {
-            this.core.addText(`しかし、発動前にヒョイっと避けた！`);
+            addText(`しかし、発動前にヒョイっと避けた！`);
           }
         }
       }
