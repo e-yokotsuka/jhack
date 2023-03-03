@@ -1,7 +1,7 @@
 {
   "name": "pixijs-boilerplate",
   "engines": {
-    "node": "18.13.x"
+    "node": "18.x.x"
   },
   "version": "1.0.0",
   "main": "index.js",
