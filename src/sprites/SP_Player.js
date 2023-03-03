@@ -57,37 +57,49 @@ class SP_Player {
 
 
   update = (/*delta*/) => {
-    const { core: { input,handleStepUpdate,addText }, mainMap,playerData,sprite } = this;
-    playerData.beforeUpdate();
+    const { core: { input, handleStepUpdate, addText }, mainMap,
+      playerData:
+      { beforeUpdate,
+        isLock,
+        unlock,
+        lock,
+        trialMove,
+        isMove,
+        moveConfirmed,
+        stay,
+        status
+      },
+      sprite } = this;
+    beforeUpdate();
     const inputMap = {
-      'o': _ => playerData.isLock() ? playerData.unlock() : playerData.lock(),
-      'w': _ => playerData.trialMove('u'),
-      's': _ => playerData.trialMove('d'),
-      'a': _ => playerData.trialMove('l'),
-      'd': _ => playerData.trialMove('r'),
-      '.': _ => playerData.stay(),
-      'ArrowUp': _ => playerData.trialMove('u'),
-      'ArrowDown': _ => playerData.trialMove('d'),
-      'ArrowLeft': _ => playerData.trialMove('l'),
-      'ArrowRight': _ => playerData.trialMove('r'),
+      'o': _ => isLock() ? unlock() : lock(),
+      'w': _ => trialMove('u'),
+      's': _ => trialMove('d'),
+      'a': _ => trialMove('l'),
+      'd': _ => trialMove('r'),
+      '.': _ => stay(),
+      'ArrowUp': _ => trialMove('u'),
+      'ArrowDown': _ => trialMove('d'),
+      'ArrowLeft': _ => trialMove('l'),
+      'ArrowRight': _ => trialMove('r'),
     };
     const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
     if (key) inputMap[key]();
 
-    sprite.x = mainMap.mapContainer.x + playerData.status.mapX * 32;
-    sprite.y = mainMap.mapContainer.y + playerData.status.mapY * 32;
-    if (!playerData.isMove()) return; // 動いていない
+    sprite.x = mainMap.mapContainer.x + status.mapX * 32;
+    sprite.y = mainMap.mapContainer.y + status.mapY * 32;
+    if (!isMove()) return; // 動いていない
     // 動いた
-    const { virtualX: vx, virtualY: vy } = playerData.status;
-    playerData.status.steps++;
+    const { virtualX: vx, virtualY: vy } = status;
+    status.steps++;
     handleStepUpdate(vx, vy);
     const blockedTile = mainMap.isBlockedTile(vx, vy);
     if (blockedTile) {
       const { type = 'unknown', item, open = _ => { }, hitStep = 0, close = false } = blockedTile;
       if (type === 'chest') {
-        if (hitStep + 1 == playerData.status.steps) {
+        if (hitStep + 1 == status.steps) {
           if (item) {
-            playerData.status.items.push(item);
+            status.items.push(item);
             addText(`${item.itemName}をGETした！`);
             open();
           } else {
@@ -97,16 +109,16 @@ class SP_Player {
           addText(`宝箱だ！`);
         }
       } else if (type === 'door') {
-        if (hitStep + 1 == playerData.status.steps && close) {
+        if (hitStep + 1 == status.steps && close) {
           addText(`ドアを開けた！`);
           open();
         } else {
           this.core.addText(`しまった！ 閉まったドアだ！`);
         }
       }
-      blockedTile.hitStep = playerData.status.steps;
+      blockedTile.hitStep = status.steps;
     } else {
-      playerData.moveConfirmed(); //移動確定
+      moveConfirmed(); //移動確定
       mainMap.center(vx, vy);
       const actionTile = mainMap.isActionTile(vx, vy);
       if (actionTile) {
