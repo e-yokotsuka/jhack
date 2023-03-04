@@ -111,7 +111,6 @@ class Core {
 
   // stepが更新された
   handleStepUpdate = (/* vx, vy*/) => {
-    console.log(`step update`)
     // プレイヤーの動作を行う（移動、アイテム使用、攻撃など）
     // 敵のAIによる移動、攻撃などの動作を行う
     // 衝突判定を行い、プレイヤーと敵が衝突した場合は戦闘処理を行う

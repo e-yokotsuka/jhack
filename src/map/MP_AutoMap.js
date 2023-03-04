@@ -10,6 +10,13 @@ import RoadCreater from '../tools/RoadCreater';
 import RoomCreater from '../tools/RoomCreater';
 import RoomWallCreater from '../tools/RoomWallCreater';
 import SP_Tile from "../sprites/SP_Tile";
+import TL_Blank from '../tiles/TL_Blank';
+import TL_Chest from '../tiles/TL_Chest';
+import TL_Door from '../tiles/TL_Door';
+import TL_Floor from '../tiles/TL_Floor';
+import TL_Road from '../tiles/TL_Road';
+import TL_Trap from '../tiles/TL_Trap';
+import TL_Wall from '../tiles/TL_Wall';
 
 class MP_AutoMap {
   constructor({ core, width = 100, height = 50 }) {
@@ -27,7 +34,8 @@ class MP_AutoMap {
   }
 
   makeAutomap = _ => {
-    this.fill("blank");
+    const {core} = this;
+    this.fill(({ x, y }) => new TL_Blank({ x, y }));
     this.rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
     this.roomArray = RoomCreater(this.rectArray);
     this.roomWallArray = RoomWallCreater(this.roomArray);
@@ -36,69 +44,42 @@ class MP_AutoMap {
     this.roadArray2 = ConectRoads(this.roadArray, this.roomArray, this.rectArray);
     this.tresureBoxes = PlaceTreasureBox(this.roomArray, this.entranceArray, MS_Item);
     this.traps = PlaceTrap(this.roomArray, this.tresureBoxes, MS_Trap);
-    this.rectArray.forEach(({ x, y, width, height }) => {
-      // this.fillRectWithAttributes({ x, y, width, height, cellName: `${tileName[(n + 5) % 7]}` });
-      this.fillRectWithAttributes({ x, y, width, height, cellName: `blank` });
-    });
-    this.roomArray.forEach(({ x, y, width, height, cellName }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName, attributes: { isBlocked: false } });
-    });
-    this.roomWallArray.forEach(({ x, y, width, height, cellName }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName });
-    });
-    this.roadArray2.forEach(({ x, y, width, height, cellName }) => {
-      this.fillRectWithAttributes({ x, y, width, height, cellName, attributes: { isBlocked: false } });
-    });
-    this.entranceArray.forEach(({ x, y, width, height }) => {
-      this.fillRectWithAttributes({
-        x, y, width, height, cellName: `dngn_closed_door`, attributes: {
-          type: 'door',
-          close: true,
-          isBlocked: true, hitStep: 0,
-          open: _ => {
-            this.map[y][x].cellName = 'dngn_open_door';
-            this.map[y][x].item = null;
-            this.map[y][x].prim.texture = this.core.getTexture(`dngn_open_door`);
-            this.map[y][x].isBlocked = false;
-            this.map[y][x].close = false;
-          }
-        }
-      });
-    });
-    this.tresureBoxes.forEach(({ x, y, item }) => {
-      this.putTileWithAttributes({
-        x, y, cellName: item ? `chest2_closed` : `chest2_open`, attributes: {
-          type: 'chest', isBlocked: true, item, hitStep: 0,
-          open: _ => {
-            this.map[y][x].cellName = 'chest2_open';
-            this.map[y][x].item = null;
-            this.map[y][x].prim.texture = this.core.getTexture(`chest2_open`);
-          }
-        }
-      });
-    });
-    this.traps.forEach(({ x, y, trap }) => {
-      this.putTileWithAttributes({
-        x, y, cellName: `floor_vines0`, attributes: {
-          type: 'trap', isAction: true, isBlocked: false, trap, action: _ => { }
-        }
-      });
-    });
+
+    this.rectArray.forEach(({ x, y, width, height }) =>
+      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Blank({core, x, y }) }));
+
+    this.roomArray.forEach(({ x, y, width, height, cellName }) =>
+      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Floor({core, x, y, cellName }) }));
+
+    this.roomWallArray.forEach(({ x, y, width, height, cellName }) =>
+      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Wall({ core, x, y, cellName }) }))
+
+    this.roadArray2.forEach(({ x, y, width, height, cellName }) => 
+      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Road({ core, x, y, cellName }) }))
+
+    this.entranceArray.forEach(({ x, y, width, height }) =>
+      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Door({ core, x, y }) }))
+
+    this.tresureBoxes.forEach(({ x, y, item }) => this.putTile(new TL_Chest({ core, x, y, item })));
+
+    this.traps.forEach(({ x, y, trap }) => this.putTile(new TL_Trap({ core, x, y, trap })));
+
     this.reset();
   }
 
-  fill = (cellName) => {
+  fill = (fnTile = _ => { }) => {
     const { width, height } = this;
-    this.map = [...Array(height)].map(_ => Array(width).fill({ cellName }));
+    this.map = [...Array(height)].map((_, y) => Array(width).map((_, x) => fnTile({ x, y })));
   }
 
-  fillRectWithAttributes = ({ x, y, width, height, cellName, attributes = { isBlocked: true } }) => {
+  fillTilesInRect = ({ x, y, width, height, fnTile = _ => { } }) => {
     for (let ny = y; ny < (y + height); ny++)
       for (let nx = x; nx < (x + width); nx++) {
-        this.map[ny][nx] = { cellName, ...attributes };
+        this.map[ny][nx] = fnTile({ nx, ny });
       }
   }
 
+  putTile = tile => this.map[tile.y][tile.x] = tile;
 
   putTileWithAttributes = ({ x, y, cellName, attributes = {} }) => {
     if (this.map[y][x].prim) this.map[y][x].prim.texture = this.core.getTexture(cellName);
@@ -144,6 +125,9 @@ class MP_AutoMap {
   isBlocked = (x, y) => this.map[y][x].isBlocked;
   isBlockedTile = (x, y) => this.map[y][x].isBlocked ? this.map[y][x] : false;
   isActionTile = (x, y) => this.map[y][x].isAction ? this.map[y][x] : false;
+
+  getTile = (x, y) => this.map[y][x];
+
   update = _ => {
     const { core: { input }/*, mapContainer */ } = this;
     // const step = 4 * delta;

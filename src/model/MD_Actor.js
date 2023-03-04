@@ -46,6 +46,10 @@ class MD_Actor {
 
   // フレーム更新のupdate前に呼ばれる
   beforeUpdate = _ => {
+    if( this.status.respawn ){ // respawn時は値を初期化しない。
+      this.status.respawn = false;
+      return;
+    }
     this.status.stay = false;
     this.status.virtualX = this.status.mapX;
     this.status.virtualY = this.status.mapY;

@@ -28,36 +28,51 @@ class SP_Player {
   respawn = _ => {
     const { x, y } = this.mainMap.getRespawnPosition();
     this.playerData.status.hp = this.playerData.status.maxHp;
-    this.playerData.status.mapX = x;
-    this.playerData.status.mapY = y;
-    this.mainMap.center(this.playerData.status.mapX, this.playerData.status.mapY);
+    this.playerData.status.virtualX = x;
+    this.playerData.status.virtualY = y;
+    this.playerData.status.stay = true;
+    this.playerData.status.respawn = true;
+    this.moveConfirmed(x,y);
   }
 
 
   diceRoll = diceText => this.core.diceRoll(diceText);
 
-  trappedIn = ({
-    dmg,
-    difficulty
-  }) => {
+  trappedIn = ({dmg,difficulty,name}) => {
+    const { core: { addText }} = this;
     const s = this.diceRoll("1d20") + 0; //Todo
-    return (difficulty <= s) ? 0 : this.diceRoll(dmg);
+    const point = (difficulty <= s) ? 0 : this.diceRoll(dmg);
+    if(point){
+      addText(`ウップス!!  ${name}という、罠にハマった！`);
+      this.applyDamage(point);
+      return true;
+    }
+    return false;
   }
 
-  hit = dmg => {
-    const hp = this.playerData.status.hp - dmg;
+  applyDamage = point => {
+    const { core: { addText }} = this;
+    addText(`いてえ！  ${point} ポイントのダメージをくらった！`);
+    const hp = this.playerData.status.hp - point;
     this.playerData.status.hp = Math.max(hp, 0);
     if (hp < 1) {
-      this.core.addText(`し  ん  だ  よ`);
+      addText(`し  ん  だ  よ`);
       this.respawn();
       return true;
     }
     return false;
   }
 
+  moveConfirmed = (x,y)=>{
+    const { mainMap,playerData } = this;
+    playerData.moveConfirmed();
+    // センタリング
+    mainMap.center(x, y);
+  }
+
 
   update = (/*delta*/) => {
-    const { core: { input, handleStepUpdate, addText }, mainMap,
+    const { core: { input, handleStepUpdate /*, addText*/ }, mainMap,
       playerData:
       { beforeUpdate,
         isLock,
@@ -65,7 +80,6 @@ class SP_Player {
         lock,
         trialMove,
         isMove,
-        moveConfirmed,
         stay,
         status
       },
@@ -93,52 +107,9 @@ class SP_Player {
     const { virtualX: vx, virtualY: vy } = status;
     status.steps++;
     handleStepUpdate(vx, vy);
-    const blockedTile = mainMap.isBlockedTile(vx, vy);
-    if (blockedTile) {
-      const { type = 'unknown', item, open = _ => { }, hitStep = 0, close = false } = blockedTile;
-      if (type === 'chest') {
-        if (hitStep + 1 == status.steps) {
-          if (item) {
-            status.items.push(item);
-            addText(`${item.itemName}をGETした！`);
-            open();
-          } else {
-            addText(`からっぽだ！`);
-          }
-        } else {
-          addText(`宝箱だ！`);
-        }
-      } else if (type === 'door') {
-        if (hitStep + 1 == status.steps && close) {
-          addText(`ドアを開けた！`);
-          open();
-        } else {
-          this.core.addText(`しまった！ 閉まったドアだ！`);
-        }
-      }
-      blockedTile.hitStep = status.steps;
-    } else {
-      moveConfirmed(); //移動確定
-      mainMap.center(vx, vy);
-      const actionTile = mainMap.isActionTile(vx, vy);
-      if (actionTile) {
-        const { type = 'unknown', trap } = actionTile;
-        if (type === 'trap') {
-          addText(`ウップス!!  ${trap.name}という、罠にハマった！`);
-          const dmg = this.trappedIn(trap);
-          if (dmg) {
-            mainMap.putTileWithAttributes({ x: vx, y: vy, cellName: 'dngn_trap_magical', attributes: { type: 'floor' } })
-            addText(`いてぇ。 ${dmg} ポイントのダメージをくらった！`);
-            if (this.hit(dmg)) return;//しんだ
-          } else {
-            addText(`しかし、発動前にヒョイっと避けた！`);
-          }
-        }
-      }
-    }
+    const tile = mainMap.getTile(vx, vy);
+    tile.hit({actor:this,status}) ||  this.moveConfirmed(vx,vy);
   }
-
-
 }
 
 export default SP_Player;
