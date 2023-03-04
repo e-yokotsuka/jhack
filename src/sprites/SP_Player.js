@@ -110,12 +110,12 @@ class SP_Player {
     sprite.y = mainMap.mapContainer.y + status.mapY * 32;
     if (!isMove()) return; // 動いていない
     // 動いた
+    afterUpdate();
     const { virtualX: vx, virtualY: vy } = status;
     status.steps++;
     handleStepUpdate(vx, vy);
     const tile = mainMap.getTile(vx, vy);
     tile.hit({ actor: this, status }) || this.moveConfirmed(vx, vy);
-    afterUpdate();
   }
 }
 
