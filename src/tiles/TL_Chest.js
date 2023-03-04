@@ -18,7 +18,9 @@ class TL_Chest extends TL_Common {
         this.changeTexture(`chest2_open`);
         this.item = null;
         status.items.push(item);
+        const itemList = status.items.map(({itemName})=>itemName).join('\n')
         addText(`${item.itemName}をGETした！`);
+        addText(`${itemList}`);
       } else {
         this.hitStep = status.steps;
         addText(`宝箱だ！`);

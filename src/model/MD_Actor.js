@@ -42,18 +42,25 @@ class MD_Actor {
   isLock = _ => this.status.lock;
 
   // 動いたか？
-  isMove = _ => (this.status.stay || this.status.virtualX !== this.status.mapX || this.status.virtualY !== this.status.mapY)
+  isMove = _ => (
+    this.status.force_update 
+    || this.status.stay 
+    || this.status.virtualX !== this.status.mapX 
+    || this.status.virtualY !== this.status.mapY)
 
   // フレーム更新のupdate前に呼ばれる
   beforeUpdate = _ => {
-    if( this.status.respawn ){ // respawn時は値を初期化しない。
-      this.status.respawn = false;
-      return;
-    }
+    // 強制アップデート時は位置と状態を初期化しない。
+    if( this.status.force_update ) return;
     this.status.stay = false;
     this.status.virtualX = this.status.mapX;
     this.status.virtualY = this.status.mapY;
   }
+
+    // フレーム更新のupdate後に呼ばれる
+    afterUpdate = _ => {
+      this.status.force_update = false;
+    }
 
 
 }

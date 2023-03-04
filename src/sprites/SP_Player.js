@@ -28,21 +28,26 @@ class SP_Player {
   respawn = _ => {
     const { x, y } = this.mainMap.getRespawnPosition();
     this.playerData.status.hp = this.playerData.status.maxHp;
+    this.move(x, y);
+  }
+
+  move = (x, y) => {
     this.playerData.status.virtualX = x;
     this.playerData.status.virtualY = y;
     this.playerData.status.stay = true;
-    this.playerData.status.respawn = true;
-    this.moveConfirmed(x,y);
+    this.playerData.status.force_update = true;
+    this.moveConfirmed(x, y);
   }
+
 
 
   diceRoll = diceText => this.core.diceRoll(diceText);
 
-  trappedIn = ({dmg,difficulty,name}) => {
-    const { core: { addText }} = this;
+  trappedIn = ({ dmg, difficulty, name }) => {
+    const { core: { addText } } = this;
     const s = this.diceRoll("1d20") + 0; //Todo
     const point = (difficulty <= s) ? 0 : this.diceRoll(dmg);
-    if(point){
+    if (point) {
       addText(`ウップス!!  ${name}という、罠にハマった！`);
       this.applyDamage(point);
       return true;
@@ -51,7 +56,7 @@ class SP_Player {
   }
 
   applyDamage = point => {
-    const { core: { addText }} = this;
+    const { core: { addText } } = this;
     addText(`いてえ！  ${point} ポイントのダメージをくらった！`);
     const hp = this.playerData.status.hp - point;
     this.playerData.status.hp = Math.max(hp, 0);
@@ -63,8 +68,8 @@ class SP_Player {
     return false;
   }
 
-  moveConfirmed = (x,y)=>{
-    const { mainMap,playerData } = this;
+  moveConfirmed = (x, y) => {
+    const { mainMap, playerData } = this;
     playerData.moveConfirmed();
     // センタリング
     mainMap.center(x, y);
@@ -75,6 +80,7 @@ class SP_Player {
     const { core: { input, handleStepUpdate /*, addText*/ }, mainMap,
       playerData:
       { beforeUpdate,
+        afterUpdate,
         isLock,
         unlock,
         lock,
@@ -108,7 +114,8 @@ class SP_Player {
     status.steps++;
     handleStepUpdate(vx, vy);
     const tile = mainMap.getTile(vx, vy);
-    tile.hit({actor:this,status}) ||  this.moveConfirmed(vx,vy);
+    tile.hit({ actor: this, status }) || this.moveConfirmed(vx, vy);
+    afterUpdate();
   }
 }
 

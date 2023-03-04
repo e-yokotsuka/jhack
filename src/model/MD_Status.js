@@ -21,7 +21,7 @@ const MD_Status = ({
   cha = 0,
   gender = MS_Gender.male.value,
   race = MS_Race.human,
-  respawn = false
+  force_update = false
 }) => ({
   lv,
   exp,
@@ -55,6 +55,6 @@ const MD_Status = ({
     white: {}
   },
   steps: 0,//歩数
-  respawn,
+  force_update,
 });
 export default MD_Status;
