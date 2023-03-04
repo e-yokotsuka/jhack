@@ -43,24 +43,24 @@ class MD_Actor {
 
   // 動いたか？
   isMove = _ => (
-    this.status.force_update 
-    || this.status.stay 
-    || this.status.virtualX !== this.status.mapX 
+    this.status.force_update
+    || this.status.stay
+    || this.status.virtualX !== this.status.mapX
     || this.status.virtualY !== this.status.mapY)
 
   // フレーム更新のupdate前に呼ばれる
   beforeUpdate = _ => {
     // 強制アップデート時は位置と状態を初期化しない。
-    if( this.status.force_update ) return;
+    if (this.status.force_update) return;
     this.status.stay = false;
     this.status.virtualX = this.status.mapX;
     this.status.virtualY = this.status.mapY;
   }
 
-    // フレーム更新のupdate後に呼ばれる
-    afterUpdate = _ => {
-      this.status.force_update = false;
-    }
+  // フレーム更新のupdate後に呼ばれる
+  afterUpdate = _ => {
+    this.status.force_update = false;
+  }
 
 
 }
