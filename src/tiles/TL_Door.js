@@ -11,6 +11,7 @@ class TL_Door extends TL_Common {
 
     // eslint-disable-next-line no-unused-vars
     hit = ({actor=null,status}) => {
+        if( !this.close ) return this.isBlocked;
         const { core: { addText },close,hitStep} = this;
         if (hitStep + 1 == status.steps && close) {
             this.close = false;
