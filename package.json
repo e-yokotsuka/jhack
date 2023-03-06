@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "@pixi/sound": "^5.0.0",
+    "@pixi/ui": "^0.5.8",
     "pixi.js": "^7.1.0",
     "stats.js": "^0.17.0"
   },
