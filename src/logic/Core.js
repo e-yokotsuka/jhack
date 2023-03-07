@@ -7,6 +7,7 @@ import SP_Player from '../sprites/SP_Player';
 import Stats from 'stats.js';
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
+import UI_Window from '../ui/UI_Window';
 import diceRoll from '../tools/Calc';
 
 class Core {
@@ -25,6 +26,7 @@ class Core {
     dom.appendChild(this.app.view);
     this.loaded = false;
     this.mainScale = 1;
+    this.isWindowOpen = false;
   }
 
   resize = _ => {
@@ -48,6 +50,7 @@ class Core {
   Start = async _ => {
     const { app, stats, loaded, mainScale } = this;
     console.assert(loaded, 'Resource not loaded.');
+    this.input = new Input();
     this.mainMap = new MP_AutoMap({ core: this }); 0
     const { height: canvasHeight } = this.getCanvasSize();
     const text = new Text('よくぞいらした。\nここムーリダヤ・メタインでは\n恐ろしき魔物との戦いが数千年にわたって繰り広げられている。', {
@@ -66,18 +69,19 @@ class Core {
     keytext.x = 0;
     keytext.y = 0;
 
-    this.input = new Input();
     app.stage.addChild(text);
     this.player = new SP_Player({ core: this });
     this.player.respawn();
     this.monster = new SP_Monster({ core: this });
     this.monster.respawn();
-    
+
     this.uiStatus = new UI_Status({ core: this });
     app.stage.addChild(this.uiStatus.getPrim());
     this.uiMessageBox = new UI_MessageBox({ core: this });
     app.stage.addChild(this.uiMessageBox.getPrim());
 
+    this.uiWindow = new UI_Window({ core: this });
+    app.stage.addChild(this.uiWindow.getPrim());
 
     window.addEventListener('resize', this.resize);
     this.resize();
@@ -97,6 +101,7 @@ class Core {
       this.player.update(delta);
       this.monster.update(delta);
       this.uiMessageBox.update(delta);
+      this.uiWindow.update(delta);
       stats.end();
     });
   }
@@ -106,6 +111,8 @@ class Core {
 
   addText = text => this.uiMessageBox.addText(text);
   getTexture = texName => this.textures.tx_main[texName];
+
+  windowOpen = isOpen => this.isWindowOpen = isOpen;
 
   diceRoll = diceText => diceRoll(diceText);
 
