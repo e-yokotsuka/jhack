@@ -5,9 +5,9 @@ import MP_AutoMap from '../map/MP_AutoMap';
 import SP_Monster from '../sprites/SP_Monster';
 import SP_Player from '../sprites/SP_Player';
 import Stats from 'stats.js';
+import UI_MainWindow from '../ui/UI_MainWindow';
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
-import UI_Window from '../ui/UI_Window';
 import diceRoll from '../tools/Calc';
 
 class Core {
@@ -80,7 +80,7 @@ class Core {
     this.uiMessageBox = new UI_MessageBox({ core: this });
     app.stage.addChild(this.uiMessageBox.getPrim());
 
-    this.uiWindow = new UI_Window({ core: this });
+    this.uiWindow = new UI_MainWindow({ core: this });
     app.stage.addChild(this.uiWindow.getPrim());
 
     window.addEventListener('resize', this.resize);

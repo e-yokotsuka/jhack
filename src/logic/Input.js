@@ -8,6 +8,7 @@ class Input {
   }
 
   okKeyDown = e => {
+    console.log(`'${e.key}'`)
     this.keyStatus[e.key] = {
       down: true,
       isSingleDown: true
