@@ -3,6 +3,7 @@ import { Container, Graphics, Text } from 'pixi.js';
 const CELL_SIZE = 32;
 class UI_Window {
   constructor({ core, x = 0, y = 0, menu = [{ label: "menu1", action: _ => { } }, { label: "menu2", action: _ => { } }], parent = null }) {
+    this.isOpen = false;
     this.core = core;
     this.parent = parent;
     this.children = []; 
@@ -14,11 +15,11 @@ class UI_Window {
     this.isLock = false;
     this.inputMap = {
       'o': _ => !this.isOpen ? this.open() : this.close(),
-      'w': _ => this.up(),
-      's': _ => this.down(),
-      ' ': _ => this.selected(),
-      'ArrowUp': _ => this.up(),
-      'ArrowDown': _ => this.down(),
+      'w': _ => this.isOpen && this.up(),
+      's': _ => this.isOpen && this.down(),
+      ' ': _ => this.isOpen && this.selected(),
+      'ArrowUp': _ => this.isOpen && this.up(),
+      'ArrowDown': _ => this.isOpen && this.down(),
     };
     this.setMenu(menu);
   }
@@ -82,6 +83,7 @@ class UI_Window {
   close = _ => {
     this.prim.removeChildren();
     this.isOpen = false;
+    this.isLock = false;
   }
 
   lock = _ => this.isLock = true;
@@ -96,6 +98,7 @@ class UI_Window {
   }
 
   selectUpdate = select => {
+    if( !this.isOpen ) return;
     this.select = select;
     this.cursol.y = this.select * CELL_SIZE + 4;
     console.log(select)
