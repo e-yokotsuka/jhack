@@ -2,13 +2,16 @@ import { Container, Graphics, Text } from 'pixi.js';
 
 const CELL_SIZE = 32;
 class UI_Window {
-  constructor({ core ,menu=[{label:"menu1",action:_=>{}},{label:"menu2",action:_=>{}}]}) {
+  constructor({ core, x = 0, y = 0, menu = [{ label: "menu1", action: _ => { } }, { label: "menu2", action: _ => { } }], parent = null }) {
     this.core = core;
+    this.parent = parent;
+    this.children = []; 
     const container = new Container();
     this.prim = container;
     this.oldKeymap = [];
-    this.x = CELL_SIZE;
-    this.y = CELL_SIZE;
+    this.x = x;
+    this.y = y;
+    this.isLock = false;
     this.inputMap = {
       'o': _ => !this.isOpen ? this.open() : this.close(),
       'w': _ => this.up(),
@@ -17,7 +20,11 @@ class UI_Window {
       'ArrowUp': _ => this.up(),
       'ArrowDown': _ => this.down(),
     };
-    const labels = menu.map(({label})=>label);
+    this.setMenu(menu);
+  }
+
+  setMenu = menu => {
+    const labels = menu.map(({ label }) => label);
     this.menuText = labels.join("\n");
     this.menuLength = labels.length;
     this.longest = labels.reduce((acc, str) => {
@@ -27,14 +34,14 @@ class UI_Window {
     this.select = 0;
   }
 
-  selected = _=>{
-    const {isOpen,menu,select} = this;
-    if(!isOpen) return;
+  selected = _ => {
+    const { isOpen, menu, select } = this;
+    if (!isOpen) return;
     menu[select].action()
   }
 
   open = _ => {
-    const { core: { windowOpen }, menuText, menuLength } = this;
+    const { menuText, menuLength } = this;
 
     const container = this.prim;
     const text = new Text(menuText, {
@@ -51,7 +58,7 @@ class UI_Window {
     const panel = new Graphics();
     panel.lineStyle(2, 0xFF00FF, 1);
     panel.beginFill(0x650A5A, 0.25);
-    panel.drawRoundedRect(this.x, this.y, this.w, this.h+4, 4);
+    panel.drawRoundedRect(this.x, this.y, this.w, this.h + 4, 4);
     panel.endFill();
 
     container.addChild(panel)
@@ -59,7 +66,7 @@ class UI_Window {
 
     const cursol = new Graphics();
     cursol.lineStyle(2, 0xFFFFFF, 1);
-    cursol.drawRoundedRect(this.x+2, this.y, this.w-4, CELL_SIZE, 2);
+    cursol.drawRoundedRect(this.x + 2, this.y, this.w - 4, CELL_SIZE, 2);
     container.addChild(cursol)
 
     this.text = text;
@@ -67,20 +74,26 @@ class UI_Window {
     this.cursol = cursol;
     this.isOpen = true;
     this.selectUpdate(this.select);
-    // coreにWindowの開閉状態を通知しておく
-    windowOpen(this.isOpen);
 
   }
+
+  leftSideX = _=> this.x + this.w;
 
   close = _ => {
-    const { windowOpen } = this.core;
     this.prim.removeChildren();
     this.isOpen = false;
-    // coreにWindowの開閉状態を通知しておく
-    windowOpen(this.isOpen);
   }
 
+  lock = _ => this.isLock = true;
+  unlock = _ => this.isLock = false;
+  parentUnlock = _ => this.parent && this.parent.unlock();
+
   getPrim = _ => this.prim;
+
+  addChild(child) {
+    this.children.push(child);
+    this.prim.addChild(child.getPrim());
+  }
 
   selectUpdate = select => {
     this.select = select;
@@ -98,7 +111,8 @@ class UI_Window {
 
   update = (/*delta*/) => {
     const { input } = this.core;
-    const { inputMap, oldKeymap, singleUpdate } = this;
+    const { inputMap, oldKeymap, children,singleUpdate} = this;
+    children.forEach(c => c.update());
     const newMap = Object.keys(inputMap).map(key => input.isSingleDown(key)).join(',');
     if (oldKeymap === newMap) return;
     singleUpdate();
@@ -108,8 +122,9 @@ class UI_Window {
   // キーが押された時に更新される
   singleUpdate = (/*delta*/) => {
     console.log("window key input")
-    const { inputMap, core: { input } } = this;
+    const { inputMap, core: { input },isLock } = this;
     const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
+    if (isLock) return;
     if (key) inputMap[key]();
   }
 }

@@ -75,6 +75,7 @@ class SP_Player {
     mainMap.center(x, y);
   }
 
+  getItems = _=> this.playerData.status.items;
 
   update = (/*delta*/) => {
     const { core: { input, handleStepUpdate /*, addText*/ }, mainMap,
