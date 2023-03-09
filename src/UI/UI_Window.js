@@ -14,7 +14,7 @@ class UI_Window {
     this.inputMap = {
       'w': _ => this.up(),
       's': _ => this.down(),
-      ' ': _ => this.selected(),
+      'ArrowRight': _ => this.selected(),
       'ArrowUp': _ => this.up(),
       'ArrowDown': _ => this.down(),
     };

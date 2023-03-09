@@ -14,7 +14,8 @@ class UI_WindowManager {
         this.prim = container;
         this.windows.forEach((w,i)=>container.addChildAt(w.getPrim(),i));
         this.inputMap = {
-            'Escape': _ => core.isWindowOpen? this.close():this.open(),
+            'e': _ => core.isWindowOpen? this.close():this.open(),
+            'ArrowLeft': _ => core.isWindowOpen && this.close(),
         };
     }
 

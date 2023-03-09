@@ -8,10 +8,10 @@ class UI_ItemWindow extends UI_Window {
             maxlabels:10,
         });
         this.inputMap = {
-            'Escape': _ => this.isOpen && this.core.uiWindowManager.closeItemMenu(),
+            'ArrowLeft': _ => this.isOpen && this.core.uiWindowManager.closeItemMenu(),
             'w': _ => this.up(),
             's': _ => this.down(),
-            ' ': _ => this.selected(),
+            'ArrowRight': _ => this.selected(),
             'ArrowUp': _ => this.up(),
             'ArrowDown': _ => this.down(),      
         };
