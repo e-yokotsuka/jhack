@@ -78,22 +78,19 @@ class SP_Player {
   getItems = _=> this.playerData.status.items;
 
   update = (/*delta*/) => {
-    const { core: { input, handleStepUpdate /*, addText*/ }, mainMap,
+    const { core: { input, handleStepUpdate ,isWindowOpen,/*, addText*/ }, mainMap,
       playerData:
       { beforeUpdate,
         afterUpdate,
-        isLock,
-        unlock,
-        lock,
         trialMove,
         isMove,
         stay,
         status
       },
       sprite } = this;
+    if( isWindowOpen ) return;
     beforeUpdate();
     const inputMap = {
-      'o': _ => isLock() ? unlock() : lock(),
       'w': _ => trialMove('u'),
       's': _ => trialMove('d'),
       'a': _ => trialMove('l'),

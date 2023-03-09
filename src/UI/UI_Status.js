@@ -6,7 +6,9 @@ const STATUS_RELATIVE_Y = -40;
 
 class UI_Status {
 
-  constructor({ core: { player, app: { screen: { height } } } }) {
+  constructor({ core }) {
+    const { player, app: { screen: { height } } } = core;
+    this.core = core;
     this.player = player;
     this.prim = new Text('', {
       fontSize: 20,
@@ -25,8 +27,9 @@ class UI_Status {
   } 
 
   update = _ => {
-    const { hp, maxHp, mp, maxMp, mapX, mapY, steps, lock } = this.player.playerData.status;
-    this.prim.text = `HP:${hp}/${maxHp} MP: ${mp}/${maxMp} STEP ${steps} : (${mapX},${mapY}) : locked:${lock} `;
+    const { hp, maxHp, mp, maxMp, mapX, mapY, steps } = this.player.playerData.status;
+    const { isWindowOpen } = this.core;
+    this.prim.text = `HP:${hp}/${maxHp} MP: ${mp}/${maxMp} STEP ${steps} : (${mapX},${mapY}) : locked:${isWindowOpen} `;
   }
 
 }

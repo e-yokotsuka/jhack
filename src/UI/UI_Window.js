@@ -2,24 +2,21 @@ import { Container, Graphics, Text } from 'pixi.js';
 
 const CELL_SIZE = 32;
 class UI_Window {
-  constructor({ core, x = 0, y = 0, menu = [{ label: "menu1", action: _ => { } }, { label: "menu2", action: _ => { } }], parent = null }) {
+  constructor({ core, x = 0, y = 0, menu = [{ label: "menu1", action: _ => { } }, { label: "menu2", action: _ => { } }] }) {
     this.isOpen = false;
     this.core = core;
-    this.parent = parent;
-    this.children = []; 
     const container = new Container();
     this.prim = container;
     this.oldKeymap = [];
     this.x = x;
     this.y = y;
-    this.isLock = false;
+    this.isLock = true;
     this.inputMap = {
-      'o': _ => !this.isOpen ? this.open() : this.close(),
-      'w': _ => this.isOpen && this.up(),
-      's': _ => this.isOpen && this.down(),
-      ' ': _ => this.isOpen && this.selected(),
-      'ArrowUp': _ => this.isOpen && this.up(),
-      'ArrowDown': _ => this.isOpen && this.down(),
+      'w': _ => this.up(),
+      's': _ => this.down(),
+      ' ': _ => this.selected(),
+      'ArrowUp': _ => this.up(),
+      'ArrowDown': _ => this.down(),
     };
     this.setMenu(menu);
   }
@@ -33,6 +30,8 @@ class UI_Window {
     }, 0);
     this.menu = menu;
     this.select = 0;
+    this.w = CELL_SIZE * this.longest + 16;
+    this.h = CELL_SIZE * this.menuLength + 4;
   }
 
   selected = _ => {
@@ -41,10 +40,11 @@ class UI_Window {
     menu[select].action()
   }
 
-  open = _ => {
-    const { menuText, menuLength } = this;
+  open() {
+    const { menuText } = this;
 
     const container = this.prim;
+    container.removeChildren();
     const text = new Text(menuText, {
       fontSize: 28,
       fill: 0xffffff,
@@ -53,8 +53,6 @@ class UI_Window {
     });
     text.setTransform(this.x + 8, this.y + 4)
 
-    this.w = CELL_SIZE * this.longest + 16;
-    this.h = CELL_SIZE * menuLength + 4;
 
     const panel = new Graphics();
     panel.lineStyle(2, 0xFF00FF, 1);
@@ -74,31 +72,23 @@ class UI_Window {
     this.panel = panel;
     this.cursol = cursol;
     this.isOpen = true;
-    this.selectUpdate(this.select);
-
+    this.unLock();
   }
 
   leftSideX = _=> this.x + this.w;
 
-  close = _ => {
+  close() {
     this.prim.removeChildren();
     this.isOpen = false;
-    this.isLock = false;
+    this.lock();
   }
 
   lock = _ => this.isLock = true;
-  unlock = _ => this.isLock = false;
-  parentUnlock = _ => this.parent && this.parent.unlock();
+  unLock = _ => this.isLock = false;
 
   getPrim = _ => this.prim;
 
-  addChild(child) {
-    this.children.push(child);
-    this.prim.addChild(child.getPrim());
-  }
-
   selectUpdate = select => {
-    if( !this.isOpen ) return;
     this.select = select;
     this.cursol.y = this.select * CELL_SIZE + 4;
     console.log(select)
@@ -112,22 +102,21 @@ class UI_Window {
     this.selectUpdate(this.select >= this.menuLength - 1 ? this.select = 0 : this.select + 1);
   }
 
-  update = (/*delta*/) => {
+  update = (delta) => {
     const { input } = this.core;
-    const { inputMap, oldKeymap, children,singleUpdate} = this;
-    children.forEach(c => c.update());
+    const { inputMap, oldKeymap,isLock,singleUpdate} = this;
+    if( isLock ) return;
     const newMap = Object.keys(inputMap).map(key => input.isSingleDown(key)).join(',');
     if (oldKeymap === newMap) return;
-    singleUpdate();
+    singleUpdate(delta);
     this.oldKeymap = Object.keys(inputMap).map(key => input.isSingleDown(key)).join(',');
   }
 
   // キーが押された時に更新される
   singleUpdate = (/*delta*/) => {
     console.log("window key input")
-    const { inputMap, core: { input },isLock } = this;
+    const { inputMap, core: { input }} = this;
     const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
-    if (isLock) return;
     if (key) inputMap[key]();
   }
 }
