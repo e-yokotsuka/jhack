@@ -73,6 +73,7 @@ class UI_Window {
     this.cursol = cursol;
     this.isOpen = true;
     this.unLock();
+    this.selectUpdate(this.select);
   }
 
   leftSideX = _=> this.x + this.w;
@@ -89,6 +90,7 @@ class UI_Window {
   getPrim = _ => this.prim;
 
   selectUpdate = select => {
+    if(!this.isOpen) return;
     this.select = select;
     this.cursol.y = this.select * CELL_SIZE + 4;
     console.log(select)

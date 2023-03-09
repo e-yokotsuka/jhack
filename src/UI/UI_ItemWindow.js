@@ -2,7 +2,23 @@ import UI_Window from "./UI_Window";
 
 class UI_ItemWindow extends UI_Window {
     constructor({ core ,x=0,y=0}) {
-        const items = core.player.getItems();
+        super({
+            core,
+            x,y,
+            maxlabels:10,
+        });
+        this.inputMap = {
+            'Escape': _ => this.isOpen && this.core.uiWindowManager.closeItemMenu(),
+            'w': _ => this.up(),
+            's': _ => this.down(),
+            ' ': _ => this.selected(),
+            'ArrowUp': _ => this.up(),
+            'ArrowDown': _ => this.down(),      
+        };
+    }
+
+    open(){
+        const items = this.core.player.getItems();
         const menu = items.length? items.map(({itemName}) => ({
             label:itemName,
             action: _ => {
@@ -16,12 +32,14 @@ class UI_ItemWindow extends UI_Window {
                 uiWindowManager.closeItemMenu();
             }
         }];
-        super({
-            core,
-            x,y,
-            maxlabels:10,
-        });
         this.setMenu(menu);
+        super.open();
+    }
+
+    update = (/*delta*/) => {
+        const { core:{ input },inputMap } = this;   
+        const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
+        if (key) inputMap[key]();
     }
 }
 

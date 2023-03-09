@@ -14,7 +14,7 @@ class UI_WindowManager {
         this.prim = container;
         this.windows.forEach((w,i)=>container.addChildAt(w.getPrim(),i));
         this.inputMap = {
-            'o': _ => core.isWindowOpen? this.close():this.open(),
+            'Escape': _ => core.isWindowOpen? this.close():this.open(),
         };
     }
 
@@ -36,14 +36,14 @@ class UI_WindowManager {
 
 
     close = _ => {
-        this.mainWindow.close();
+        this.itemWindow.isOpen || this.mainWindow.close();
     }
 
     update = delta => {
         const { core:{ input },inputMap } = this;   
         const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
-        if (key) inputMap[key]();   
-        this.windows.forEach((w)=>w.update(delta));   
+        if (key) inputMap[key]();
+        this.windows.reverse().forEach((w)=>w.update(delta));   
     }
 }
 
