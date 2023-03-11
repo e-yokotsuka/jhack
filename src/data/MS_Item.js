@@ -1,5 +1,5 @@
 const ITEM_TYPE = {
-  potion: 'potion',
+  recovery: 'recovery',
   weapon: 'weapon',
   armour: 'armour',
 }
