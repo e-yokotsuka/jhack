@@ -7,7 +7,6 @@ class IL_Recovery extends IL_Common {
     }
 
     use = target=> {
-        super.use();
         const { value } = this.item;
         const { itemName } = this.item;
         const {status,healHp} = target;

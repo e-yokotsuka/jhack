@@ -7,7 +7,8 @@ class IL_Common {
     }
 
     use(/*target*/){
-        console.warn(`Logic is not implemented. - ${this.itemName}`);
+        const {itemName} = this.item;
+        this.addText(`うーん、${itemName}は使うもんじゃぁないな`);
     }
 
     addText  = text => this.core.addText(text);
