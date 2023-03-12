@@ -69,7 +69,6 @@ class Core {
     keytext.x = 0;
     keytext.y = 0;
 
-    app.stage.addChild(text);
     this.player = new SP_Player({ core: this });
     this.player.respawn();
     this.monster = new SP_Monster({ core: this });
@@ -85,6 +84,7 @@ class Core {
 
     window.addEventListener('resize', this.resize);
     this.resize();
+    app.stage.addChild(text);
 
     app.ticker.add((delta) => {
       stats.begin();
@@ -95,7 +95,7 @@ class Core {
       this.mainMap.update(delta);
       keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z']);
       this.uiStatus.update();
-      text.y -= delta * 0.2;
+      text.y -= delta * 1;
       text.y = Math.max(text.y, 0);
       text.x = (canvasWidth - text.width) / 2;
       this.player.update(delta);
