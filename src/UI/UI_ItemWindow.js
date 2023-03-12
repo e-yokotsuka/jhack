@@ -8,7 +8,7 @@ class UI_ItemWindow extends UI_Window {
             maxlabels:10,
         });
         this.inputMap = {
-            'ArrowLeft': _ => this.isOpen && this.core.uiWindowManager.closeItemMenu(),
+            'ArrowLeft': _ => this.closeMenu(),
             'w': _ => this.up(),
             's': _ => this.down(),
             'ArrowRight': _ => this.selected(),
@@ -17,12 +17,17 @@ class UI_ItemWindow extends UI_Window {
         };
     }
 
+    closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeItemMenu()
+
     open(){
         const items = this.core.player.getItems();
-        const menu = items.length? items.map(({itemName}) => ({
-            label:itemName,
+        const menu = items.length? items.map((item,index) => ({
+            label:item.itemName,
             action: _ => {
-                console.log(itemName)
+                const logic = new item.itemLogicClass(this.core,item);
+                const used = logic.use(this.core.getPlayer());
+                if(used) this.core.player.itemUsed(item,index);
+                this.closeMenu();
             }
         })):[{
             label:"なにも持っていない！",

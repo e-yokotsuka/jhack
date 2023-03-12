@@ -2,13 +2,13 @@ import MD_Status from "./MD_Status";
 
 class MD_Actor {
   constructor(status) {
-    this.status = MD_Status({ ...status });
+    Object.keys(MD_Status({ ...status })).forEach(key=>this[key]=status[key]);
   }
 
   //仮の移動を行う
   trialMove = (direction = '.') => {
-    if (this.status.lock) return; //ロック中(UI表示中など)は、移動不可
-    const { mapX, mapY } = this.status;
+    if (this.lock) return; //ロック中(UI表示中など)は、移動不可
+    const { mapX, mapY } = this;
     let virtualX = mapX;
     let virtualY = mapY;
 
@@ -21,48 +21,47 @@ class MD_Actor {
     }
     console.assert(f[direction], `The specified movement direction code '${direction}' does not exist. `)
     f[direction]?.()
-    this.status.virtualX = virtualX;
-    this.status.virtualY = virtualY;
+    this.virtualX = virtualX;
+    this.virtualY = virtualY;
   }
 
   //移動確定
   moveConfirmed = _ => {
-    this.status.mapX = this.status.virtualX;
-    this.status.mapY = this.status.virtualY;
+    this.mapX = this.virtualX;
+    this.mapY = this.virtualY;
   }
 
   // とどまる
-  stay = _ => this.status.lock ? null : this.status.stay = true;
+  stay = _ => this.lock ? null : this.stay = true;
 
   //ロック
-  lock = _ => this.status.lock = true;
+  lock = _ => this.lock = true;
   //ロック解除
-  unlock = _ => this.status.lock = false;
+  unlock = _ => this.lock = false;
   //ロック状態
-  isLock = _ => this.status.lock;
+  isLock = _ => this.lock;
 
   // 動いたか？
   isMove = _ => (
-    this.status.force_update
-    || this.status.stay
-    || this.status.virtualX !== this.status.mapX
-    || this.status.virtualY !== this.status.mapY)
+    this.force_update
+    || this.stay
+    || this.virtualX !== this.mapX
+    || this.virtualY !== this.mapY)
 
   // フレーム更新のupdate前に呼ばれる
   beforeUpdate = _ => {
     // 強制アップデート時は位置と状態を初期化しない。
-    if (this.status.force_update) return;
-    this.status.stay = false;
-    this.status.virtualX = this.status.mapX;
-    this.status.virtualY = this.status.mapY;
+    if (this.force_update) return;
+    this.stay = false;
+    this.virtualX = this.mapX;
+    this.virtualY = this.mapY;
   }
 
   // フレーム更新のupdate後に呼ばれる
   afterUpdate = _ => {
-    this.status.force_update = false;
+    this.force_update = false;
   }
-
-
+ 
 }
 
 export default MD_Actor;

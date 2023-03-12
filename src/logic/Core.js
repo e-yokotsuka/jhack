@@ -116,6 +116,8 @@ class Core {
 
   diceRoll = diceText => diceRoll(diceText);
 
+  getPlayer = _=> this.player;
+
   // stepが更新された
   handleStepUpdate = (/* vx, vy*/) => {
     // プレイヤーの動作を行う（移動、アイテム使用、攻撃など）

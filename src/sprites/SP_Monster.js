@@ -1,14 +1,15 @@
 import MD_Monster from '../model/MD_Monster';
+import SP_Actor from './SP_Actor';
 import { Sprite } from 'pixi.js';
 
-class SP_Monster {
+class SP_Monster extends SP_Actor {
 
   constructor({ core, name = "goblin" }) {
-    this.SP_MonsterData = new MD_Monster({
+    const status =  new MD_Monster({
       hp: 15, maxHp: 15,
       mp: 10, maxMp: 10,
     });
-    this.core = core;
+    super(core,status);
     const { textures: { tx_main }, mainMap } = core;
     this.mainMap = mainMap;
     this.mainMap.addResetCallback(_ => {
@@ -19,18 +20,18 @@ class SP_Monster {
     const { stage } = this.core.app;
     stage.addChild(sprite);
     this.sprite = sprite;
-    this.SP_MonsterData.status.mapX = 0;
-    this.SP_MonsterData.status.mapY = 0;
+    this.status.mapX = 0;
+    this.status.mapY = 0;
   }
 
-  getSP_MonsterData = _ => this.SP_MonsterData;
+  getSP_MonsterData = _ => this.status;
 
   respawn = _ => {
     const { x, y } = this.mainMap.getRespawnPosition();
-    this.SP_MonsterData.status.hp = this.SP_MonsterData.status.maxHp;
-    this.SP_MonsterData.status.mapX = x;
-    this.SP_MonsterData.status.mapY = y;
-    // this.mainMap.center(this.SP_MonsterData.status.mapX, this.SP_MonsterData.status.mapY);
+    this.status.hp = this.status.maxHp;
+    this.status.mapX = x;
+    this.status.mapY = y;
+    // this.mainMap.center(this.status.mapX, this.status.mapY);
   }
 
   diceRoll = diceText => this.core.diceRoll(diceText);
@@ -44,8 +45,8 @@ class SP_Monster {
   }
 
   hit = dmg => {
-    const hp = this.SP_MonsterData.status.hp - dmg;
-    this.SP_MonsterData.status.hp = Math.max(hp, 0);
+    const hp = this.status.hp - dmg;
+    this.status.hp = Math.max(hp, 0);
     if (hp < 1) {
       this.core.addText(`し  ん  だ  よ`);
       this.respawn();

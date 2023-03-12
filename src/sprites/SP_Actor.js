@@ -1,9 +1,22 @@
-import { Assets, Sprite } from 'pixi.js';
+class SP_Actor {
+  constructor(core,status){
+    this.core = core;
+    this.status = status;
+  }
 
-const SP_Actor = async () => {
-  const { textures } = await Assets.load('./assets/sprites/atlas.json');
-  const sprite = new Sprite(textures[`pen1.svg`]);
-  return sprite;
+  healHp(){
+    console.warn('healHp')
+  }
+
+  itemUsed(){
+    console.warn('itemUsed')   
+  }
+
+  addText = text=>{
+    const { core: { addText } } = this;
+    addText(text);
+  }
+
 }
 
 export default SP_Actor;

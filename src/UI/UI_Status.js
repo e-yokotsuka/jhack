@@ -27,7 +27,7 @@ class UI_Status {
   } 
 
   update = _ => {
-    const { hp, maxHp, mp, maxMp, mapX, mapY, steps } = this.player.playerData.status;
+    const { hp, maxHp, mp, maxMp, mapX, mapY, steps } = this.player.getPlayerData();
     const { isWindowOpen } = this.core;
     this.prim.text = `HP:${hp}/${maxHp} MP: ${mp}/${maxMp} STEP ${steps} : (${mapX},${mapY}) : locked:${isWindowOpen} `;
   }

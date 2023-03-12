@@ -1,14 +1,15 @@
 import MD_Player from '../model/MD_Player';
+import SP_Actor from './SP_Actor';
 import { Sprite } from 'pixi.js';
 
-class SP_Player {
+class SP_Player extends SP_Actor{
 
   constructor({ core, name = "human" }) {
-    this.playerData = new MD_Player({
+    const status = new MD_Player({
       hp: 15, maxHp: 15,
       mp: 10, maxMp: 10,
     });
-    this.core = core;
+    super(core,status);
     const { textures: { tx_main }, mainMap } = core;
     this.mainMap = mainMap;
     this.mainMap.addResetCallback(_ => {
@@ -19,23 +20,23 @@ class SP_Player {
     const { stage } = this.core.app;
     stage.addChild(sprite);
     this.sprite = sprite;
-    this.playerData.status.mapX = 0;
-    this.playerData.status.mapY = 0;
+    this.status.mapX = 0;
+    this.status.mapY = 0;
   }
 
-  getPlayerData = _ => this.playerData;
+  getPlayerData = _ => this.status;
 
   respawn = _ => {
     const { x, y } = this.mainMap.getRespawnPosition();
-    this.playerData.status.hp = this.playerData.status.maxHp;
+    this.status.hp = this.status.maxHp;
     this.move(x, y);
   }
 
   move = (x, y) => {
-    this.playerData.status.virtualX = x;
-    this.playerData.status.virtualY = y;
-    this.playerData.status.stay = true;
-    this.playerData.status.force_update = true;
+    this.status.virtualX = x;
+    this.status.virtualY = y;
+    this.status.stay = true;
+    this.status.force_update = true;
     this.moveConfirmed(x, y);
   }
 
@@ -44,7 +45,7 @@ class SP_Player {
   diceRoll = diceText => this.core.diceRoll(diceText);
 
   trappedIn = ({ dmg, difficulty, name }) => {
-    const { core: { addText } } = this;
+    const { addText } = this;
     const s = this.diceRoll("1d20") + 0; //Todo
     const point = (difficulty <= s) ? 0 : this.diceRoll(dmg);
     if (point) {
@@ -56,10 +57,10 @@ class SP_Player {
   }
 
   applyDamage = point => {
-    const { core: { addText } } = this;
+    const { addText } = this;
     addText(`いてえ！  ${point} ポイントのダメージをくらった！`);
-    const hp = this.playerData.status.hp - point;
-    this.playerData.status.hp = Math.max(hp, 0);
+    const hp = this.status.hp - point;
+    this.status.hp = Math.max(hp, 0);
     if (hp < 1) {
       addText(`し  ん  だ  よ`);
       this.respawn();
@@ -69,23 +70,38 @@ class SP_Player {
   }
 
   moveConfirmed = (x, y) => {
-    const { mainMap, playerData } = this;
-    playerData.moveConfirmed();
+    const { mainMap, status } = this;
+    status.moveConfirmed();
     // センタリング
     mainMap.center(x, y);
   }
 
-  getItems = _=> this.playerData.status.items;
+  getItems = _=> this.status.items;
+
+  healHp(n,{itemName}){
+    const { addText } = this;
+    const {name,hp,maxHp} = this.status;
+    const oldHp = hp;
+    this.status.hp += n;
+    this.status.hp = Math.min(this.status.hp, maxHp);
+    const point = this.status.hp - oldHp; 
+    addText(`${name} は、${itemName} を使用して ${point} ポイント回復した。\nうまし！`); 
+  }
+
+  // itemを使用したあとの処理
+  itemUsed(item,index){
+    this.status.items.splice(index, 1);
+  }
 
   update = (/*delta*/) => {
     const { core: { input, handleStepUpdate ,isWindowOpen,/*, addText*/ }, mainMap,
-      playerData:
+      status,
+      status:
       { beforeUpdate,
         afterUpdate,
         trialMove,
         isMove,
         stay,
-        status
       },
       sprite } = this;
     if( isWindowOpen ) return;
