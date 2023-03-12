@@ -41,11 +41,10 @@ class UI_ItemWindow extends UI_Window {
         super.open();
     }
 
-    update = (/*delta*/) => {
-        const { core:{ input },inputMap } = this;   
-        const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
-        if (key) inputMap[key]();
+    update = (delta) => {
+        super.update(delta);
     }
+
 }
 
 export default UI_ItemWindow;

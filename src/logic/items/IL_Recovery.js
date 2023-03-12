@@ -10,7 +10,7 @@ class IL_Recovery extends IL_Common {
         const { value } = this.item;
         const { itemName } = this.item;
         const {status,healHp} = target;
-        if( status.maxHp >= status.hp){
+        if( status.maxHp <= status.hp){
             if(Math.random() <= 0.1){
                 this.addText(`無駄に${itemName}を消費した！\nあなたはもっと頭を使うべきだ！`);
                 return true;

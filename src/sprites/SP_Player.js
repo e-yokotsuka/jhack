@@ -78,7 +78,7 @@ class SP_Player extends SP_Actor{
 
   getItems = _=> this.status.items;
 
-  healHp(n,{itemName}){
+  healHp = (n,{itemName}) => {
     const { addText } = this;
     const {name,hp,maxHp} = this.status;
     const oldHp = hp;

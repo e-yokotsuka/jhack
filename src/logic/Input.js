@@ -8,7 +8,8 @@ class Input {
   }
 
   okKeyDown = e => {
-    console.log(`'${e.key}'`)
+    e.preventDefault();
+    // console.log(`DOWN '${e.key}'`)
     this.keyStatus[e.key] = {
       down: true,
       isSingleDown: true
@@ -16,6 +17,8 @@ class Input {
   }
 
   onKeyUp = e => {
+    e.preventDefault();
+    // console.log(`UP '${e.key}'`)
     this.keyStatus[e.key] = {
       down: false
     }
@@ -23,7 +26,6 @@ class Input {
 
   update = _ => {
     this.snapshot = {
-      ...this.snapshot,
       ...this.keyStatus
     }
     Object.keys(this.keyStatus).forEach(key => {
