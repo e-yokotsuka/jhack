@@ -4,6 +4,10 @@ class SP_Actor {
     this.status = status;
   }
 
+  healMp(){
+    console.warn('healMp')
+  }
+
   healHp(){
     console.warn('healHp')
   }
