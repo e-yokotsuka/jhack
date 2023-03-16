@@ -1,4 +1,5 @@
 import { Container } from 'pixi.js';
+import UI_ConfirmWindow from './UI_ConfirmWindow';
 import UI_ItemWindow from "./UI_ItemWindow";
 import UI_MainWindow from './UI_MainWindow';
 
@@ -9,7 +10,8 @@ class UI_WindowManager {
         this.mainWindow  = new UI_MainWindow({ core });
         const {x,y,w} = this.mainWindow;
         this.itemWindow  = new UI_ItemWindow({ core,x:x+w,y });
-        this.windows = [this.mainWindow,this.itemWindow];
+        this.confirmWindow = new UI_ConfirmWindow({ core });
+        this.windows = [this.mainWindow,this.itemWindow,this.confirmWindow];
         const container = new Container();
         this.prim = container;
         this.windows.forEach((w,i)=>container.addChildAt(w.getPrim(),i));
@@ -44,7 +46,10 @@ class UI_WindowManager {
         const { core:{ input },inputMap } = this;   
         const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
         if (key) inputMap[key]();
-        this.windows.reverse().forEach((w)=>w.update(delta));   
+        let f = true;
+        for(const win of this.windows){
+            if(f) f = win.update(delta);
+        }
     }
 }
 

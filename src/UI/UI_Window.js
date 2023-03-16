@@ -106,11 +106,12 @@ class UI_Window {
   update(delta){
     const { input } = this.core;
     const { inputMap, oldKeymap,isLock,singleUpdate} = this;
-    if( isLock ) return;
+    if( isLock ) return true;
     const newMap = Object.keys(inputMap).map(key => input.isSingleDown(key)? true:false).join(',');
-    if (oldKeymap === newMap) return;
+    if (oldKeymap === newMap) return true;
     singleUpdate(delta);
     this.oldKeymap = Object.keys(inputMap).map(key => input.isSingleDown(key)? true:false).join(',');
+    return false;
   }
 
   // キーが押された時に更新される
