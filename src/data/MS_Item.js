@@ -17,7 +17,9 @@ export default [
     itemName: "よゆちょんぶっちそう",
     type: ITEM_TYPE.recovery,
     value: "1d6+2",
-    prace: 4,
+    price: 4,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -25,7 +27,9 @@ export default [
     itemName: "ダガー",
     type: ITEM_TYPE.weapon,
     value: "1d4+2",
-    prace: 4,
+    price: 4,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -33,7 +37,9 @@ export default [
     itemName: "レザーアーマー",
     type: ITEM_TYPE.armour,
     value: "11+dex",
-    prace: 4,
+    price: 4,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -42,6 +48,8 @@ export default [
     type: ITEM_TYPE.recovery,
     value: "2d4+2",
     price: 8,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -50,6 +58,8 @@ export default [
     type: ITEM_TYPE.weapon,
     value: "1d8+3",
     price: 10,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -58,6 +68,8 @@ export default [
     type: ITEM_TYPE.armour,
     value: "13+dex",
     price: 12,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -66,6 +78,8 @@ export default [
     type: ITEM_TYPE.recovery,
     value: "1d8+4",
     price: 10,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -74,6 +88,8 @@ export default [
     type: ITEM_TYPE.weapon,
     value: "1d6+1",
     price: 6,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -82,6 +98,8 @@ export default [
     type: ITEM_TYPE.armour,
     value: "18",
     price: 20,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -90,6 +108,8 @@ export default [
     type: ITEM_TYPE.recovery,
     value: "1",
     price: 2,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -98,6 +118,8 @@ export default [
     type: ITEM_TYPE.weapon,
     value: "2d6+4",
     price: 15,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -106,6 +128,8 @@ export default [
     type: ITEM_TYPE.weapon,
     value: "1d8+2",
     price: 10,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -114,6 +138,8 @@ export default [
     type: ITEM_TYPE.armour,
     value: "14+dex",
     price: 14,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -122,6 +148,8 @@ export default [
     type: ITEM_TYPE.recovery,
     value: "full",
     price: 25,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -130,6 +158,8 @@ export default [
     type: ITEM_TYPE.weapon,
     value: "1d6+1",
     price: 5,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -138,6 +168,8 @@ export default [
     type: ITEM_TYPE.armour,
     value: "+2",
     price: 8,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -146,6 +178,8 @@ export default [
     type: ITEM_TYPE.recovery,
     value: "1d4",
     price: 7,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -154,6 +188,8 @@ export default [
     type: ITEM_TYPE.weapon,
     value: "1d8+3",
     price: 12,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -162,6 +198,8 @@ export default [
     type: ITEM_TYPE.armour,
     value: "17",
     price: 18,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -170,6 +208,8 @@ export default [
     type: ITEM_TYPE.recovery,
     value: "50%",
     price: 20,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -178,6 +218,8 @@ export default [
     type: ITEM_TYPE.weapon,
     value: "1d8+2",
     price: 10,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -186,6 +228,8 @@ export default [
     type: ITEM_TYPE.ring,
     value: "+1",
     price: 15,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -194,6 +238,8 @@ export default [
     type: ITEM_TYPE.scroll,
     value: "2d6",
     price: 5,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Scroll
   },
   {
@@ -202,6 +248,8 @@ export default [
     type: ITEM_TYPE.scroll,
     value: "1d10",
     price: 5,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Scroll
   },
   {
@@ -210,6 +258,8 @@ export default [
     type: ITEM_TYPE.scroll,
     value: "2d4+2",
     price: 5,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Scroll
   },
   {
@@ -218,6 +268,8 @@ export default [
     type: ITEM_TYPE.weapon,
     value: "1d6+2",
     price: 8,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Common
   },
   {
@@ -226,6 +278,8 @@ export default [
     type: ITEM_TYPE.ring,
     value: "+2",
     price: 12,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Ring
   },
   {
@@ -234,6 +288,8 @@ export default [
     type: ITEM_TYPE.ring,
     value: "+2",
     price: 12,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Ring
   },
   {
@@ -242,6 +298,8 @@ export default [
     type: ITEM_TYPE.ring,
     value: "+2",
     price: 12,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Ring
   },
   {
@@ -250,6 +308,8 @@ export default [
     type: ITEM_TYPE.ring,
     value: "+2",
     price: 12,
+    rarity: 1.0,
+    minimumDepth:0,
     itemLogicClass: IL_Ring
   }
 ]
