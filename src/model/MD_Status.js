@@ -12,7 +12,7 @@ const MD_Status = ({
   mapY = 0,//現在値のマップ座標
   maxHp = 0,
   maxMp = 0,
-  stay = false,
+  isStay = false,
   lock = false,
   str = 0,
   con = 0,
@@ -29,7 +29,7 @@ const MD_Status = ({
   mp,
   maxHp,
   maxMp,
-  stay,
+  isStay,
   lock,
   str,
   con,

@@ -32,7 +32,7 @@ class MD_Actor {
   }
 
   // とどまる
-  stay = _ => this.lock ? null : this.stay = true;
+  stay = _ => this.lock ? null : this.isStay = true;
 
   //ロック
   lock = _ => this.lock = true;
@@ -44,7 +44,7 @@ class MD_Actor {
   // 動いたか？
   isMove = _ => (
     this.force_update
-    || this.stay
+    || this.isStay
     || this.virtualX !== this.mapX
     || this.virtualY !== this.mapY)
 
@@ -52,7 +52,7 @@ class MD_Actor {
   beforeUpdate = _ => {
     // 強制アップデート時は位置と状態を初期化しない。
     if (this.force_update) return;
-    this.stay = false;
+    this.isStay = false;
     this.virtualX = this.mapX;
     this.virtualY = this.mapY;
   }

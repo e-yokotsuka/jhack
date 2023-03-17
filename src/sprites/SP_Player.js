@@ -35,7 +35,7 @@ class SP_Player extends SP_Actor{
   move = (x, y) => {
     this.status.virtualX = x;
     this.status.virtualY = y;
-    this.status.stay = true;
+    this.status.isStay = true;
     this.status.force_update = true;
     this.moveConfirmed(x, y);
   }
