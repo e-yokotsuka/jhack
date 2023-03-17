@@ -37,6 +37,19 @@ class UI_WindowManager {
         this.mainWindow.unLock();
     }
 
+    openConfirmWindow = action => {
+        this.itemWindow.lock();
+        const {x,y:wy,w} = this.itemWindow;
+        const {y} = this.itemWindow.getCursolPosition();
+        this.confirmWindow.x = x + w;
+        this.confirmWindow.y = y + wy;
+        this.confirmWindow.open(action);
+    }
+
+    closeConfirmWindow = _ => {
+        this.confirmWindow.close();
+        this.itemWindow.unLock();
+    }
 
     close = _ => {
         this.itemWindow.isOpen || this.mainWindow.close();

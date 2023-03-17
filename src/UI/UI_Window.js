@@ -120,6 +120,9 @@ class UI_Window {
     const key = Object.keys(inputMap).find(k => input.isSingleDown(k));
     if (key) inputMap[key]();
   }
+
+  getCursolPosition = _ => ({x:this.cursol.x,y:this.cursol.y});
+  
 }
 
 export default UI_Window;

@@ -24,10 +24,12 @@ class UI_ItemWindow extends UI_Window {
         const menu = items.length? items.map((item,index) => ({
             label:item.itemName,
             action: _ => {
-                const logic = new item.itemLogicClass(this.core,item);
-                const used = logic.use(this.core.getPlayer());
-                if(used) this.core.player.itemUsed(item,index);
-                this.closeMenu();
+                this.core.uiWindowManager.openConfirmWindow(()=>{
+                    const logic = new item.itemLogicClass(this.core,item);
+                    const used = logic.use(this.core.getPlayer());
+                    if(used) this.core.player.itemUsed(item,index);
+                    this.closeMenu();   
+                });
             }
         })):[{
             label:"なにも持っていない！",
@@ -41,9 +43,8 @@ class UI_ItemWindow extends UI_Window {
         super.open();
     }
 
-    update = (delta) => {
-        super.update(delta);
-    }
+    update = delta => super.update(delta);
+    
 
 }
 
