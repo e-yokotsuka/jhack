@@ -18,9 +18,7 @@ class UI_MainWindow extends UI_Window {
                     }
                 },
                 {
-                    label: "そうび", action: _ => {
-                        console.log("そうび")
-                    }
+                    label: "そうび",  action: this.selectEqipmentMenu
                 },
                 {
                     label: "つよさ", action: _ => {
@@ -45,6 +43,12 @@ class UI_MainWindow extends UI_Window {
         const {core:{uiWindowManager}} = this;
         console.log("どうぐ");
         uiWindowManager.openItemMenu();
+    }
+
+    selectEqipmentMenu = _=>{
+        const {core:{uiWindowManager}} = this;
+        console.log("そうび");
+        uiWindowManager.openEqipmentMenu();
     }
 
     open(){

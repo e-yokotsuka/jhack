@@ -7,9 +7,12 @@ const ITEM_TYPE = {
   recovery: 'recovery',
   weapon: 'weapon',
   armour: 'armour',
+  shield : 'shield ',
   scroll:'scroll',
   ring:'ring',
 }
+
+export {ITEM_TYPE};
 
 export default [
   {

@@ -1,6 +1,7 @@
+import { ITEM_TYPE } from "../data/MS_Item";
 import UI_Window from "./UI_Window";
 
-class UI_ItemWindow extends UI_Window {
+class UI_EquipmentWindow extends UI_Window {
     constructor({ core ,x=0,y=0}) {
         super({
             core,
@@ -17,10 +18,15 @@ class UI_ItemWindow extends UI_Window {
         };
     }
 
-    closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeItemMenu()
+    closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeEquipmentMenu()
 
     open(){
-        const items = this.core.player.getItems();
+        const items = this.core.player.getItems().filter(({type}) => [
+            ITEM_TYPE.armour,
+            ITEM_TYPE.weapon,
+            ITEM_TYPE.ring,
+            ITEM_TYPE.shield
+        ].includes(type));
         const menu = items.length? items.map((item,index) => ({
             label:item.itemName,
             action: _ => {
@@ -28,15 +34,15 @@ class UI_ItemWindow extends UI_Window {
                     const logic = new item.itemLogicClass(this.core,item);
                     const used = logic.use(this.core.getPlayer());
                     if(used) this.core.player.itemUsed(item,index);
-                    this.closeMenu();   
+                    this.closeMenu();
                 });
             }
         })):[{
-            label:"なにも持っていない！",
+            label:"装備できるものがない！",
             action: _ => {
-                console.log("なにも持っていない！");
+                console.log("装備できるものがない！");
                 const {core:{uiWindowManager}} = this;
-                uiWindowManager.closeItemMenu();
+                uiWindowManager.closeEquipmentMenu();
             }
         }];
         this.setMenu(menu);
@@ -48,4 +54,4 @@ class UI_ItemWindow extends UI_Window {
 
 }
 
-export default UI_ItemWindow;
+export default UI_EquipmentWindow;

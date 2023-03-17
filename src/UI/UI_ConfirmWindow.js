@@ -13,7 +13,7 @@ class UI_ConfirmWindow extends UI_Window {
         };
     }
 
-    closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeConfirmWindow()
+    closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeConfirmWindow(this)
 
     open(use_action=_=>{}){
         const menu = [{
@@ -21,7 +21,7 @@ class UI_ConfirmWindow extends UI_Window {
             action: _ => {
                 const {core:{uiWindowManager}} = this;
                 use_action();
-                uiWindowManager.closeConfirmWindow();
+                uiWindowManager.closeConfirmWindow(this);
             }
         }];
         this.setMenu(menu);
