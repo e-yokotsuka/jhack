@@ -13,6 +13,12 @@ class MD_Player extends MD_Actor {
       maxMp: 10,
       gender: MS_Gender.male.value,
       race: MS_Race.human,
+      equipments: {
+        armour: {},
+        weapon: {},
+        ring: {},
+        shield: {},
+      },   
       position: {
         x: 0,
         y: 0

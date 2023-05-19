@@ -44,11 +44,10 @@ const MD_Status = ({
   mapY,
   items: [],
   equipments: {
-    head: {},
-    body: {},
-    lefthand: {},
-    righthand: {},
-    foot: {},
+    armour: {},
+    weapon: {},
+    ring: {},
+    shield: {},
   },
   magic: {
     black: {},

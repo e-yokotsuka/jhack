@@ -93,6 +93,18 @@ class SP_Player extends SP_Actor{
     this.status.items.splice(index, 1);
   }
 
+  // itemを使用したあとの処理
+  itemEquipment(item,index){
+    // equipments: {
+    //   armour: {},
+    //   weapon: {},
+    //   ring: {},
+    //   shield: {},
+    // },
+    this.status.items.splice(index, 1);
+  }
+  
+
   update = (/*delta*/) => {
     const { core: { input, handleStepUpdate ,isWindowOpen,/*, addText*/ }, mainMap,
       status,
