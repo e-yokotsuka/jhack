@@ -15,10 +15,11 @@ class UI_WindowManager {
         this.confirmWindow = new UI_ConfirmWindow({ core });
         this.windows = [
             this.mainWindow,
-            this.equipmentWindow,
             this.itemWindow,
-            this.confirmWindow
+            this.equipmentWindow,
+            this.confirmWindow,
         ];
+        this.openWindow=[];
         const container = new Container();
         this.prim = container;
         this.windows.forEach((w,i)=>container.addChildAt(w.getPrim(),i));
@@ -30,28 +31,45 @@ class UI_WindowManager {
 
     getPrim = _ => this.prim;
 
+    parentLock = _=>  this.openWindow.forEach(w=>w.lock());
+
+    childWindowClose = _=>  {
+        const cw = this.openWindow.pop();
+        if( cw ){
+            cw.close();
+            cw.unLock();
+        }
+        this.childWindowUnlock();
+    }
+
+    childWindowUnlock = _=>  {
+        const pw = this.openWindow[this.openWindow.length - 1] ?? undefined;
+        pw && pw.unLock();
+    }
+
     open = _=> {
         this.mainWindow.open();
+        this.openWindow.push(this.mainWindow);
     }
 
     openItemMenu = _=>{
-        this.mainWindow.lock();
+        this.parentLock();
         this.itemWindow.open();
+        this.openWindow.push(this.itemWindow);
     }
 
     closeItemMenu = _=>{
-        this.itemWindow.close();
-        this.mainWindow.unLock();
+        this.childWindowClose();
     }
 
     openEqipmentMenu = _=>{
-        this.mainWindow.lock();
+        this.parentLock();
         this.equipmentWindow.open();
+        this.openWindow.push(this.equipmentWindow);
     }
 
     closeEquipmentMenu = _=>{
-        this.equipmentWindow.close();
-        this.mainWindow.unLock();
+        this.childWindowClose();
     }
 
     openConfirmWindow = (win,action) => {
@@ -63,13 +81,14 @@ class UI_WindowManager {
         this.confirmWindow.open(action);
     }
 
-    closeConfirmWindow = win => {
+    closeConfirmWindow = _ => {
         this.confirmWindow.close();
-        win.unLock();
+        this.childWindowUnlock();
     }
 
     close = _ => {
-        this.itemWindow.isOpen || this.mainWindow.close();
+        if (this.equipmentWindow.isOpen || this.itemWindow.isOpen) return;
+        this.mainWindow.close();
     }
 
     update = delta => {

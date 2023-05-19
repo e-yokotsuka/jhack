@@ -28,7 +28,7 @@ class UI_ItemWindow extends UI_Window {
                     const logic = new item.itemLogicClass(this.core,item);
                     const used = logic.use(this.core.getPlayer());
                     if(used) this.core.player.itemUsed(item,index);
-                    this.closeMenu();   
+                    this.closeMenu();
                 });
             }
         })):[{
