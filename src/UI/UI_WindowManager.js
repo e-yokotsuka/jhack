@@ -73,17 +73,18 @@ class UI_WindowManager {
     }
 
     openConfirmWindow = (win,action) => {
+        this.parentLock();
         win.lock();
         const {x,y:wy,w} = win;
         const {y} = win.getCursolPosition();
         this.confirmWindow.x = x + w;
         this.confirmWindow.y = y + wy;
         this.confirmWindow.open(action);
+        this.openWindow.push(this.confirmWindow);
     }
 
     closeConfirmWindow = _ => {
-        this.confirmWindow.close();
-        this.childWindowUnlock();
+        this.childWindowClose();
     }
 
     close = _ => {
@@ -96,7 +97,7 @@ class UI_WindowManager {
         const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
         if (key) inputMap[key]();
         let f = true;
-        for(const win of this.windows){
+        for(const win of this.openWindow){
             if(f) f = win.update(delta);
         }
     }
