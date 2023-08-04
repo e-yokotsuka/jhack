@@ -12,14 +12,14 @@ class TL_Trap extends TL_Common {
 
     hit = ({ actor }) => {
         if (!this.active) return this.isBlocked;
-        const { core: { addText }, trap } = this;
+        const { trap } = this;
         const dmg = actor.trappedIn(trap);
         if (dmg) {
             this.active = false;
             this.cellName = 'dngn_trap_magical';
             this.changeTexture(`dngn_trap_magical`);
         } else {
-            addText(`しかし、発動前にヒョイっと避けた！`);
+            actor.escapeTrap()
         }
         return this.isBlocked;
     }

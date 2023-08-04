@@ -14,11 +14,11 @@ class MD_Player extends MD_Actor {
       gender: MS_Gender.male.value,
       race: MS_Race.human,
       equipments: {
-        armour: {},
-        weapon: {},
-        ring: {},
-        shield: {},
-      },   
+        armour: null,
+        weapon: null,
+        ring: null,
+        shield: null,
+      },
       position: {
         x: 0,
         y: 0

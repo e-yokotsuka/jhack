@@ -10,7 +10,8 @@
     "@pixi/sound": "^5.0.0",
     "@pixi/ui": "^0.5.8",
     "pixi.js": "^7.2.3",
-    "stats.js": "^0.17.0"
+    "stats.js": "^0.17.0",
+    "uuid": "^9.0.0"
   },
   "scripts": {
     "start": "webpack serve --config webpack.config.js",

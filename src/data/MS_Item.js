@@ -3,16 +3,17 @@ import IL_Recovery from "../logic/items/IL_Recovery"
 import IL_Ring from "../logic/items/IL_Ring"
 import IL_Scroll from "../logic/items/IL_Scroll"
 
+// 値はequipmentsのプロパティ名と一致していなくてはならない
 const ITEM_TYPE = {
   recovery: 'recovery',
   weapon: 'weapon',
   armour: 'armour',
-  shield : 'shield ',
-  scroll:'scroll',
-  ring:'ring',
+  shield: 'shield ',
+  scroll: 'scroll',
+  ring: 'ring',
 }
 
-export {ITEM_TYPE};
+export { ITEM_TYPE };
 
 export default [
   {
@@ -22,7 +23,7 @@ export default [
     value: "1d6+2",
     price: 4,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -32,7 +33,7 @@ export default [
     value: "1d4+2",
     price: 4,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -42,7 +43,7 @@ export default [
     value: "11+dex",
     price: 4,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -52,7 +53,7 @@ export default [
     value: "2d4+2",
     price: 8,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -62,7 +63,7 @@ export default [
     value: "1d8+3",
     price: 10,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -72,7 +73,7 @@ export default [
     value: "13+dex",
     price: 12,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -82,7 +83,7 @@ export default [
     value: "1d8+4",
     price: 10,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -92,7 +93,7 @@ export default [
     value: "1d6+1",
     price: 6,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -102,7 +103,7 @@ export default [
     value: "18",
     price: 20,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -112,7 +113,7 @@ export default [
     value: "1",
     price: 2,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -122,7 +123,7 @@ export default [
     value: "2d6+4",
     price: 15,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -132,7 +133,7 @@ export default [
     value: "1d8+2",
     price: 10,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -142,7 +143,7 @@ export default [
     value: "14+dex",
     price: 14,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -152,7 +153,7 @@ export default [
     value: "full",
     price: 25,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -162,7 +163,7 @@ export default [
     value: "1d6+1",
     price: 5,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -172,7 +173,7 @@ export default [
     value: "+2",
     price: 8,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -182,7 +183,7 @@ export default [
     value: "1d4",
     price: 7,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -192,7 +193,7 @@ export default [
     value: "1d8+3",
     price: 12,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -202,7 +203,7 @@ export default [
     value: "17",
     price: 18,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -212,7 +213,7 @@ export default [
     value: "50%",
     price: 20,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Recovery
   },
   {
@@ -222,7 +223,7 @@ export default [
     value: "1d8+2",
     price: 10,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -232,7 +233,7 @@ export default [
     value: "+1",
     price: 15,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -242,7 +243,7 @@ export default [
     value: "2d6",
     price: 5,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Scroll
   },
   {
@@ -252,7 +253,7 @@ export default [
     value: "1d10",
     price: 5,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Scroll
   },
   {
@@ -262,7 +263,7 @@ export default [
     value: "2d4+2",
     price: 5,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Scroll
   },
   {
@@ -272,7 +273,7 @@ export default [
     value: "1d6+2",
     price: 8,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Common
   },
   {
@@ -282,7 +283,7 @@ export default [
     value: "+2",
     price: 12,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Ring
   },
   {
@@ -292,7 +293,7 @@ export default [
     value: "+2",
     price: 12,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Ring
   },
   {
@@ -302,7 +303,7 @@ export default [
     value: "+2",
     price: 12,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Ring
   },
   {
@@ -312,7 +313,7 @@ export default [
     value: "+2",
     price: 12,
     rarity: 1.0,
-    minimumDepth:0,
+    minimumDepth: 0,
     itemLogicClass: IL_Ring
   }
 ]

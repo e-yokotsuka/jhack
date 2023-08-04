@@ -76,9 +76,10 @@ class UI_Window {
     this.selectUpdate(this.select);
   }
 
-  leftSideX = _=> this.x + this.w;
+  leftSideX = _ => this.x + this.w;
 
   close() {
+    console.log("close")
     this.prim.removeChildren();
     this.isOpen = false;
     this.lock();
@@ -90,7 +91,7 @@ class UI_Window {
   getPrim = _ => this.prim;
 
   selectUpdate = select => {
-    if(!this.isOpen) return;
+    if (!this.isOpen) return;
     this.select = select;
     this.cursol.y = this.select * CELL_SIZE + 4;
   }
@@ -103,26 +104,26 @@ class UI_Window {
     this.selectUpdate(this.select >= this.menuLength - 1 ? this.select = 0 : this.select + 1);
   }
 
-  update(delta){
+  update(delta) {
     const { input } = this.core;
-    const { inputMap, oldKeymap,isLock,singleUpdate} = this;
-    if( isLock ) return true;
-    const newMap = Object.keys(inputMap).map(key => input.isSingleDown(key)? true:false).join(',');
+    const { inputMap, oldKeymap, isLock, singleUpdate } = this;
+    if (isLock) return true;
+    const newMap = Object.keys(inputMap).map(key => input.isSingleDown(key) ? true : false).join(',');
     if (oldKeymap === newMap) return true;
     singleUpdate(delta);
-    this.oldKeymap = Object.keys(inputMap).map(key => input.isSingleDown(key)? true:false).join(',');
+    this.oldKeymap = Object.keys(inputMap).map(key => input.isSingleDown(key) ? true : false).join(',');
     return false;
   }
 
   // キーが押された時に更新される
   singleUpdate = (/*delta*/) => {
-    const { inputMap, core: { input }} = this;
+    const { inputMap, core: { input } } = this;
     const key = Object.keys(inputMap).find(k => input.isSingleDown(k));
     if (key) inputMap[key]();
   }
 
-  getCursolPosition = _ => ({x:this.cursol.x,y:this.cursol.y});
-  
+  getCursolPosition = _ => ({ x: this.cursol.x, y: this.cursol.y });
+
 }
 
 export default UI_Window;

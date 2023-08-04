@@ -5,22 +5,22 @@ class TL_Door extends TL_Common {
     constructor({ core, x, y }) {
         const cellName = `dngn_closed_door`;
         const prim = SP_Tile({ core, name: cellName });
-        super({ core, x, y, cellName, type: 'door', isBlocked: true ,prim});
+        super({ core, x, y, cellName, type: 'door', isBlocked: true, prim });
         this.close = true;
     }
 
     // eslint-disable-next-line no-unused-vars
-    hit = ({actor=null,status}) => {
-        if( !this.close ) return this.isBlocked;
-        const { core: { addText },close,hitStep} = this;
+    hit = ({ actor = null, status }) => {
+        if (!this.close) return this.isBlocked;
+        const { close, hitStep } = this;
         if (hitStep + 1 == status.steps && close) {
             this.close = false;
             this.isBlocked = false;
             this.changeTexture(`dngn_open_door`);
-            addText(`ドアを開けた！`);
+            actor.openDoor(this);
         } else {
             this.hitStep = status.steps;
-            addText(`しまった！ 閉まったドアだ！`);
+            actor.discoverDoor(this);
         }
         return this.isBlocked;
     }

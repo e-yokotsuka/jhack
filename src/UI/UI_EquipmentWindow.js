@@ -2,11 +2,11 @@ import { ITEM_TYPE } from "../data/MS_Item";
 import UI_Window from "./UI_Window";
 
 class UI_EquipmentWindow extends UI_Window {
-    constructor({ core ,x=0,y=0}) {
+    constructor({ core, x = 0, y = 0 }) {
         super({
             core,
-            x,y,
-            maxlabels:10,
+            x, y,
+            maxlabels: 10,
         });
         this.inputMap = {
             'ArrowLeft': _ => this.closeMenu(),
@@ -14,34 +14,34 @@ class UI_EquipmentWindow extends UI_Window {
             's': _ => this.down(),
             'ArrowRight': _ => this.selected(),
             'ArrowUp': _ => this.up(),
-            'ArrowDown': _ => this.down(),      
+            'ArrowDown': _ => this.down(),
         };
     }
 
     closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeEquipmentMenu()
 
-    open(){
-        const items = this.core.player.getItems().filter(({type}) => [
+    open() {
+        const items = this.core.player.items().filter(({ type }) => [
             ITEM_TYPE.armour,
             ITEM_TYPE.weapon,
             ITEM_TYPE.ring,
             ITEM_TYPE.shield
         ].includes(type));
-        const menu = items.length? items.map((item,index) => ({
-            label:item.itemName,
+        const menu = items.length ? items.map((item, index) => ({
+            label: item.itemName,
             action: _ => {
-                this.core.uiWindowManager.openConfirmWindow(this,()=>{
-                    const logic = new item.itemLogicClass(this.core,item);
-                    const used = logic.use(this.core.getPlayer());
-                    if(used) this.core.player.itemUsed(item,index);
+                this.core.uiWindowManager.openConfirmWindow(this, () => {
+                    const logic = new item.itemLogicClass(this.core, item);
+                    const used = logic.eqipment(this.core.getPlayer());
+                    if (used) this.core.player.equipment(item, index);
                     this.closeMenu();
                 });
             }
-        })):[{
-            label:"装備できるものがない！",
+        })) : [{
+            label: "装備できるものがない！",
             action: _ => {
                 console.log("装備できるものがない！");
-                const {core:{uiWindowManager}} = this;
+                const { core: { uiWindowManager } } = this;
                 uiWindowManager.closeEquipmentMenu();
             }
         }];
@@ -50,7 +50,7 @@ class UI_EquipmentWindow extends UI_Window {
     }
 
     update = delta => super.update(delta);
-    
+
 
 }
 

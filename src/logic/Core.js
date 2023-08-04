@@ -52,14 +52,14 @@ class Core {
     console.assert(loaded, 'Resource not loaded.');
     this.input = new Input();
     this.mainMap = new MP_AutoMap({ core: this }); 0
-    const { height: canvasHeight } = this.getCanvasSize();
-    const text = new Text('よくぞいらした。\nここムーリダヤ・メタインでは\n恐ろしき魔物との戦いが数千年にわたって繰り広げられている。', {
-      fontSize: 24,
-      fill: 0xffffff,
-      align: 'center',
-    });
-    text.y = canvasHeight;
-    console.log(`text-y:${text.y}/${canvasHeight}`)
+    // const { height: canvasHeight } = this.getCanvasSize();
+    // const text = new Text('よくぞいらした。\nここムーリダヤ・メタインでは\n恐ろしき魔物との戦いが数千年にわたって繰り広げられている。', {
+    //   fontSize: 24,
+    //   fill: 0xffffff,
+    //   align: 'center',
+    // });
+    // text.y = canvasHeight;
+    // console.log(`text-y:${text.y}/${canvasHeight}`)
     const keytext = new Text('debug key string', {
       fontSize: 20,
       fill: 0xffffff,
@@ -84,20 +84,20 @@ class Core {
 
     window.addEventListener('resize', this.resize);
     this.resize();
-    app.stage.addChild(text);
+    // app.stage.addChild(text);
 
     app.ticker.add((delta) => {
       stats.begin();
       app.stage.scale.x = mainScale;
       app.stage.scale.y = mainScale;
-      const { width: canvasWidth } = this.getCanvasSize();
+      // const { width: canvasWidth } = this.getCanvasSize();
       this.input.update();
       this.mainMap.update(delta);
       keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z']);
       this.uiStatus.update();
-      text.y -= delta * 1;
-      text.y = Math.max(text.y, 0);
-      text.x = (canvasWidth - text.width) / 2;
+      // text.y -= delta * 1;
+      // text.y = Math.max(text.y, 0);
+      // text.x = (canvasWidth - text.width) / 2;
       this.player.update(delta);
       this.monster.update(delta);
       this.uiMessageBox.update(delta);
@@ -109,14 +109,14 @@ class Core {
   isKeyDown = key => this.input.isDown(key);
   isKeyUp = key => !this.input.isDown(key);
 
-  addText = text => this.uiMessageBox.addText(text);
+  addText = text => this.uiMessageBox?.addText(text);
   getTexture = texName => this.textures.tx_main[texName];
 
   windowOpen = isOpen => this.isWindowOpen = isOpen;
 
   diceRoll = diceText => diceRoll(diceText);
 
-  getPlayer = _=> this.player;
+  getPlayer = _ => this.player;
 
   // stepが更新された
   handleStepUpdate = (/* vx, vy*/) => {

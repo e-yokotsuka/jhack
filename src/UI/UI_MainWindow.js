@@ -18,7 +18,7 @@ class UI_MainWindow extends UI_Window {
                     }
                 },
                 {
-                    label: "そうび",  action: this.selectEqipmentMenu
+                    label: "そうび", action: this.selectEqipmentMenu
                 },
                 {
                     label: "つよさ", action: _ => {
@@ -40,25 +40,25 @@ class UI_MainWindow extends UI_Window {
     }
 
     selectItemMenu = _ => {
-        const {core:{uiWindowManager}} = this;
+        const { core: { uiWindowManager } } = this;
         console.log("どうぐ");
         uiWindowManager.openItemMenu();
     }
 
-    selectEqipmentMenu = _=>{
-        const {core:{uiWindowManager}} = this;
+    selectEqipmentMenu = _ => {
+        const { core: { uiWindowManager } } = this;
         console.log("そうび");
         uiWindowManager.openEqipmentMenu();
     }
 
-    open(){
-        const { core: { windowOpen }} = this;
+    open() {
+        const { core: { windowOpen } } = this;
         super.open();
         // coreにMainWindowの開閉状態を通知しておく
         windowOpen(this.isOpen);
     }
 
-    close(){
+    close() {
         const { windowOpen } = this.core;
         super.close();
         // coreにMainWindowの開閉状態を通知しておく

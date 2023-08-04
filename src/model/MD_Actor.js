@@ -2,7 +2,7 @@ import MD_Status from "./MD_Status";
 
 class MD_Actor {
   constructor(status) {
-    Object.keys(MD_Status({ ...status })).forEach(key=>this[key]=status[key]);
+    Object.keys(MD_Status({ ...status })).forEach(key => this[key] = status[key]);
   }
 
   //仮の移動を行う
@@ -32,14 +32,16 @@ class MD_Actor {
   }
 
   // とどまる
-  stay = _ => this.lock ? null : this.isStay = true;
+  stay() { this.lock ? null : this.isStay = true; }
 
   //ロック
-  lock = _ => this.lock = true;
+  lock() { this.lock = true; }
+
   //ロック解除
-  unlock = _ => this.lock = false;
+  unlock() { this.lock = false; }
+
   //ロック状態
-  isLock = _ => this.lock;
+  isLock() { return this.lock; }
 
   // 動いたか？
   isMove = _ => (
@@ -61,7 +63,7 @@ class MD_Actor {
   afterUpdate = _ => {
     this.force_update = false;
   }
- 
+
 }
 
 export default MD_Actor;

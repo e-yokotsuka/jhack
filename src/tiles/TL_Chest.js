@@ -11,22 +11,21 @@ class TL_Chest extends TL_Common {
 
   // eslint-disable-next-line no-unused-vars
   hit = ({ actor = null, status }) => {
-    const { core: { addText }, item, hitStep } = this;
+    const { item, hitStep } = this;
     if (item) {
       if (hitStep + 1 == status.steps) {
         this.cellName = 'chest2_open';
         this.changeTexture(`chest2_open`);
         this.item = null;
-        status.items.push(item);
-        const itemList = status.items.map(({itemName})=>itemName).join('\n')
-        addText(`${item.itemName}をGETした！`);
-        addText(`${itemList}`);
+        actor.getItem(item);
       } else {
         this.hitStep = status.steps;
-        addText(`宝箱だ！`);
+        //宝箱を発見した
+        actor.discoverChest();
       }
     } else {
-      addText(`からっぽだ！`);
+      //空っぽの宝箱を発見した
+      actor.discoverEmptyChest();
     }
 
     return this.isBlocked;
