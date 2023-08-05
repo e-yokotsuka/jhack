@@ -36,18 +36,10 @@ class SP_Player extends SP_Actor {
 
   getPlayerData = _ => this.status;
 
-  respawn = _ => {
+  respawn() {
     const { x, y } = this.mainMap.getRespawnPosition();
     this.status.hp = this.status.maxHp;
     this.move(x, y);
-  }
-
-  move = (x, y) => {
-    this.status.virtualX = x;
-    this.status.virtualY = y;
-    this.status.isStay = true;
-    this.status.force_update = true;
-    this.moveConfirmed(x, y);
   }
 
   diceRoll = diceText => this.core.diceRoll(diceText);
@@ -69,8 +61,6 @@ class SP_Player extends SP_Actor {
     addText(`しかし、発動前にヒョイっと避けた！`);
   }
 
-
-
   applyDamage(point) {
     const { addText } = this;
     addText(`いてえ！  ${point} ポイントのダメージをくらった！`);
@@ -90,9 +80,9 @@ class SP_Player extends SP_Actor {
     this.respawn();
   }
 
-  moveConfirmed = (x, y) => {
-    const { mainMap, status } = this;
-    status.moveConfirmed();
+  moveConfirmed(x, y) {
+    const { mainMap } = this;
+    super.moveConfirmed()
     // センタリング
     mainMap.center(x, y);
   }
@@ -116,9 +106,9 @@ class SP_Player extends SP_Actor {
     const { addText } = this;
     item.uuid = this.getUUID()
     this.status.items.push(item);
-    const itemList = this.status.items.map(({ itemName }) => itemName).join('\n')
+    const itemList = this.status.items.map(({ itemName, uuid, id, type }) => `${uuid}:${itemName}:${id}:${type}`).join('\n')
     addText(`${item.itemName}をGETした！`);
-    addText(`${itemList}`);
+    addText(`${itemList}`, 30);
   }
 
   items = _ => this.status.items;

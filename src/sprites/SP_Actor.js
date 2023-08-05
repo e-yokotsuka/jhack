@@ -6,6 +6,19 @@ class SP_Actor {
     this.status = status;
   }
 
+  move(x, y) {
+    this.status.virtualX = x;
+    this.status.virtualY = y;
+    this.status.isStay = true;
+    this.status.force_update = true;
+    this.moveConfirmed(x, y);
+  }
+
+  moveConfirmed(/* x,y */) {
+    const { status } = this;
+    status.moveConfirmed();
+  }
+
   //罠をよけた
   escapeTrap() { console.log("escapeTrap") }
 
@@ -53,9 +66,9 @@ class SP_Actor {
 
   getUUID = _ => uuidv4();
 
-  addText = text => {
+  addText = (text, time) => {
     const { core: { addText } } = this;
-    addText(text);
+    addText(text, time);
   }
 
 }

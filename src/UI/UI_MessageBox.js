@@ -1,6 +1,6 @@
 import { Text } from 'pixi.js';
 
-const DISPLAY_TIME = 5 * 60;
+const DEFAULT_TIME = 5; //sec
 
 class UI_MessageBox {
 
@@ -17,12 +17,12 @@ class UI_MessageBox {
 
   getPrim = _ => this.prim;
 
-  addText = text => this.msgs.push({ text, time: 0 });
+  addText = (text, time = DEFAULT_TIME) => this.msgs.push({ text, elapsedTime: 0, time: time * 60 }); // 60fr
 
   update = delta => {
-    this.msgs = this.msgs.map(({ text, time }) => ({ text, time: time + delta }));
-    this.msgs = this.msgs.filter(({ time }) => (time <= DISPLAY_TIME));
-    let text = this.msgs.map(({ text, time }) => `${text}(${Math.floor(time / 60)})`).join('\n');
+    this.msgs = this.msgs.map(v => ({ ...v, elapsedTime: v.elapsedTime + delta }));
+    this.msgs = this.msgs.filter(({ time, elapsedTime }) => (elapsedTime <= time));
+    let text = this.msgs.map(({ text, elapsedTime, time }) => `${text}(${Math.floor(elapsedTime / 60)}/${Math.floor(time / 60)})`).join('\n');
     this.prim.text = text;
   }
 

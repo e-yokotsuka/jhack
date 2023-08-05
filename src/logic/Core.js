@@ -109,7 +109,7 @@ class Core {
   isKeyDown = key => this.input.isDown(key);
   isKeyUp = key => !this.input.isDown(key);
 
-  addText = text => this.uiMessageBox?.addText(text);
+  addText = (text, time) => this.uiMessageBox?.addText(text, time);
   getTexture = texName => this.textures.tx_main[texName];
 
   windowOpen = isOpen => this.isWindowOpen = isOpen;
