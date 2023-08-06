@@ -1,6 +1,7 @@
 import { Container } from 'pixi.js';
 import UI_ConfirmWindow from './UI_ConfirmWindow';
 import UI_EquipmentWindow from './UI_EquipmentWindow';
+import UI_ItemStatusWindow from "./UI_ItemStatusWindow"
 import UI_ItemWindow from "./UI_ItemWindow";
 import UI_MainWindow from './UI_MainWindow';
 import UI_StatusWindow from './UI_StatusWindow';
@@ -15,11 +16,14 @@ class UI_WindowManager {
         this.equipmentWindow = new UI_EquipmentWindow({ core, x: x + w, y });
         this.confirmWindow = new UI_ConfirmWindow({ core });
         this.statusWindow = new UI_StatusWindow({ core, x: x + w, y });
+        this.itemStatusWindow = new UI_ItemStatusWindow({ core });
+
 
         this.windows = [
             this.mainWindow,
             this.itemWindow,
             this.equipmentWindow,
+            this.itemStatusWindow,
             this.confirmWindow,
             this.statusWindow
         ];
@@ -32,6 +36,8 @@ class UI_WindowManager {
             'ArrowLeft': _ => core.isWindowOpen && this.close(),
         };
     }
+
+    getMainWindowPos = _ => ({ x: this.mainWindow.x, y: this.mainWindow.y });
 
     getPrim = _ => this.prim;
 
@@ -63,6 +69,7 @@ class UI_WindowManager {
     }
 
     closeItemMenu = _ => {
+        this.itemStatusWindow.close();
         this.childWindowClose();
     }
 
@@ -87,6 +94,17 @@ class UI_WindowManager {
         this.confirmWindow.y = y + wy;
         this.confirmWindow.open(action);
         this.openWindow.push(this.confirmWindow);
+    }
+
+    openItemStatusWindow = (win, action, item) => {
+        const { x, w } = win;
+        const { y } = this.getMainWindowPos();
+        this.itemStatusWindow.x = x + w;
+        this.itemStatusWindow.y = y;
+        this.itemStatusWindow.open(action, item);
+    }
+
+    closeItemStatusWindow = _ => {
     }
 
     closeConfirmWindow = _ => {

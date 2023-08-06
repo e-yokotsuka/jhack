@@ -2,7 +2,7 @@ import { Container, Graphics, Text } from 'pixi.js';
 
 const CELL_SIZE = 32;
 class UI_Window {
-  constructor({ core, x = 0, y = 0, menu = [{ label: "menu1", action: _ => { } }, { label: "menu2", action: _ => { } }] }) {
+  constructor({ core, x = 0, y = 0, w = 0, h = 0, menu }) {
     this.isOpen = false;
     this.core = core;
     const container = new Container();
@@ -10,6 +10,8 @@ class UI_Window {
     this.oldKeymap = [];
     this.x = x;
     this.y = y;
+    this.w = w;
+    this.h = h;
     this.isLock = true;
     this.inputMap = {
       'w': _ => this.up(),
@@ -18,7 +20,7 @@ class UI_Window {
       'ArrowUp': _ => this.up(),
       'ArrowDown': _ => this.down(),
     };
-    this.setMenu(menu);
+    if (menu) this.setMenu(menu);
   }
 
   setMenu = menu => {
@@ -34,7 +36,7 @@ class UI_Window {
     this.h = CELL_SIZE * this.menuLength + 4;
   }
 
-  selected = _ => {
+  selected() {
     const { isOpen, menu, select } = this;
     if (!isOpen) return;
     menu[select].action()

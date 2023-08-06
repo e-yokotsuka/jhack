@@ -1,10 +1,8 @@
+import IL_Common from "./IL_Common";
 
-class IL_Common {
+class IL_Wepon extends IL_Common {
     constructor(core, item) {
-        this.item = item; // アイテム
-        this.core = core;
-        this.valueLabel = "値";
-        this.use.bind(this);
+        super(core, item);
     }
 
     use(/*target*/) {
@@ -17,7 +15,6 @@ class IL_Common {
         this.addText(`${itemName}を装備したぞ！`);
     }
 
-    addText = text => this.core.addText(text);
 }
 
-export default IL_Common;
+export default IL_Wepon;

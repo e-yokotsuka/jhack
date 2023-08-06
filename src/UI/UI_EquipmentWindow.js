@@ -21,12 +21,12 @@ class UI_EquipmentWindow extends UI_Window {
     closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeEquipmentMenu()
 
     open() {
-        const items = this.core.player.items().filter(({ type }) => [
+        const items = this.core.player.items().filter(({ itemType }) => [
             ITEM_TYPE.armour,
             ITEM_TYPE.weapon,
             ITEM_TYPE.ring,
             ITEM_TYPE.shield
-        ].includes(type));
+        ].includes(itemType));
         const menu = items.length ? items.map((item, index) => ({
             label: item.itemName,
             action: _ => {

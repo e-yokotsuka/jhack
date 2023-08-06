@@ -12,8 +12,14 @@ class UI_ItemWindow extends UI_Window {
             'w': _ => this.up(),
             's': _ => this.down(),
             'ArrowRight': _ => this.selected(),
-            'ArrowUp': _ => this.up(),
-            'ArrowDown': _ => this.down(),
+            'ArrowUp': _ => {
+                this.up()
+                this.selected();
+            },
+            'ArrowDown': _ => {
+                this.down()
+                this.selected();
+            },
         };
     }
 
@@ -24,12 +30,12 @@ class UI_ItemWindow extends UI_Window {
         const menu = items.length ? items.map((item, index) => ({
             label: item.itemName,
             action: _ => {
-                this.core.uiWindowManager.openConfirmWindow(this, () => {
+                this.core.uiWindowManager.openItemStatusWindow(this, () => {
                     const logic = new item.itemLogicClass(this.core, item);
                     const used = logic.use(this.core.getPlayer());
                     if (used) this.core.player.itemUsed(item, index);
                     this.closeMenu();
-                });
+                }, item);
             }
         })) : [{
             label: "なにも持っていない！",
@@ -41,9 +47,14 @@ class UI_ItemWindow extends UI_Window {
         }];
         this.setMenu(menu);
         super.open();
+        if (items.length) this.selected();
     }
 
-    update = delta => super.update(delta);
+    update = delta => {
+        super.update(delta);
+        // もう構造が複雑なのでウインドウ系は組みなおす！これはその場しのぎ！
+        this.core.uiWindowManager.itemStatusWindow.update(delta);
+    }
 
 
 }

@@ -66,7 +66,7 @@ class Core {
       align: 'center',
     });
     app.stage.addChild(keytext);
-    keytext.x = 0;
+    keytext.x = 100;
     keytext.y = 0;
 
     this.player = new SP_Player({ core: this });
@@ -93,7 +93,7 @@ class Core {
       // const { width: canvasWidth } = this.getCanvasSize();
       this.input.update();
       this.mainMap.update(delta);
-      keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z']);
+      keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z', 'e']);
       this.uiStatus.update();
       // text.y -= delta * 1;
       // text.y = Math.max(text.y, 0);

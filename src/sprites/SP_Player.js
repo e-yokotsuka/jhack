@@ -106,7 +106,7 @@ class SP_Player extends SP_Actor {
     const { addText } = this;
     item.uuid = this.getUUID()
     this.status.items.push(item);
-    const itemList = this.status.items.map(({ itemName, uuid, id, type }) => `${uuid}:${itemName}:${id}:${type}`).join('\n')
+    const itemList = this.status.items.map(({ itemName, uuid, id, itemTypeName }) => `${uuid}:${itemName}:${id}:${itemTypeName}`).join('\n')
     addText(`${item.itemName}をGETした！`);
     addText(`${itemList}`, 30);
   }
