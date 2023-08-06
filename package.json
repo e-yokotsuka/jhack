@@ -9,7 +9,7 @@
   "dependencies": {
     "@pixi/sound": "^5.0.0",
     "@pixi/ui": "^0.5.8",
-    "pixi.js": "^7.2.3",
+    "pixi.js": "^7.2.4",
     "stats.js": "^0.17.0",
     "uuid": "^9.0.0"
   },
