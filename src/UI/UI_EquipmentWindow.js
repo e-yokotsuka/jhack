@@ -49,9 +49,6 @@ class UI_EquipmentWindow extends UI_Window {
         super.open();
     }
 
-    update = delta => super.update(delta);
-
-
 }
 
 export default UI_EquipmentWindow;

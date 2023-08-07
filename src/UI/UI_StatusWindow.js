@@ -1,26 +1,6 @@
-import {
-    Container
-} from 'pixi.js';
+import UI_Window from "./UI_Window";
 
-class UI_StatusWindow {
-    constructor({ core }) {
-        this.core = core;
-        const container = new Container();
-        this.prim = container;
-
-    }
-
-    closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeStatusWindow()
-
-    open() {
-        // const { armour,weapon,ring,shield } = this.core.player.equipments();
-
-        super.open();
-    }
-
-    update = delta => super.update(delta);
-
-    getPrim = _ => this.prim;
+class UI_StatusWindow extends UI_Window {
 
 }
 

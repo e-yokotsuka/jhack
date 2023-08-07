@@ -27,13 +27,11 @@ class UI_WindowManager {
             this.confirmWindow,
             this.statusWindow
         ];
-        this.openWindow = [];
         const container = new Container();
         this.prim = container;
         this.windows.forEach((w, i) => container.addChildAt(w.getPrim(), i));
         this.inputMap = {
             'e': _ => core.isWindowOpen ? this.close() : this.open(),
-            'ArrowLeft': _ => core.isWindowOpen && this.close(),
         };
     }
 
@@ -41,59 +39,45 @@ class UI_WindowManager {
 
     getPrim = _ => this.prim;
 
-    parentLock = _ => this.openWindow.forEach(w => w.lock());
-
-    childWindowClose = _ => {
-        const cw = this.openWindow.pop();
-        if (cw) {
-            cw.close();
-            cw.unLock();
-        }
-        this.childWindowUnlock();
-    }
-
-    childWindowUnlock = _ => {
-        const pw = this.openWindow[this.openWindow.length - 1] ?? undefined;
-        pw && pw.unLock();
-    }
+    forceLockAll = _ => this.windows.forEach(w => w.forceLock());
+    forceUnLockAll = _ => this.windows.forEach(w => w.forceUnLock());
 
     open = _ => {
         this.mainWindow.open();
-        this.openWindow.push(this.mainWindow);
     }
 
     openItemMenu = _ => {
-        this.parentLock();
+        this.mainWindow.lock();
         this.itemWindow.open();
-        this.openWindow.push(this.itemWindow);
     }
 
     closeItemMenu = _ => {
+        this.itemWindow.close();
         this.itemStatusWindow.close();
-        this.childWindowClose();
+        this.mainWindow.unLock();
     }
 
     openEqipmentMenu = _ => {
-        this.parentLock();
+        this.mainWindow.lock();
         this.equipmentWindow.open();
-        this.openWindow.push(this.equipmentWindow);
     }
 
     closeEquipmentMenu = _ => {
-        this.childWindowClose();
+        this.equipmentWindow.close();
+        this.mainWindow.unLock();
     }
 
     closeEquipmentWindow = _ => { }
 
     openConfirmWindow = (win, action) => {
-        this.parentLock();
-        win.lock();
+        this.forceLockAll();//全てのウインドウを強制的にロックする
         const { x, y: wy, w } = win;
         const { y } = win.getCursolPosition();
         this.confirmWindow.x = x + w;
         this.confirmWindow.y = y + wy;
         this.confirmWindow.open(action);
-        this.openWindow.push(this.confirmWindow);
+        //モーダルウインドウ（最上位）なので自分のウインドウの操作を許す
+        this.confirmWindow.forceUnLock();
     }
 
     openItemStatusWindow = (win, action, item) => {
@@ -108,22 +92,19 @@ class UI_WindowManager {
     }
 
     closeConfirmWindow = _ => {
-        this.childWindowClose();
+        this.confirmWindow.close();
+        this.forceUnLockAll();//全てのウインドウをロック前の状態に戻す
     }
 
     close = _ => {
-        if (this.equipmentWindow.isOpen || this.itemWindow.isOpen) return;
-        this.mainWindow.close();
+        for (const win of this.windows) win.close();
     }
 
     update = delta => {
         const { core: { input }, inputMap } = this;
         const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
         if (key) inputMap[key]();
-        let f = true;
-        for (const win of this.openWindow) {
-            if (f) f = win.update(delta);
-        }
+        for (const win of this.windows) win.update(delta);
     }
 }
 

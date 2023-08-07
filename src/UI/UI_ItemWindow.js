@@ -11,7 +11,7 @@ class UI_ItemWindow extends UI_Window {
             'ArrowLeft': _ => this.closeMenu(),
             'w': _ => this.up(),
             's': _ => this.down(),
-            'ArrowRight': _ => this.selected(),
+            'ArrowRight': _ => _ => { },
             'ArrowUp': _ => {
                 this.up()
                 this.selected();
@@ -49,13 +49,6 @@ class UI_ItemWindow extends UI_Window {
         super.open();
         if (items.length) this.selected();
     }
-
-    update = delta => {
-        super.update(delta);
-        // もう構造が複雑なのでウインドウ系は組みなおす！これはその場しのぎ！
-        this.core.uiWindowManager.itemStatusWindow.update(delta);
-    }
-
 
 }
 

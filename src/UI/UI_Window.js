@@ -13,6 +13,8 @@ class UI_Window {
     this.w = w;
     this.h = h;
     this.isLock = true;
+    // isLockの状態を維持したうえでロックする
+    this.isForceLock = false;
     this.inputMap = {
       'w': _ => this.up(),
       's': _ => this.down(),
@@ -74,6 +76,8 @@ class UI_Window {
     this.panel = panel;
     this.cursol = cursol;
     this.isOpen = true;
+    // 同一フレームでウインドウのオープン処理が起きないように
+    this.delayFrame = 1;
     this.unLock();
     this.selectUpdate(this.select);
   }
@@ -89,6 +93,8 @@ class UI_Window {
 
   lock = _ => this.isLock = true;
   unLock = _ => this.isLock = false;
+  forceLock = _ => this.isForceLock = true;
+  forceUnLock = _ => this.isForceLock = false;
 
   getPrim = _ => this.prim;
 
@@ -108,8 +114,12 @@ class UI_Window {
 
   update(delta) {
     const { input } = this.core;
-    const { inputMap, oldKeymap, isLock, singleUpdate } = this;
-    if (isLock) return true;
+    const { inputMap, oldKeymap, isLock, isForceLock, singleUpdate, delayFrame } = this;
+    if (delayFrame !== 0) {
+      this.delayFrame -= 1
+      return;
+    }
+    if (isLock || isForceLock) return true;
     const newMap = Object.keys(inputMap).map(key => input.isSingleDown(key) ? true : false).join(',');
     if (oldKeymap === newMap) return true;
     singleUpdate(delta);

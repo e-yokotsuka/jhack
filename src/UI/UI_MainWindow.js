@@ -37,6 +37,7 @@ class UI_MainWindow extends UI_Window {
                 },
             ]
         );
+        this.inputMap['ArrowLeft'] = _ => this.core.uiWindowManager.close();
     }
 
     selectItemMenu = _ => {

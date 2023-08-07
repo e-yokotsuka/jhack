@@ -58,19 +58,19 @@ ${item.valueLabel}：${item.value}
         this.panel = panel;
         this.cursol = cursol;
         this.isOpen = true;
+        // 同一フレームでウインドウのオープン処理が起きないように
+        this.delayFrame = 1;
         this.unLock();
         this.selectUpdate(this.select);
     }
 
     // override
     selected() {
+        console.log("selected")
         const { isOpen } = this;
         if (!isOpen) return;
         this.action(this.item);
     }
-
-    update = delta => super.update(delta);
-
 }
 
 export default UI_ItemStatusWindow;
