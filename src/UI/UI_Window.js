@@ -103,10 +103,9 @@ class UI_Window {
   getPrim = _ => this.prim;
 
   updateMenuText() {
-    const { menu, select, menuOffsetPosition } = this;
+    const { menu, menuOffsetPosition } = this;
     const startIndex = menuOffsetPosition;
     const endIndex = startIndex + MENU_MAX_ITEMS;
-    console.log(`select:${select}/startIndex:${startIndex}/endIndex:${endIndex}`)
     const labels = menu.slice(startIndex, endIndex).map(({ label }) => label);
     this.textPrim.text = labels.join("\n");
   }
@@ -115,22 +114,23 @@ class UI_Window {
     if (!this.isOpen) return;
     this.select--;
     this.cursolPosition--;
-    if (this.cursolPosition < 0) {
-      if (this.menuLength < MENU_MAX_ITEMS - 1) {
+    if (this.cursolPosition < 0) {// カーソルが最上位にあってかつ上が押された
+      if (this.menuLength < MENU_MAX_ITEMS - 1) { // ウインドウの最大要素数よりメニュー項目が少ない場合
         this.cursolPosition = this.menuLength - 1;
         this.select = this.menuLength - 1;
         this.menuOffsetPosition = 0;
       } else if (this.select < 0) {
+        // 先頭の要素をが選択されていた場合末尾の要素を選択する
         this.cursolPosition = MENU_MAX_ITEMS - 1;
         this.select = this.menuLength - 1;
         this.menuOffsetPosition = Math.max(this.menuLength - MENU_MAX_ITEMS, 0);
       } else {
+        // スクロールする
         this.cursolPosition = 0;
         this.menuOffsetPosition = Math.max(0, this.menuOffsetPosition - 1)
       }
     }
     this.updateMenuText();
-    console.log(this.cursolPosition)
     this.cursolPrim.y = this.cursolPosition * CELL_SIZE + 4;
   }
 
@@ -138,18 +138,19 @@ class UI_Window {
     if (!this.isOpen) return;
     this.select++;
     this.cursolPosition++;
-    if (this.cursolPosition > Math.min(MENU_MAX_ITEMS, this.menuLength) - 1) {
+    if (this.cursolPosition > Math.min(MENU_MAX_ITEMS, this.menuLength) - 1) {// 末尾の要素を選択していた
       if (this.select >= this.menuLength) {
+        // 先頭の要素を選択する
         this.cursolPosition = 0;
         this.select = 0;
         this.menuOffsetPosition = 0;
       } else {
+        // スクロールする
         this.cursolPosition = MENU_MAX_ITEMS - 1;
         this.menuOffsetPosition = Math.min(this.menuLength - MENU_MAX_ITEMS, this.menuOffsetPosition + 1)
       }
     }
     this.updateMenuText();
-    console.log(this.cursolPosition)
     this.cursolPrim.y = this.cursolPosition * CELL_SIZE + 4;
   }
 
