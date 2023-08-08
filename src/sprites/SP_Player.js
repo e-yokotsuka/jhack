@@ -30,6 +30,21 @@ class SP_Player extends SP_Actor {
     this.getItem(MS_Item[4]);
     this.getItem(MS_Item[5]);
     this.getItem(MS_Item[6]);
+    this.getItem(MS_Item[2]);
+    this.getItem(MS_Item[3]);
+    this.getItem(MS_Item[4]);
+    this.getItem(MS_Item[5]);
+    this.getItem(MS_Item[6]);
+    this.getItem(MS_Item[2]);
+    this.getItem(MS_Item[3]);
+    this.getItem(MS_Item[4]);
+    this.getItem(MS_Item[5]);
+    this.getItem(MS_Item[6]);
+    this.getItem(MS_Item[2]);
+    this.getItem(MS_Item[3]);
+    this.getItem(MS_Item[4]);
+    this.getItem(MS_Item[5]);
+    this.getItem(MS_Item[6]);
     this.getItem(MS_Item[7]);
     this.getItem(MS_Item[8]);
   }
