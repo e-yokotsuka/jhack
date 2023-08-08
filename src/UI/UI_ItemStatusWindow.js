@@ -54,14 +54,13 @@ ${item.valueLabel}：${item.value}
         cursol.drawRoundedRect(this.x + 2, this.y, this.w - 4, CELL_SIZE, 2);
         container.addChild(cursol)
 
-        this.text = text;
-        this.panel = panel;
-        this.cursol = cursol;
+        this.textPrim = text;
+        this.panelPrim = panel;
+        this.cursolPrim = cursol;
         this.isOpen = true;
         // 同一フレームでウインドウのオープン処理が起きないように
         this.delayFrame = 1;
         this.unLock();
-        this.selectUpdate(this.select);
     }
 
     // override

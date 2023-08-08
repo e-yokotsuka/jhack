@@ -1,6 +1,7 @@
 import { Container, Graphics, Text } from 'pixi.js';
 
 const CELL_SIZE = 32;
+const MENU_MAX_ITEMS = 12;
 class UI_Window {
   constructor({ core, x = 0, y = 0, w = 0, h = 0, menu }) {
     this.isOpen = false;
@@ -26,16 +27,18 @@ class UI_Window {
   }
 
   setMenu = menu => {
-    const labels = menu.map(({ label }) => label);
+    const labels = menu.map(({ label }) => `${label}`);
     this.menuText = labels.join("\n");
-    this.menuLength = labels.length;
+    this.menuLength = menu.length;
+    this.menuOffsetPosition = 0;
     this.longest = labels.reduce((acc, str) => {
       return Math.max(acc, str.length);
     }, 0);
     this.menu = menu;
     this.select = 0;
+    this.cursolPosition = 0;
     this.w = CELL_SIZE * this.longest + 16;
-    this.h = CELL_SIZE * this.menuLength + 4;
+    this.h = CELL_SIZE * Math.min(MENU_MAX_ITEMS, this.menuLength) + 4;
   }
 
   selected() {
@@ -72,14 +75,15 @@ class UI_Window {
     cursol.drawRoundedRect(this.x + 2, this.y, this.w - 4, CELL_SIZE, 2);
     container.addChild(cursol)
 
-    this.text = text;
-    this.panel = panel;
-    this.cursol = cursol;
+    this.textPrim = text;
+    this.panelPrim = panel;
+    this.cursolPrim = cursol;
     this.isOpen = true;
     // 同一フレームでウインドウのオープン処理が起きないように
     this.delayFrame = 1;
     this.unLock();
-    this.selectUpdate(this.select);
+    this.cursolPrim.y = 4;
+    this.updateMenuText();
   }
 
   leftSideX = _ => this.x + this.w;
@@ -98,18 +102,55 @@ class UI_Window {
 
   getPrim = _ => this.prim;
 
-  selectUpdate = select => {
-    if (!this.isOpen) return;
-    this.select = select;
-    this.cursol.y = this.select * CELL_SIZE + 4;
+  updateMenuText() {
+    const { menu, select, menuOffsetPosition } = this;
+    const startIndex = menuOffsetPosition;
+    const endIndex = startIndex + MENU_MAX_ITEMS;
+    console.log(`select:${select}/startIndex:${startIndex}/endIndex:${endIndex}`)
+    const labels = menu.slice(startIndex, endIndex).map(({ label }) => label);
+    this.textPrim.text = labels.join("\n");
   }
 
   up = _ => {
-    this.selectUpdate(this.select <= 0 ? this.select = this.menuLength - 1 : this.select - 1);
+    if (!this.isOpen) return;
+    this.select--;
+    this.cursolPosition--;
+    if (this.cursolPosition < 0) {
+      if (this.menuLength < MENU_MAX_ITEMS - 1) {
+        this.cursolPosition = this.menuLength - 1;
+        this.select = this.menuLength - 1;
+        this.menuOffsetPosition = 0;
+      } else if (this.select < 0) {
+        this.cursolPosition = MENU_MAX_ITEMS - 1;
+        this.select = this.menuLength - 1;
+        this.menuOffsetPosition = Math.max(this.menuLength - MENU_MAX_ITEMS, 0);
+      } else {
+        this.cursolPosition = 0;
+        this.menuOffsetPosition = Math.max(0, this.menuOffsetPosition - 1)
+      }
+    }
+    this.updateMenuText();
+    console.log(this.cursolPosition)
+    this.cursolPrim.y = this.cursolPosition * CELL_SIZE + 4;
   }
 
   down = _ => {
-    this.selectUpdate(this.select >= this.menuLength - 1 ? this.select = 0 : this.select + 1);
+    if (!this.isOpen) return;
+    this.select++;
+    this.cursolPosition++;
+    if (this.cursolPosition > Math.min(MENU_MAX_ITEMS, this.menuLength) - 1) {
+      if (this.select >= this.menuLength) {
+        this.cursolPosition = 0;
+        this.select = 0;
+        this.menuOffsetPosition = 0;
+      } else {
+        this.cursolPosition = MENU_MAX_ITEMS - 1;
+        this.menuOffsetPosition = Math.min(this.menuLength - MENU_MAX_ITEMS, this.menuOffsetPosition + 1)
+      }
+    }
+    this.updateMenuText();
+    console.log(this.cursolPosition)
+    this.cursolPrim.y = this.cursolPosition * CELL_SIZE + 4;
   }
 
   update(delta) {
@@ -134,7 +175,7 @@ class UI_Window {
     if (key) inputMap[key]();
   }
 
-  getCursolPosition = _ => ({ x: this.cursol.x, y: this.cursol.y });
+  getCursolPosition = _ => ({ x: this.cursolPrim.x, y: this.cursolPrim.y });
 
 }
 
