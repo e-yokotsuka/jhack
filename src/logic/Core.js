@@ -27,6 +27,16 @@ class Core {
     this.loaded = false;
     this.mainScale = 1;
     this.isWindowOpen = false;
+    this.debugText = {};
+  }
+
+  setDebugText = (index, text) => {
+    this.debugText[`${index}`] = text;
+  }
+
+  getDebugText = _ => {
+    const keys = Object.keys(this.debugText).sort();
+    return keys.map(key => `${this.debugText[key]}`).join("\n");
   }
 
   resize = _ => {
@@ -52,22 +62,14 @@ class Core {
     console.assert(loaded, 'Resource not loaded.');
     this.input = new Input();
     this.mainMap = new MP_AutoMap({ core: this }); 0
-    // const { height: canvasHeight } = this.getCanvasSize();
-    // const text = new Text('よくぞいらした。\nここムーリダヤ・メタインでは\n恐ろしき魔物との戦いが数千年にわたって繰り広げられている。', {
-    //   fontSize: 24,
-    //   fill: 0xffffff,
-    //   align: 'center',
-    // });
-    // text.y = canvasHeight;
-    // console.log(`text-y:${text.y}/${canvasHeight}`)
-    const keytext = new Text('debug key string', {
+    const debugTextPrim = new Text('debug key string', {
       fontSize: 20,
       fill: 0xffffff,
       align: 'center',
     });
-    app.stage.addChild(keytext);
-    keytext.x = 100;
-    keytext.y = 0;
+    app.stage.addChild(debugTextPrim);
+    debugTextPrim.x = 100;
+    debugTextPrim.y = 0;
 
     this.player = new SP_Player({ core: this });
     this.player.respawn();
@@ -92,8 +94,8 @@ class Core {
       app.stage.scale.y = mainScale;
       // const { width: canvasWidth } = this.getCanvasSize();
       this.input.update();
+      this.setDebugText(0, this.input.getDebugString(['w', 'a', 'd', 's', 'z', 'e']));
       this.mainMap.update(delta);
-      keytext.text = this.input.getDebugString(['w', 'a', 'd', 's', 'z', 'e']);
       this.uiStatus.update();
       // text.y -= delta * 1;
       // text.y = Math.max(text.y, 0);
@@ -102,6 +104,7 @@ class Core {
       this.monster.update(delta);
       this.uiMessageBox.update(delta);
       this.uiWindowManager.update(delta);
+      debugTextPrim.text = this.getDebugText();
       stats.end();
     });
   }
