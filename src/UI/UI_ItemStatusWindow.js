@@ -49,14 +49,8 @@ ${item.valueLabel}：${item.value}
         container.addChild(panel)
         container.addChild(text)
 
-        const cursol = new Graphics();
-        cursol.lineStyle(2, 0xFFFFFF, 1);
-        cursol.drawRoundedRect(this.x + 2, this.y, this.w - 4, CELL_SIZE, 2);
-        container.addChild(cursol)
-
         this.textPrim = text;
         this.panelPrim = panel;
-        this.cursolPrim = cursol;
         this.isOpen = true;
         // 同一フレームでウインドウのオープン処理が起きないように
         this.delayFrame = 1;
