@@ -5,6 +5,7 @@ const MENU_MAX_ITEMS = 12;
 class UI_Window {
   constructor({ core, x = 0, y = 0, w = 0, h = 0, menu }) {
     this.isOpen = false;
+    this.hasMenu = !menu;
     this.core = core;
     const container = new Container();
     this.prim = container;
