@@ -120,6 +120,7 @@ class Core {
   diceRoll = diceText => diceRoll(diceText);
 
   getPlayer = _ => this.player;
+  getPlayerStatus = _ => this.player.status;
 
   // stepが更新された
   handleStepUpdate = (/* vx, vy*/) => {

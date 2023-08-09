@@ -1,7 +1,8 @@
-import IL_Common from "../logic/items/IL_Common"
+import IL_Armour from "../logic/items/IL_Armour"
 import IL_Recovery from "../logic/items/IL_Recovery"
 import IL_Ring from "../logic/items/IL_Ring"
 import IL_Scroll from "../logic/items/IL_Scroll"
+import IL_Shield from "../logic/items/IL_Shield"
 import IL_Wepon from "../logic/items/IL_Wepon"
 
 // 値はequipmentsのプロパティ名と一致していなくてはならない
@@ -12,6 +13,7 @@ const ITEM_TYPE = {
   shield: 'shield',
   scroll: 'scroll',
   ring: 'ring',
+  empty: 'empty',
 }
 
 const ITEM_TYPE_NAME = {
@@ -21,11 +23,24 @@ const ITEM_TYPE_NAME = {
   shield: '盾',
   scroll: 'まきもの',
   ring: '指輪',
+  empty: '装備していません'
 }
 
 export { ITEM_TYPE };
 
 export default [
+  {//装備を外すときには空を装備する
+    id: "empty",
+    itemName: "なし",
+    itemType: ITEM_TYPE.empty,
+    itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.empty],
+    value: "0",
+    valueLabel: "",
+    price: 0,
+    rarity: 0,
+    minimumDepth: 0,
+    itemLogicClass: null
+  },
   {
     id: "yakuso",
     itemName: "よゆちょんぶっちそう",
@@ -60,7 +75,7 @@ export default [
     price: 4,
     rarity: 1.0,
     minimumDepth: 0,
-    itemLogicClass: IL_Common
+    itemLogicClass: IL_Armour
   },
   {
     id: "potion",
@@ -96,7 +111,7 @@ export default [
     price: 12,
     rarity: 1.0,
     minimumDepth: 0,
-    itemLogicClass: IL_Common
+    itemLogicClass: IL_Armour
   },
   {
     id: "mana-potion",
@@ -132,7 +147,7 @@ export default [
     price: 20,
     rarity: 1.0,
     minimumDepth: 0,
-    itemLogicClass: IL_Common
+    itemLogicClass: IL_Armour
   },
   {
     id: "antidote",
@@ -180,7 +195,7 @@ export default [
     price: 14,
     rarity: 1.0,
     minimumDepth: 0,
-    itemLogicClass: IL_Common
+    itemLogicClass: IL_Armour
   },
   {
     id: "elixir",
@@ -209,14 +224,14 @@ export default [
   {
     id: "shield",
     itemName: "シールド",
-    itemType: ITEM_TYPE.armour,
-    itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.armour],
+    itemType: ITEM_TYPE.shield,
+    itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.shield],
     value: "+2",
     valueLabel: "防御力",
     price: 8,
     rarity: 1.0,
     minimumDepth: 0,
-    itemLogicClass: IL_Common
+    itemLogicClass: IL_Shield
   },
   {
     id: "speed-potion",
@@ -244,15 +259,15 @@ export default [
   },
   {
     id: "splint-armor",
-    itemName: "スプリントアーマー",
-    itemType: ITEM_TYPE.armour,
-    itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.armour],
+    itemName: "驚異の盾",
+    itemType: ITEM_TYPE.shield,
+    itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.shield],
     value: "17",
     valueLabel: "防御力",
     price: 18,
     rarity: 1.0,
     minimumDepth: 0,
-    itemLogicClass: IL_Common
+    itemLogicClass: IL_Shield
   },
   {
     id: "revival-potion",
@@ -288,7 +303,7 @@ export default [
     price: 15,
     rarity: 1.0,
     minimumDepth: 0,
-    itemLogicClass: IL_Common
+    itemLogicClass: IL_Ring
   },
   {
     id: "fire-scroll",

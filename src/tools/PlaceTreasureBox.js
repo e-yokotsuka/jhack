@@ -1,4 +1,7 @@
+import { ITEM_TYPE } from "../data/MS_Item";
 
+// 宝箱に入らないアイテムを除外
+const itemFilter = itemsList => itemsList.filter(item => item.itemType != ITEM_TYPE.empty);
 
 const PlaceTreasureBox = (roomArray,
   entranceArray,
@@ -8,6 +11,7 @@ const PlaceTreasureBox = (roomArray,
   emptyProbability = 1
 ) => {
   if (!itemsList?.length) return [];
+  const filterdItemList = itemFilter(itemsList);
   const isEntranceSide = (x, y) => {
     for (const { x: ex, y: ey } of entranceArray) {
       if (Math.abs(ex - x) + Math.abs(ey - y) === 1) return true;
@@ -22,8 +26,8 @@ const PlaceTreasureBox = (roomArray,
       const x = Math.floor(Math.random() * (room.width - 2)) + 1 + room.x;
       const y = Math.floor(Math.random() * (room.height - 2)) + 1 + room.y;
       if (isEntranceSide(x, y)) continue; // 入り口の横には配置されない。
-      const itemIndex = Math.floor(Math.random() * itemsList.length);
-      const item = (Math.random() < emptyProbability) ? itemsList[itemIndex] : null;
+      const itemIndex = Math.floor(Math.random() * filterdItemList.length);
+      const item = (Math.random() < emptyProbability) ? filterdItemList[itemIndex] : null;
       treasureBoxes.push({ x, y, item });
     }
   });

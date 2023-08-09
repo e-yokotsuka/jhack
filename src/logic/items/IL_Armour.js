@@ -1,6 +1,6 @@
 import IL_Common from "./IL_Common";
 
-class IL_Wepon extends IL_Common {
+class IL_Armour extends IL_Common {
     constructor(core, item) {
         super(core, item);
     }
@@ -18,4 +18,4 @@ class IL_Wepon extends IL_Common {
 
 }
 
-export default IL_Wepon;
+export default IL_Armour;

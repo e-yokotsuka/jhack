@@ -32,7 +32,7 @@ class UI_EquipmentWindow extends UI_Window {
             action: _ => {
                 this.core.uiWindowManager.openConfirmWindow(this, () => {
                     const logic = new item.itemLogicClass(this.core, item);
-                    const used = logic.eqipment(this.core.getPlayer());
+                    const used = logic.equipment(this.core.getPlayer());
                     if (used) this.core.player.equipment(item, index);
                     this.closeMenu();
                 });

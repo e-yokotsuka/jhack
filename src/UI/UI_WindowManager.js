@@ -56,8 +56,7 @@ class UI_WindowManager {
         this.itemStatusWindow.close();
         this.mainWindow.unLock();
     }
-
-    openEqipmentMenu = _ => {
+    openEquipmentMenu = _ => {
         this.mainWindow.lock();
         this.equipmentWindow.open();
     }
@@ -87,6 +86,17 @@ class UI_WindowManager {
         this.itemStatusWindow.y = y;
         this.itemStatusWindow.open(action, item);
     }
+
+    openStatusWindow = _ => {
+        this.mainWindow.lock();
+        this.statusWindow.open();
+    }
+
+    closeStatusWindow = _ => {
+        this.statusWindow.close();
+        this.mainWindow.unLock();
+    }
+
 
     closeItemStatusWindow = _ => {
     }

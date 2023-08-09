@@ -1,3 +1,4 @@
+import { ITEM_TYPE } from "../data/MS_Item";
 import MD_Status from "./MD_Status";
 
 class MD_Actor {
@@ -42,6 +43,17 @@ class MD_Actor {
 
   //ロック状態
   isLock() { return this.lock; }
+
+  //装備する
+  equipment(item) {
+    const equipment = {
+      [ITEM_TYPE.weapon]: _ => (this.equipments.weapon = item),
+      [ITEM_TYPE.armour]: _ => (this.equipments.armour = item),
+      [ITEM_TYPE.shield]: _ => (this.equipments.shield = item),
+      [ITEM_TYPE.ring]: _ => (this.equipments.ring = item),
+    }[item.itemType];
+    equipment();
+  }
 
   // 動いたか？
   isMove = _ => (

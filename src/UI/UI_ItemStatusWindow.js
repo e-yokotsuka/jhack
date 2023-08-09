@@ -1,8 +1,8 @@
 import { Graphics, Text } from 'pixi.js';
 
+import { CELL_SIZE } from "../define";
 import UI_Window from "./UI_Window";
 
-const CELL_SIZE = 32;
 class UI_ItemStatusWindow extends UI_Window {
     constructor({ core, x = 0, y = 0 }) {
         super({
@@ -23,11 +23,11 @@ class UI_ItemStatusWindow extends UI_Window {
         this.action = action;
         this.item = item;
 
-        const itemText =
-            `アイテム名：${item.itemName}
+        const itemText = `
+アイテム名：${item.itemName}
 アイテムタイプ：${item.itemTypeName}
 ${item.valueLabel}：${item.value}
-`;
+`.replace(/^\s+/, '');
 
         const container = this.prim;
         container.removeChildren();
@@ -35,7 +35,7 @@ ${item.valueLabel}：${item.value}
             fontSize: 28,
             fill: 0xffffff,
             align: 'left',
-            lineHeight: 32
+            lineHeight: CELL_SIZE
         });
         text.setTransform(this.x + 8, this.y + 4)
 

@@ -1,4 +1,6 @@
+import { EMPTY_ITEM_INDEX } from "../define"
 import MS_Gender from "../data/MS_Gender";
+import MS_Item from "../data/MS_Item";
 import MS_Race from "../data/MS_Race";
 
 const MD_Status = ({
@@ -44,10 +46,10 @@ const MD_Status = ({
   mapY,
   items: [],
   equipments: {
-    armour: {},
-    weapon: {},
-    ring: {},
-    shield: {},
+    armour: MS_Item[EMPTY_ITEM_INDEX],
+    weapon: MS_Item[EMPTY_ITEM_INDEX],
+    ring: MS_Item[EMPTY_ITEM_INDEX],
+    shield: MS_Item[EMPTY_ITEM_INDEX],
   },
   magic: {
     black: {},

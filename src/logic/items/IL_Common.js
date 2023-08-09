@@ -12,9 +12,9 @@ class IL_Common {
         this.addText(`うーん、${itemName}は使うもんじゃぁないな`);
     }
 
-    eqipment() {
+    equipment() {
         const { itemName } = this.item;
-        this.addText(`${itemName}を装備したぞ！`);
+        this.addText(`${itemName}は、装備できない！だいじょうぶか？`);
     }
 
     addText = text => this.core.addText(text);

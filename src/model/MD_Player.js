@@ -1,5 +1,7 @@
+import { EMPTY_ITEM_INDEX } from "../define"
 import MD_Actor from "./MD_Actor";
 import MS_Gender from "../data/MS_Gender";
+import MS_Item from "../data/MS_Item";
 import MS_Race from "../data/MS_Race";
 
 class MD_Player extends MD_Actor {
@@ -14,10 +16,10 @@ class MD_Player extends MD_Actor {
       gender: MS_Gender.male.value,
       race: MS_Race.human,
       equipments: {
-        armour: null,
-        weapon: null,
-        ring: null,
-        shield: null,
+        armour: MS_Item[EMPTY_ITEM_INDEX],
+        weapon: MS_Item[EMPTY_ITEM_INDEX],
+        ring: MS_Item[EMPTY_ITEM_INDEX],
+        shield: MS_Item[EMPTY_ITEM_INDEX],
       },
       position: {
         x: 0,
@@ -29,3 +31,4 @@ class MD_Player extends MD_Actor {
   }
 }
 export default MD_Player;
+

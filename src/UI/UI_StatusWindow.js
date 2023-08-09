@@ -1,6 +1,67 @@
+import { CELL_SIZE, HP_MAX_DIGITS, LV_MAX_DIGITS, MAX_NAME_LENGTH, MP_MAX_DIGITS } from "../define";
+import { Graphics, Text } from 'pixi.js';
+
 import UI_Window from "./UI_Window";
+import { padEnd } from '../tools/Formatter'
 
 class UI_StatusWindow extends UI_Window {
+    constructor({ core, x = 0, y = 0 }) {
+        super({
+            core,
+            x, y,
+            w: CELL_SIZE * 20,
+            h: CELL_SIZE * 10,
+        });
+        this.inputMap = {
+            'ArrowLeft': _ => this.isOpen && this.core.uiWindowManager.closeStatusWindow(),
+        };
+        this.action = _ => { }
+    }
+
+    // override
+    open() {
+        const status = this.core.getPlayerStatus();
+        console.dir(status);
+        const { armour, weapon, ring, shield } = status.equipments;
+        const itemText =
+            `レベル：${padEnd(status.lv, LV_MAX_DIGITS, " ")} 名前：${padEnd(status.name, MAX_NAME_LENGTH)}
+HP：${padEnd(status.hp, HP_MAX_DIGITS, " ")}/${padEnd(status.maxHp, HP_MAX_DIGITS, " ")} MP：${padEnd(status.mp, MP_MAX_DIGITS, " ")}/${padEnd(status.maxMp, MP_MAX_DIGITS, " ")}
+
+装備：
+  武器：${weapon.itemName}
+  鎧  ：${armour.itemName}
+  盾  ：${shield.itemName}
+  指輪：${ring.itemName}
+
+`;
+
+        const container = this.prim;
+        container.removeChildren();
+        const text = new Text(itemText, {
+            fontSize: 28,
+            fill: 0xffffff,
+            align: 'left',
+            lineHeight: 32
+        });
+        text.setTransform(this.x + 8, this.y + 4)
+
+
+        const panel = new Graphics();
+        panel.lineStyle(2, 0xFFFFFF, 1);
+        panel.beginFill(0x650A5A, 0.25);
+        panel.drawRoundedRect(this.x, this.y, this.w, this.h + 4, 4);
+        panel.endFill();
+
+        container.addChild(panel)
+        container.addChild(text)
+
+        this.textPrim = text;
+        this.panelPrim = panel;
+        this.isOpen = true;
+        // 同一フレームでウインドウのオープン処理が起きないように
+        this.delayFrame = 1;
+        this.unLock();
+    }
 
 }
 

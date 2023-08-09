@@ -50,7 +50,7 @@ class SP_Actor {
   healMp() { console.log("healMp") }
 
   //装備
-  equipment() { console.log("itemEquipment") }
+  equipment(item) { this.status.equipment(item) }
 
   //装備をはずす
   removeEquipment() { console.log("removeEquipment") }

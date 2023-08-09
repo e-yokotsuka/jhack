@@ -23,22 +23,21 @@ class SP_Player extends SP_Actor {
     this.sprite = sprite;
     this.status.mapX = 0;
     this.status.mapY = 0;
-    this.getItem(MS_Item[0]);
     this.getItem(MS_Item[1]);
     this.getItem(MS_Item[2]);
     this.getItem(MS_Item[3]);
     this.getItem(MS_Item[4]);
     this.getItem(MS_Item[5]);
     this.getItem(MS_Item[6]);
-    this.getItem(MS_Item[2]);
-    this.getItem(MS_Item[3]);
-    this.getItem(MS_Item[4]);
-    this.getItem(MS_Item[5]);
-    this.getItem(MS_Item[6]);
-    this.getItem(MS_Item[2]);
-    this.getItem(MS_Item[3]);
-    this.getItem(MS_Item[4]);
-    this.getItem(MS_Item[5]);
+    this.getItem(MS_Item[16]);
+    this.getItem(MS_Item[17]);
+    this.getItem(MS_Item[18]);
+    this.getItem(MS_Item[19]);
+    this.getItem(MS_Item[20]);
+    this.getItem(MS_Item[21]);
+    this.getItem(MS_Item[22]);
+    this.getItem(MS_Item[23]);
+    this.getItem(MS_Item[24]);
     this.getItem(MS_Item[6]);
     this.getItem(MS_Item[2]);
     this.getItem(MS_Item[3]);
@@ -143,12 +142,6 @@ class SP_Player extends SP_Actor {
   // itemを使用したあとの処理
   itemUsed(item, index) {
     this.status.items.splice(index, 1);
-  }
-
-  // 装備する
-  equipment(item, index) {
-    const { type } = item;
-    this.status.equipments[type] = { index, ...item }
   }
 
   update = (/*delta*/) => {
