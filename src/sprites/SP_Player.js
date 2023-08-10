@@ -1,3 +1,4 @@
+import { AVAILABLE_EQUIP_TYPES } from "../data/MS_Item";
 import MD_Player from '../model/MD_Player';
 import MS_Item from "../data/MS_Item";
 import SP_Actor from './SP_Actor';
@@ -116,18 +117,16 @@ class SP_Player extends SP_Actor {
     addText(`ドアを開けた！`);
   }
 
-  getItem(item) {
-    const { addText } = this;
-    item.uuid = this.getUUID()
-    this.status.items.push(item);
-    const itemList = this.status.items.map(({ itemName, uuid, id, itemTypeName }) => `${uuid}:${itemName}:${id}:${itemTypeName}`).join('\n')
-    addText(`${item.itemName}をGETした！`);
-    addText(`${itemList}`, 30);
-  }
-
   items = _ => this.status.items;
 
   getEquipments = _ => this.status.equipments;
+
+  isItemEquipped = item => this.status.isItemEquipped(item);
+
+  //装備可能なアイテムの一覧
+  equipmentItems() {
+    return this.items().filter(({ itemType }) => AVAILABLE_EQUIP_TYPES.includes(itemType));
+  }
 
   healHp(n, { itemName }) {
     const { addText } = this;

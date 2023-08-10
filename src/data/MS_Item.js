@@ -26,11 +26,19 @@ const ITEM_TYPE_NAME = {
   empty: '装備していません'
 }
 
-export { ITEM_TYPE };
+const AVAILABLE_EQUIP_TYPES = [
+  ITEM_TYPE.weapon,
+  ITEM_TYPE.armour,
+  ITEM_TYPE.shield,
+  ITEM_TYPE.ring,
+];
+
+export { ITEM_TYPE, AVAILABLE_EQUIP_TYPES };
 
 export default [
   {//装備を外すときには空を装備する
     id: "empty",
+    uuid: "",
     itemName: "なし",
     itemType: ITEM_TYPE.empty,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.empty],
@@ -43,6 +51,7 @@ export default [
   },
   {
     id: "yakuso",
+    uuid: "",
     itemName: "よゆちょんぶっちそう",
     itemType: ITEM_TYPE.recovery,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.recovery],
@@ -55,6 +64,7 @@ export default [
   },
   {
     id: "dagger",
+    uuid: "",
     itemName: "ダガー",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -67,6 +77,7 @@ export default [
   },
   {
     id: "leather-armor",
+    uuid: "",
     itemName: "レザーアーマー",
     itemType: ITEM_TYPE.armour,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.armour],
@@ -79,6 +90,7 @@ export default [
   },
   {
     id: "potion",
+    uuid: "",
     itemName: "回復ポーション",
     itemType: ITEM_TYPE.recovery,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.recovery],
@@ -91,6 +103,7 @@ export default [
   },
   {
     id: "long-sword",
+    uuid: "",
     itemName: "ロングソード",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -103,6 +116,7 @@ export default [
   },
   {
     id: "chain-mail",
+    uuid: "",
     itemName: "チェインメイル",
     itemType: ITEM_TYPE.armour,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.armour],
@@ -115,6 +129,7 @@ export default [
   },
   {
     id: "mana-potion",
+    uuid: "",
     itemName: "マナポーション",
     itemType: ITEM_TYPE.recovery,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.recovery],
@@ -127,6 +142,7 @@ export default [
   },
   {
     id: "shortbow",
+    uuid: "",
     itemName: "ショートボウ",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -139,6 +155,7 @@ export default [
   },
   {
     id: "plate-armor",
+    uuid: "",
     itemName: "プレートアーマー",
     itemType: ITEM_TYPE.armour,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.armour],
@@ -151,6 +168,7 @@ export default [
   },
   {
     id: "antidote",
+    uuid: "",
     itemName: "解毒薬",
     itemType: ITEM_TYPE.recovery,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.recovery],
@@ -163,6 +181,7 @@ export default [
   },
   {
     id: "greatsword",
+    uuid: "",
     itemName: "グレートソード",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -175,6 +194,7 @@ export default [
   },
   {
     id: "crossbow",
+    uuid: "",
     itemName: "クロスボウ",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -187,6 +207,7 @@ export default [
   },
   {
     id: "scale-armor",
+    uuid: "",
     itemName: "スケイルアーマー",
     itemType: ITEM_TYPE.armour,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.armour],
@@ -199,6 +220,7 @@ export default [
   },
   {
     id: "elixir",
+    uuid: "",
     itemName: "エリクサー",
     itemType: ITEM_TYPE.recovery,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.recovery],
@@ -211,6 +233,7 @@ export default [
   },
   {
     id: "staff",
+    uuid: "",
     itemName: "スタッフ",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -223,6 +246,7 @@ export default [
   },
   {
     id: "shield",
+    uuid: "",
     itemName: "シールド",
     itemType: ITEM_TYPE.shield,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.shield],
@@ -235,6 +259,7 @@ export default [
   },
   {
     id: "speed-potion",
+    uuid: "",
     itemName: "速さのポーション",
     itemType: ITEM_TYPE.recovery,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.recovery],
@@ -247,6 +272,7 @@ export default [
   },
   {
     id: "warhammer",
+    uuid: "",
     itemName: "ウォーハンマー",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -259,6 +285,7 @@ export default [
   },
   {
     id: "splint-armor",
+    uuid: "",
     itemName: "驚異の盾",
     itemType: ITEM_TYPE.shield,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.shield],
@@ -271,6 +298,7 @@ export default [
   },
   {
     id: "revival-potion",
+    uuid: "",
     itemName: "復活のポーション",
     itemType: ITEM_TYPE.recovery,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.recovery],
@@ -283,6 +311,7 @@ export default [
   },
   {
     id: "flail",
+    uuid: "",
     itemName: "フレイル",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -295,6 +324,7 @@ export default [
   },
   {
     id: "ring-of-protection",
+    uuid: "",
     itemName: "プロテクションリング",
     itemType: ITEM_TYPE.ring,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.ring],
@@ -307,6 +337,7 @@ export default [
   },
   {
     id: "fire-scroll",
+    uuid: "",
     itemName: "火のスクロール",
     itemType: ITEM_TYPE.scroll,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.scroll],
@@ -319,6 +350,7 @@ export default [
   },
   {
     id: "ice-scroll",
+    uuid: "",
     itemName: "氷のスクロール",
     itemType: ITEM_TYPE.scroll,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.scroll],
@@ -331,6 +363,7 @@ export default [
   },
   {
     id: "thunder-scroll",
+    uuid: "",
     itemName: "雷のスクロール",
     itemType: ITEM_TYPE.scroll,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.scroll],
@@ -343,6 +376,7 @@ export default [
   },
   {
     id: "mace",
+    uuid: "",
     itemName: "メイス",
     itemType: ITEM_TYPE.weapon,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.weapon],
@@ -355,6 +389,7 @@ export default [
   },
   {
     id: "ring-of-strength",
+    uuid: "",
     itemName: "力のリング",
     itemType: ITEM_TYPE.ring,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.ring],
@@ -367,6 +402,7 @@ export default [
   },
   {
     id: "ring-of-dexterity",
+    uuid: "",
     itemName: "敏捷のリング",
     itemType: ITEM_TYPE.ring,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.ring],
@@ -379,6 +415,7 @@ export default [
   },
   {
     id: "ring-of-intelligence",
+    uuid: "",
     itemName: "知性のリング",
     itemType: ITEM_TYPE.ring,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.ring],
@@ -391,6 +428,7 @@ export default [
   },
   {
     id: "ring-of-constitution",
+    uuid: "",
     itemName: "体力のリング",
     itemType: ITEM_TYPE.ring,
     itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.ring],

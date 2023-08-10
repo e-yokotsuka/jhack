@@ -13,7 +13,7 @@ class IL_Ring extends IL_Common {
     equipment(actor) {
         const { itemName } = this.item;
         actor.equipment(this.item);
-        this.addText(`${itemName}をそっと薬指にはめた。少しどきどきした。`);
+        this.addText(`${itemName}をそっと左の薬指にはめた。少しどきどきした。`);
     }
 }
 

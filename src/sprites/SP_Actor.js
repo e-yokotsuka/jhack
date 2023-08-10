@@ -32,7 +32,15 @@ class SP_Actor {
   died() { console.log("died") }
 
   //アイテムを手に入れた
-  getItem() { console.log("getItem") }
+  getItem(item) {
+    const { addText } = this;
+    const newItem = { ...item }; //参照を切り離す
+    newItem.uuid = this.getUUID()
+    this.status.items.push(newItem);
+    const itemList = this.status.items.map(({ itemName, uuid, id, itemTypeName }) => `${uuid}:${itemName}:${id}:${itemTypeName}`).join('\n')
+    addText(`${newItem.itemName}をGETした！`);
+    addText(`${itemList}`, 30);
+  }
 
   //ドアをみつけた
   discoverDoor() { console.log("discoverDoor") }
@@ -51,6 +59,9 @@ class SP_Actor {
 
   //装備
   equipment(item) { this.status.equipment(item) }
+
+  //装備可能なアイテム一覧
+  equipmentItems() { return [] }
 
   //装備をはずす
   removeEquipment() { console.log("removeEquipment") }

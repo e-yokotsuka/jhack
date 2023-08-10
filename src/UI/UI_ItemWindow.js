@@ -1,3 +1,4 @@
+import { EQUIPPED_TEXT_COLOR } from '../define'
 import UI_Window from "./UI_Window";
 
 class UI_ItemWindow extends UI_Window {
@@ -26,18 +27,23 @@ class UI_ItemWindow extends UI_Window {
     closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeItemMenu()
 
     open() {
-        const items = this.core.player.items();
-        const menu = items.length ? items.map((item, index) => ({
-            label: item.itemName,
-            action: _ => {
-                this.core.uiWindowManager.openItemStatusWindow(this, () => {
-                    const logic = new item.itemLogicClass(this.core, item);
-                    const used = logic.use(this.core.getPlayer());
-                    if (used) this.core.player.itemUsed(item, index);
-                    this.closeMenu();
-                }, item);
+        const { player } = this.core;
+        const items = player.items();
+        const menu = items.length ? items.map((item, index) => {
+            const isEquipped = player.isItemEquipped(item);
+            return {
+                label: item.itemName,
+                color: isEquipped ? EQUIPPED_TEXT_COLOR : super.DEFAULT_TEXT_COLOR,
+                action: _ => {
+                    this.core.uiWindowManager.openItemStatusWindow(this, () => {
+                        const logic = new item.itemLogicClass(this.core, item);
+                        const used = logic.use(this.core.getPlayer());
+                        if (used) this.core.player.itemUsed(item, index);
+                        this.closeMenu();
+                    }, item);
+                }
             }
-        })) : [{
+        }) : [{
             label: "なにも持っていない！",
             action: _ => {
                 console.log("なにも持っていない！");

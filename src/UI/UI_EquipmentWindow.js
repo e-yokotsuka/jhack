@@ -1,4 +1,4 @@
-import { ITEM_TYPE } from "../data/MS_Item";
+import { EQUIPPED_TEXT_COLOR } from '../define'
 import UI_Window from "./UI_Window";
 
 class UI_EquipmentWindow extends UI_Window {
@@ -21,23 +21,23 @@ class UI_EquipmentWindow extends UI_Window {
     closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeEquipmentMenu()
 
     open() {
-        const items = this.core.player.items().filter(({ itemType }) => [
-            ITEM_TYPE.armour,
-            ITEM_TYPE.weapon,
-            ITEM_TYPE.ring,
-            ITEM_TYPE.shield
-        ].includes(itemType));
-        const menu = items.length ? items.map((item, index) => ({
-            label: item.itemName,
-            action: _ => {
-                this.core.uiWindowManager.openConfirmWindow(this, () => {
-                    const logic = new item.itemLogicClass(this.core, item);
-                    const used = logic.equipment(this.core.getPlayer());
-                    if (used) this.core.player.equipment(item, index);
-                    this.closeMenu();
-                });
+        const { player } = this.core;
+        const items = player.equipmentItems();
+        const menu = items.length ? items.map((item, index) => {
+            const isEquipped = player.isItemEquipped(item);
+            return {
+                label: item.itemName,
+                color: isEquipped ? EQUIPPED_TEXT_COLOR : super.DEFAULT_TEXT_COLOR,
+                action: _ => {
+                    this.core.uiWindowManager.openConfirmWindow(this, () => {
+                        const logic = new item.itemLogicClass(this.core, item);
+                        const used = logic.equipment(this.core.getPlayer());
+                        if (used) this.core.player.equipment(item, index);
+                        this.closeMenu();
+                    });
+                }
             }
-        })) : [{
+        }) : [{
             label: "装備できるものがない！",
             action: _ => {
                 console.log("装備できるものがない！");

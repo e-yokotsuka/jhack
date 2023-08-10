@@ -1,7 +1,14 @@
 import { Container, Graphics, Text } from 'pixi.js';
 
+import { DEFAULT_TEXT_COLOR } from '../define'
+
 const CELL_SIZE = 32;
 const MENU_MAX_ITEMS = 12;
+const X_PADDING = 4;
+const Y_PADDING = 4;
+const MENU_RIGHT_PADDING = 16;
+const CURSOL_MARGIN = 4;
+
 class UI_Window {
   constructor({ core, x = 0, y = 0, w = 0, h = 0, menu }) {
     this.isOpen = false;
@@ -27,6 +34,8 @@ class UI_Window {
     if (menu) this.setMenu(menu);
   }
 
+  rowHeight = _ => Math.min(MENU_MAX_ITEMS, this.menuLength);
+
   setMenu = menu => {
     const labels = menu.map(({ label }) => `${label}`);
     this.menuText = labels.join("\n");
@@ -38,8 +47,8 @@ class UI_Window {
     this.menu = menu;
     this.select = 0;
     this.cursolPosition = 0;
-    this.w = CELL_SIZE * this.longest + 16;
-    this.h = CELL_SIZE * Math.min(MENU_MAX_ITEMS, this.menuLength) + 4;
+    this.w = CELL_SIZE * this.longest + MENU_RIGHT_PADDING;
+    this.h = CELL_SIZE * this.rowHeight() + Y_PADDING;
   }
 
   selected() {
@@ -48,42 +57,49 @@ class UI_Window {
     menu[select].action()
   }
 
-  open() {
-    const { menuText } = this;
+  createTextContainer() {
+    const textContainer = new Container();
+    this.textPrims = Array(this.rowHeight()).fill().map((txtPrim, index) => {
+      txtPrim = new Text("", {
+        fontSize: 28,
+        fill: DEFAULT_TEXT_COLOR,
+        align: 'left',
+        lineHeight: 32
+      })
+      txtPrim.setTransform(this.x + X_PADDING, this.y + Y_PADDING + index * 32);
+      textContainer.addChild(txtPrim)
+      return txtPrim;
+    });
+    return textContainer;
+  }
 
+  open() {
     const container = this.prim;
     container.removeChildren();
-    const text = new Text(menuText, {
-      fontSize: 28,
-      fill: 0xffffff,
-      align: 'left',
-      lineHeight: 32
-    });
-    text.setTransform(this.x + 8, this.y + 4)
-
 
     const panel = new Graphics();
     panel.lineStyle(2, 0xFFFFFF, 1);
     panel.beginFill(0x650A5A, 0.25);
-    panel.drawRoundedRect(this.x, this.y, this.w, this.h + 4, 4);
+    panel.drawRoundedRect(this.x, this.y, this.w, this.h + Y_PADDING, 4);
     panel.endFill();
 
     container.addChild(panel)
-    container.addChild(text)
 
     const cursol = new Graphics();
     cursol.lineStyle(2, 0xFFFFFF, 1);
-    cursol.drawRoundedRect(this.x + 2, this.y, this.w - 4, CELL_SIZE, 2);
+    cursol.drawRoundedRect(this.x + CURSOL_MARGIN / 2, this.y, this.w - CURSOL_MARGIN, CELL_SIZE, 2);
     container.addChild(cursol)
 
-    this.textPrim = text;
+    this.textContainer = this.createTextContainer();
+    container.addChild(this.textContainer)
+
     this.panelPrim = panel;
     this.cursolPrim = cursol;
     this.isOpen = true;
     // 同一フレームでウインドウのオープン処理が起きないように
     this.delayFrame = 1;
     this.unLock();
-    this.cursolPrim.y = 4;
+    this.cursolPrim.y = Y_PADDING;
     this.updateMenuText();
   }
 
@@ -107,8 +123,11 @@ class UI_Window {
     const { menu, menuOffsetPosition } = this;
     const startIndex = menuOffsetPosition;
     const endIndex = startIndex + MENU_MAX_ITEMS;
-    const labels = menu.slice(startIndex, endIndex).map(({ label }) => label);
-    this.textPrim.text = labels.join("\n");
+    this.textPrims.forEach(textPrim => textPrim.text = "");
+    menu.slice(startIndex, endIndex).forEach(({ label, color = DEFAULT_TEXT_COLOR }, index) => {
+      this.textPrims[index].style.fill = color
+      this.textPrims[index].text = label
+    });
   }
 
   up = _ => {
@@ -132,14 +151,14 @@ class UI_Window {
       }
     }
     this.updateMenuText();
-    this.cursolPrim.y = this.cursolPosition * CELL_SIZE + 4;
+    this.cursolPrim.y = this.cursolPosition * CELL_SIZE + Y_PADDING;
   }
 
   down = _ => {
     if (!this.isOpen) return;
     this.select++;
     this.cursolPosition++;
-    if (this.cursolPosition > Math.min(MENU_MAX_ITEMS, this.menuLength) - 1) {// 末尾の要素を選択していた
+    if (this.cursolPosition > this.rowHeight() - 1) {// 末尾の要素を選択していた
       if (this.select >= this.menuLength) {
         // 先頭の要素を選択する
         this.cursolPosition = 0;
@@ -152,7 +171,7 @@ class UI_Window {
       }
     }
     this.updateMenuText();
-    this.cursolPrim.y = this.cursolPosition * CELL_SIZE + 4;
+    this.cursolPrim.y = this.cursolPosition * CELL_SIZE + Y_PADDING;
   }
 
   update(delta) {

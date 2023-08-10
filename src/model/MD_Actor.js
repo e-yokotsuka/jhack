@@ -1,4 +1,5 @@
-import { ITEM_TYPE } from "../data/MS_Item";
+import { AVAILABLE_EQUIP_TYPES, ITEM_TYPE } from "../data/MS_Item";
+
 import MD_Status from "./MD_Status";
 
 class MD_Actor {
@@ -52,8 +53,22 @@ class MD_Actor {
       [ITEM_TYPE.shield]: _ => (this.equipments.shield = item),
       [ITEM_TYPE.ring]: _ => (this.equipments.ring = item),
     }[item.itemType];
-    equipment();
+    equipment && equipment();
   }
+
+  canEquip = item => AVAILABLE_EQUIP_TYPES.includes(item.itemType);
+
+  //装備しているか？
+  isItemEquipped(item) {
+    const isEquipped = {
+      [ITEM_TYPE.weapon]: _ => (this.equipments.weapon.uuid == item.uuid),
+      [ITEM_TYPE.armour]: _ => (this.equipments.armour.uuid == item.uuid),
+      [ITEM_TYPE.shield]: _ => (this.equipments.shield.uuid == item.uuid),
+      [ITEM_TYPE.ring]: _ => (this.equipments.ring.uuid == item.uuid),
+    }[item.itemType];
+    return isEquipped && isEquipped();
+  }
+
 
   // 動いたか？
   isMove = _ => (
