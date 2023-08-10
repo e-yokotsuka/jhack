@@ -8,7 +8,7 @@ import Stats from 'stats.js';
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
 import UI_WindowManager from '../ui/UI_WindowManager';
-import diceRoll from '../tools/Calc';
+import { diceRoll } from '../tools/Calc';
 
 class Core {
   constructor({ isShowStats = true }) {

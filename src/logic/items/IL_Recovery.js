@@ -1,5 +1,5 @@
 import IL_Common from "./IL_Common";
-import diceRoll from "../../tools/Calc";
+import { diceRoll } from "../../tools/Calc";
 
 class IL_Recovery extends IL_Common {
     constructor(core, item) {

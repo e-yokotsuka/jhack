@@ -9,4 +9,20 @@ const diceRoll = (str) => {
   return result + modifier;
 };
 
-export default diceRoll;
+const calculateMinMax = rollString => {
+  const match = rollString.match(/^(\d+)d(\d+)([+-]\d+)?$/);
+  if (!match) {
+    throw new Error('Invalid roll format');
+  }
+
+  const numberOfDice = parseInt(match[1], 10);
+  const facesOnDice = parseInt(match[2], 10);
+  const modifier = match[3] ? parseInt(match[3], 10) : 0;
+
+  const minValue = numberOfDice + modifier; // 最小の出目は、全てのダイスが1の場合
+  const maxValue = numberOfDice * facesOnDice + modifier; // 最大の出目は、全てのダイスが最大値の場合
+
+  return { minValue, maxValue };
+}
+
+export { diceRoll, calculateMinMax }
