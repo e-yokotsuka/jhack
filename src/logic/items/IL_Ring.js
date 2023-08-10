@@ -25,6 +25,11 @@ class IL_Ring extends IL_Common {
             this.addText(`${itemName}をそっと左の薬指にはめた。少しどきどきした。`);
         }
     }
+
+    getStringValue() {
+        const { item } = this;
+        return `${item.value}`;
+    }
 }
 
 export default IL_Ring;

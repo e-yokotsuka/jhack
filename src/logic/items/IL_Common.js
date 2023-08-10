@@ -18,6 +18,8 @@ class IL_Common {
     }
 
     addText = text => this.core.addText(text);
+    getStringValue() { return "" }
+
 }
 
 export default IL_Common;

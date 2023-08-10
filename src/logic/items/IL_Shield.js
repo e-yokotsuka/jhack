@@ -26,6 +26,10 @@ class IL_Shield extends IL_Common {
         }
     }
 
+    getStringValue() {
+        const { item } = this;
+        return `${item.value}`;
+    }
 }
 
 export default IL_Shield;

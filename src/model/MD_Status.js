@@ -6,6 +6,7 @@ import MS_Race from "../data/MS_Race";
 const MD_Status = ({
   lv = 1,
   exp = 0,
+  nextExp = 0,
   hp = 0,
   mp = 0,
   virtualX = 0,//移動先の座標
@@ -17,6 +18,7 @@ const MD_Status = ({
   isStay = false,
   lock = false,
   str = 0,
+  dex = 0,
   con = 0,
   intl = 0,
   wiz = 0,
@@ -27,6 +29,7 @@ const MD_Status = ({
 }) => ({
   lv,
   exp,
+  nextExp,
   hp,
   mp,
   maxHp,
@@ -34,6 +37,7 @@ const MD_Status = ({
   isStay,
   lock,
   str,
+  dex,
   con,
   intl,
   wiz,

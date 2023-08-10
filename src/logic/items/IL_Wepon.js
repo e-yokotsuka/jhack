@@ -2,6 +2,7 @@ import MS_Item, { ITEM_TYPE } from "../../data/MS_Item";
 
 import { EMPTY_ITEM_INDEX } from "../../define"
 import IL_Common from "./IL_Common";
+import { calculateMinMax } from "../../tools/Calc"
 
 class IL_Wepon extends IL_Common {
     constructor(core, item) {
@@ -24,6 +25,12 @@ class IL_Wepon extends IL_Common {
             actor.equipment(equipItem);
             this.addText(`${itemName}を装備したぞ！`);
         }
+    }
+
+    getStringValue() {
+        const { item } = this;
+        const minmax = calculateMinMax(item.value);
+        return `${minmax.minValue}～${minmax.maxValue}`;
     }
 
 }

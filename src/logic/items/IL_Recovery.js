@@ -1,4 +1,5 @@
 import IL_Common from "./IL_Common";
+import { calculateMinMax } from "../../tools/Calc"
 import { diceRoll } from "../../tools/Calc";
 
 class IL_Recovery extends IL_Common {
@@ -21,6 +22,13 @@ class IL_Recovery extends IL_Common {
         const n = diceRoll(value);
         healHp(n, this.item);
         return true;
+    }
+
+    getStringValue() {
+        const { item } = this;
+        if (item.value.includes('%')) return item.value;
+        const minmax = calculateMinMax(item.value);
+        return `${minmax.minValue}～${minmax.maxValue}`;
     }
 }
 

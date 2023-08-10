@@ -25,6 +25,11 @@ class IL_Armour extends IL_Common {
             this.addText(`${itemName}を装着したぞ！`);
         }
     }
+
+    getStringValue() {
+        const { item } = this;
+        return `${item.value}`;
+    }
 }
 
 export default IL_Armour;

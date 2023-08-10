@@ -22,11 +22,12 @@ class UI_ItemStatusWindow extends UI_Window {
     open(action = _ => { }, item = {}) {
         this.action = action;
         this.item = item;
-
+        const logic = new item.itemLogicClass(this.core, item);
+        const stringValue = logic.getStringValue();
         const itemText = `
 アイテム名：${item.itemName}
 アイテムタイプ：${item.itemTypeName}
-${item.valueLabel}：${item.value}
+${item.valueLabel}：${stringValue}
 `.replace(/^\s+/, '');
 
         const container = this.prim;
