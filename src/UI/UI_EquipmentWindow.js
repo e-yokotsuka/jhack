@@ -10,11 +10,23 @@ class UI_EquipmentWindow extends UI_Window {
         });
         this.inputMap = {
             'ArrowLeft': _ => this.closeMenu(),
-            'w': _ => this.up(),
-            's': _ => this.down(),
+            'w': _ => {
+                this.up()
+                this.selected();
+            },
+            's': _ => {
+                this.down()
+                this.selected();
+            },
             'ArrowRight': _ => this.selected(),
-            'ArrowUp': _ => this.up(),
-            'ArrowDown': _ => this.down(),
+            'ArrowUp': _ => {
+                this.up()
+                this.selected();
+            },
+            'ArrowDown': _ => {
+                this.down()
+                this.selected();
+            },
         };
     }
 
@@ -29,12 +41,12 @@ class UI_EquipmentWindow extends UI_Window {
                 label: item.itemName,
                 color: isEquipped ? EQUIPPED_TEXT_COLOR : super.DEFAULT_TEXT_COLOR,
                 action: _ => {
-                    this.core.uiWindowManager.openConfirmWindow(this, () => {
+                    this.core.uiWindowManager.openItemStatusWindow(this, () => {
                         const logic = new item.itemLogicClass(this.core, item);
                         const used = logic.equipment(this.core.getPlayer());
                         if (used) this.core.player.equipment(item, index);
                         this.closeMenu();
-                    });
+                    }, item);
                 }
             }
         }) : [{
@@ -47,6 +59,7 @@ class UI_EquipmentWindow extends UI_Window {
         }];
         this.setMenu(menu);
         super.open();
+        if (items.length) this.selected();
     }
 
 }

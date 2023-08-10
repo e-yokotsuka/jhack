@@ -10,8 +10,14 @@ class UI_ItemWindow extends UI_Window {
         });
         this.inputMap = {
             'ArrowLeft': _ => this.closeMenu(),
-            'w': _ => this.up(),
-            's': _ => this.down(),
+            'w': _ => {
+                this.up()
+                this.selected();
+            },
+            's': _ => {
+                this.down()
+                this.selected();
+            },
             'ArrowRight': _ => _ => { },
             'ArrowUp': _ => {
                 this.up()

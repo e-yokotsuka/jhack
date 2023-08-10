@@ -62,6 +62,7 @@ class UI_WindowManager {
     }
 
     closeEquipmentMenu = _ => {
+        this.itemStatusWindow.close();
         this.equipmentWindow.close();
         this.mainWindow.unLock();
     }
