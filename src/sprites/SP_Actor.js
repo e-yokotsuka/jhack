@@ -58,7 +58,7 @@ class SP_Actor {
   healMp() { console.log("healMp") }
 
   //装備
-  equipment(item) { this.status.equipment(item) }
+  equipment(item, forceItemType) { this.status.equipment(item, forceItemType) }
 
   //装備可能なアイテム一覧
   equipmentItems() { return [] }

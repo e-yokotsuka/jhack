@@ -18,7 +18,6 @@ class UI_EquipmentWindow extends UI_Window {
                 this.down()
                 this.selected();
             },
-            'ArrowRight': _ => this.selected(),
             'ArrowUp': _ => {
                 this.up()
                 this.selected();
@@ -33,7 +32,7 @@ class UI_EquipmentWindow extends UI_Window {
     closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeEquipmentMenu()
 
     open() {
-        const { player } = this.core;
+        const player = this.core.getPlayer();
         const items = player.equipmentItems();
         const menu = items.length ? items.map((item, index) => {
             const isEquipped = player.isItemEquipped(item);
@@ -43,8 +42,8 @@ class UI_EquipmentWindow extends UI_Window {
                 action: _ => {
                     this.core.uiWindowManager.openItemStatusWindow(this, () => {
                         const logic = new item.itemLogicClass(this.core, item);
-                        const used = logic.equipment(this.core.getPlayer());
-                        if (used) this.core.player.equipment(item, index);
+                        const used = logic.equipment(player);
+                        if (used) player.equipment(item, index);
                         this.closeMenu();
                     }, item);
                 }

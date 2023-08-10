@@ -52,8 +52,8 @@ const MD_Status = ({
     shield: MS_Item[EMPTY_ITEM_INDEX],
   },
   magic: {
-    black: {},
-    white: {}
+    black: [{}, {}, {}, {}, {}, {}, {}, {}, {}],
+    white: [{}, {}, {}, {}, {}, {}, {}, {}, {}]
   },
   steps: 0,//歩数
   force_update,

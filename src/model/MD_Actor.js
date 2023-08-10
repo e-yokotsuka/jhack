@@ -46,13 +46,13 @@ class MD_Actor {
   isLock() { return this.lock; }
 
   //装備する
-  equipment(item) {
+  equipment(item, forceItemType) {
     const equipment = {
       [ITEM_TYPE.weapon]: _ => (this.equipments.weapon = item),
       [ITEM_TYPE.armour]: _ => (this.equipments.armour = item),
       [ITEM_TYPE.shield]: _ => (this.equipments.shield = item),
       [ITEM_TYPE.ring]: _ => (this.equipments.ring = item),
-    }[item.itemType];
+    }[forceItemType ? forceItemType : item.itemType];
     equipment && equipment();
   }
 

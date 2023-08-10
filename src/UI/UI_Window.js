@@ -99,7 +99,7 @@ class UI_Window {
     // 同一フレームでウインドウのオープン処理が起きないように
     this.delayFrame = 1;
     this.unLock();
-    this.cursolPrim.y = Y_PADDING;
+    this.cursolPrim.y = this.cursolPosition * CELL_SIZE + Y_PADDING;
     this.updateMenuText();
   }
 

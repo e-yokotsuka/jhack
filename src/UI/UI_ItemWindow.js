@@ -33,7 +33,7 @@ class UI_ItemWindow extends UI_Window {
     closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeItemMenu()
 
     open() {
-        const { player } = this.core;
+        const player = this.core.getPlayer();
         const items = player.items();
         const menu = items.length ? items.map((item, index) => {
             const isEquipped = player.isItemEquipped(item);
@@ -43,7 +43,7 @@ class UI_ItemWindow extends UI_Window {
                 action: _ => {
                     this.core.uiWindowManager.openItemStatusWindow(this, () => {
                         const logic = new item.itemLogicClass(this.core, item);
-                        const used = logic.use(this.core.getPlayer());
+                        const used = logic.use(player);
                         if (used) this.core.player.itemUsed(item, index);
                         this.closeMenu();
                     }, item);
