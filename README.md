@@ -1,4 +1,4 @@
-# pixijs-boilerplate
+# CRAPPY RPG
 
 ## Getting started
 
