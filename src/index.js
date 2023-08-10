@@ -4,7 +4,6 @@ import Core from './logic/Core';
 
 const init = async _ => {
     const core = new Core({ isShowStats: true });
-    if (await core.Load())
-        await core.Start();
+    await core.reset();
 };
 init();

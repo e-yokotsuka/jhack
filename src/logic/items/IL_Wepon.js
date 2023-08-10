@@ -5,10 +5,9 @@ import IL_Common from "./IL_Common";
 import { calculateMinMax } from "../../tools/Calc"
 
 class IL_Wepon extends IL_Common {
-    constructor(core, item) {
-        super(core, item);
+    constructor(core,scene, item) {
+        super(core,scene, item);
     }
-
     use(/*target*/) {
         const { itemName } = this.item;
         this.addText(`うーん、${itemName}は使うもんじゃぁないな`);

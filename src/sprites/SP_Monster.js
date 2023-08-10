@@ -4,13 +4,14 @@ import { Sprite } from 'pixi.js';
 
 class SP_Monster extends SP_Actor {
 
-  constructor({ core, name = "goblin" }) {
-    const status =  new MD_Monster({
+  constructor({ core, scene, name = "goblin" }) {
+    const status = new MD_Monster({
       hp: 15, maxHp: 15,
       mp: 10, maxMp: 10,
     });
-    super(core,status);
-    const { textures: { tx_main }, mainMap } = core;
+    super({ core, scene, status });
+    const { textures: { tx_main } } = core;
+    const { mainMap } = scene;
     this.mainMap = mainMap;
     this.mainMap.addResetCallback(_ => {
       this.respawn();
@@ -23,6 +24,8 @@ class SP_Monster extends SP_Actor {
     this.status.mapX = 0;
     this.status.mapY = 0;
   }
+
+  getPrim = _ => this.sprite;
 
   getSP_MonsterData = _ => this.status;
 

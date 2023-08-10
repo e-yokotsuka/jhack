@@ -1,8 +1,8 @@
 import IL_Common from "./IL_Common";
 
 class IL_Scroll extends IL_Common {
-    constructor(core, item) {
-        super(core, item);
+    constructor(core,scene, item) {
+        super(core,scene, item);
     }
 
     use(/*target*/) {

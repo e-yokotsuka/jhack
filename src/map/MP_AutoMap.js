@@ -19,22 +19,24 @@ import TL_Trap from '../tiles/TL_Trap';
 import TL_Wall from '../tiles/TL_Wall';
 
 class MP_AutoMap {
-  constructor({ core, width = 100, height = 50 }) {
+  constructor({ core, scene, width = 100, height = 50 }) {
     this.isDebugViewCollision = false;
     this.core = core;
+    this.scene = scene;
     this.width = width;
     this.height = height;
     this.lastMapX = 0;
     this.lastMapY = 0;
     this.resetCallback = [];
-    const { stage } = this.core.app;
     this.mapContainer = new Container();
-    stage.addChild(this.mapContainer);
     this.makeAutomap();
   }
 
+  getPrim = _ => this.mapContainer;
+
+
   makeAutomap = _ => {
-    const {core} = this;
+    const { scene: { core } } = this;
     this.fill(({ x, y }) => new TL_Blank({ x, y }));
     this.rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
     this.roomArray = RoomCreater(this.rectArray);
@@ -46,15 +48,15 @@ class MP_AutoMap {
     this.traps = PlaceTrap(this.roomArray, this.tresureBoxes, MS_Trap);
 
     this.rectArray.forEach(({ x, y, width, height }) =>
-      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Blank({core, x, y }) }));
+      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Blank({ core, x, y }) }));
 
     this.roomArray.forEach(({ x, y, width, height, cellName }) =>
-      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Floor({core, x, y, cellName }) }));
+      this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Floor({ core, x, y, cellName }) }));
 
     this.roomWallArray.forEach(({ x, y, width, height, cellName }) =>
       this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Wall({ core, x, y, cellName }) }))
 
-    this.roadArray2.forEach(({ x, y, width, height, cellName }) => 
+    this.roadArray2.forEach(({ x, y, width, height, cellName }) =>
       this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Road({ core, x, y, cellName }) }))
 
     this.entranceArray.forEach(({ x, y, width, height }) =>

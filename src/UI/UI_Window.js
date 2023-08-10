@@ -10,10 +10,11 @@ const MENU_RIGHT_PADDING = 16;
 const CURSOL_MARGIN = 4;
 
 class UI_Window {
-  constructor({ core, x = 0, y = 0, w = 0, h = 0, menu }) {
+  constructor({ core,scene, x = 0, y = 0, w = 0, h = 0, menu }) {
     this.isOpen = false;
     this.hasMenu = !menu;
     this.core = core;
+    this.scene = scene;    
     const container = new Container();
     this.prim = container;
     this.oldKeymap = [];

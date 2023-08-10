@@ -1,11 +1,12 @@
 import UI_Window from "./UI_Window";
 
 class UI_MainWindow extends UI_Window {
-    constructor({ core }) {
+    constructor({ core,scene }) {
         super({
             x: 32,
             y: 32,
-            core
+            core,
+            scene
         });
         this.setMenu(
             [
@@ -35,36 +36,36 @@ class UI_MainWindow extends UI_Window {
                 },
             ]
         );
-        this.inputMap['ArrowLeft'] = _ => this.core.uiWindowManager.close();
+        this.inputMap['ArrowLeft'] = _ => this.scene.uiWindowManager.close();
     }
 
     selectItemMenu = _ => {
-        const { core: { uiWindowManager } } = this;
+        const { scene: { uiWindowManager } } = this;
         console.log("どうぐ");
         uiWindowManager.openItemMenu();
     }
 
     selectEqipmentMenu = _ => {
-        const { core: { uiWindowManager } } = this;
+        const { scene: { uiWindowManager } } = this;
         console.log("そうび");
         uiWindowManager.openEquipmentMenu();
     }
 
     selectStatus = _ => {
-        const { core: { uiWindowManager } } = this;
+        const { scene: { uiWindowManager } } = this;
         console.log("つよさ");
         uiWindowManager.openStatusWindow();
     }
 
     open() {
-        const { core: { windowOpen } } = this;
+        const { scene: { windowOpen } } = this;
         super.open();
         // coreにMainWindowの開閉状態を通知しておく
         windowOpen(this.isOpen);
     }
 
     close() {
-        const { windowOpen } = this.core;
+        const { windowOpen } = this.scene;
         super.close();
         // coreにMainWindowの開閉状態を通知しておく
         windowOpen(this.isOpen);

@@ -2,9 +2,10 @@ import { EQUIPPED_TEXT_COLOR } from '../define'
 import UI_Window from "./UI_Window";
 
 class UI_ItemWindow extends UI_Window {
-    constructor({ core, x = 0, y = 0 }) {
+    constructor({ core, scene, x = 0, y = 0 }) {
         super({
             core,
+            scene,
             x, y,
             maxlabels: 10,
         });
@@ -30,10 +31,10 @@ class UI_ItemWindow extends UI_Window {
         };
     }
 
-    closeMenu = _ => this.isOpen && this.core.uiWindowManager.closeItemMenu()
+    closeMenu = _ => this.isOpen && this.scene.uiWindowManager.closeItemMenu()
 
     open() {
-        const player = this.core.getPlayer();
+        const player = this.scene.getPlayer();
         const items = player.items();
         const menu = items.length ? items.map((item, index) => {
             const isEquipped = player.isItemEquipped(item);
@@ -41,10 +42,10 @@ class UI_ItemWindow extends UI_Window {
                 label: item.itemName,
                 color: isEquipped ? EQUIPPED_TEXT_COLOR : super.DEFAULT_TEXT_COLOR,
                 action: _ => {
-                    this.core.uiWindowManager.openItemStatusWindow(this, () => {
-                        const logic = new item.itemLogicClass(this.core, item);
+                    this.scene.uiWindowManager.openItemStatusWindow(this, () => {
+                        const logic = new item.itemLogicClass(this.core, this.scene, item);
                         const used = logic.use(player);
-                        if (used) this.core.player.itemUsed(item, index);
+                        if (used) this.scene.player.itemUsed(item, index);
                         this.closeMenu();
                     }, item);
                 }

@@ -4,9 +4,10 @@ import { CELL_SIZE } from "../define";
 import UI_Window from "./UI_Window";
 
 class UI_ItemStatusWindow extends UI_Window {
-    constructor({ core, x = 0, y = 0 }) {
+    constructor({ core, scene, x = 0, y = 0 }) {
         super({
             core,
+            scene,
             x, y,
             w: CELL_SIZE * 20,
             h: CELL_SIZE * 10,
@@ -22,7 +23,7 @@ class UI_ItemStatusWindow extends UI_Window {
     open(action = _ => { }, item = {}) {
         this.action = action;
         this.item = item;
-        const logic = new item.itemLogicClass(this.core, item);
+        const logic = new item.itemLogicClass(this.core, this.scene, item);
         const stringValue = logic.getStringValue();
         const itemText = `
 アイテム名：${item.itemName}

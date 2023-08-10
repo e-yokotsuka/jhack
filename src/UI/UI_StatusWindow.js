@@ -5,22 +5,23 @@ import UI_Window from "./UI_Window";
 import { padEnd } from '../tools/Formatter'
 
 class UI_StatusWindow extends UI_Window {
-    constructor({ core, x = 0, y = 0 }) {
+    constructor({ core, scene, x = 0, y = 0 }) {
         super({
             core,
+            scene,
             x, y,
             w: CELL_SIZE * 20,
             h: CELL_SIZE * 10,
         });
         this.inputMap = {
-            'ArrowLeft': _ => this.isOpen && this.core.uiWindowManager.closeStatusWindow(),
+            'ArrowLeft': _ => this.isOpen && this.scene.uiWindowManager.closeStatusWindow(),
         };
         this.action = _ => { }
     }
 
     // override
     open() {
-        const status = this.core.getPlayerStatus();
+        const status = this.scene.getPlayerStatus();
         console.dir(status);
         const { armour, weapon, ring, shield } = status.equipments;
         const itemText =

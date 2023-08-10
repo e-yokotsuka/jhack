@@ -4,8 +4,8 @@ import { EMPTY_ITEM_INDEX } from "../../define"
 import IL_Common from "./IL_Common";
 
 class IL_Armour extends IL_Common {
-    constructor(core, item) {
-        super(core, item);
+    constructor(core,scene, item) {
+        super(core,scene, item);
     }
 
     use(/*target*/) {

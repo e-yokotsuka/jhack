@@ -6,21 +6,21 @@ import { Sprite } from 'pixi.js';
 
 class SP_Player extends SP_Actor {
 
-  constructor({ core, name = "human" }) {
+  constructor({ core, scene, name = "human" }) {
     const status = new MD_Player({
       hp: 15, maxHp: 15,
       mp: 10, maxMp: 10,
     });
-    super(core, status);
-    const { textures: { tx_main }, mainMap } = core;
+    super({ core, scene, status });
+    const { textures: { tx_main } } = core;
+    const { mainMap } = scene;
     this.mainMap = mainMap;
     this.mainMap.addResetCallback(_ => {
       this.respawn();
     });
+    this.healHp.bind(this);
     const sprite = new Sprite(tx_main[`${name}`]);
     sprite.interactive = false;
-    const { stage } = this.core.app;
-    stage.addChild(sprite);
     this.sprite = sprite;
     this.status.mapX = 0;
     this.status.mapY = 0;
@@ -48,6 +48,8 @@ class SP_Player extends SP_Actor {
     this.getItem(MS_Item[7]);
     this.getItem(MS_Item[8]);
   }
+
+  getPrim = _ => this.sprite;
 
   getPlayerData = _ => this.status;
 
@@ -144,7 +146,9 @@ class SP_Player extends SP_Actor {
   }
 
   update = (/*delta*/) => {
-    const { core: { input, handleStepUpdate, isWindowOpen,/*, addText*/ }, mainMap,
+    const { core: { input },
+      scene: { handleStepUpdate, isWindowOpen,/*, addText*/ },
+      mainMap,
       status,
       status:
       { beforeUpdate,

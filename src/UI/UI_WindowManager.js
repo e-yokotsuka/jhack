@@ -7,16 +7,17 @@ import UI_MainWindow from './UI_MainWindow';
 import UI_StatusWindow from './UI_StatusWindow';
 
 class UI_WindowManager {
-    constructor({ core }) {
+    constructor({ core, scene }) {
         this.core = core;
+        this.scene = scene;
         // ウィンドウの配列
-        this.mainWindow = new UI_MainWindow({ core });
+        this.mainWindow = new UI_MainWindow({ core, scene });
         const { x, y, w } = this.mainWindow;
-        this.itemWindow = new UI_ItemWindow({ core, x: x + w, y });
-        this.equipmentWindow = new UI_EquipmentWindow({ core, x: x + w, y });
-        this.confirmWindow = new UI_ConfirmWindow({ core });
-        this.statusWindow = new UI_StatusWindow({ core, x: x + w, y });
-        this.itemStatusWindow = new UI_ItemStatusWindow({ core });
+        this.itemWindow = new UI_ItemWindow({ core, scene, x: x + w, y });
+        this.equipmentWindow = new UI_EquipmentWindow({ core, scene, x: x + w, y });
+        this.confirmWindow = new UI_ConfirmWindow({ core, scene });
+        this.statusWindow = new UI_StatusWindow({ core, scene, x: x + w, y });
+        this.itemStatusWindow = new UI_ItemStatusWindow({ core, scene });
 
 
         this.windows = [
@@ -31,7 +32,7 @@ class UI_WindowManager {
         this.prim = container;
         this.windows.forEach((w, i) => container.addChildAt(w.getPrim(), i));
         this.inputMap = {
-            'e': _ => core.isWindowOpen ? this.close() : this.open(),
+            'e': _ => scene.isWindowOpen ? this.close() : this.open(),
         };
     }
 

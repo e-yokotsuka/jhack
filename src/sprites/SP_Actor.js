@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
 class SP_Actor {
-  constructor(core, status) {
+  constructor({ core, scene, status }) {
     this.core = core;
+    this.scene = scene;
     this.status = status;
   }
 
@@ -78,7 +79,7 @@ class SP_Actor {
   getUUID = _ => uuidv4();
 
   addText = (text, time) => {
-    const { core: { addText } } = this;
+    const { scene: { addText } } = this;
     addText(text, time);
   }
 

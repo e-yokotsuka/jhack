@@ -8,9 +8,11 @@ const STATUS_RELATIVE_Y = -60;
 
 class UI_Status {
 
-  constructor({ core }) {
-    const { player, app: { screen: { height } } } = core;
+  constructor({ core, scene }) {
+    const { app: { screen: { height } } } = core;
+    const { player } = scene;
     this.core = core;
+    this.scene = scene;
     this.player = player;
     this.container = new Container();
     this.primText = new Text('', {
@@ -20,13 +22,13 @@ class UI_Status {
     });
     this.progressHp = new UI_ProgressBar({
       core,
-      y:24
+      y: 24
     });
     this.progressMp = new UI_ProgressBar({
       core,
-      fillColor:"#0f0fff",
-      backgroundColor:"#ff0f0f",
-      y:34
+      fillColor: "#0f0fff",
+      backgroundColor: "#ff0f0f",
+      y: 34
     });
     this.container.addChild(this.primText);
     this.container.addChild(this.progressHp.getPrim());
@@ -37,17 +39,17 @@ class UI_Status {
 
   getPrim = _ => this.container;
 
-  resize = (width,height)=>{
+  resize = (width, height) => {
     this.container.x = STATUS_ABS_X;
     this.container.y = height + STATUS_RELATIVE_Y;
-  } 
+  }
 
   update = _ => {
     const { hp, maxHp, mp, maxMp, mapX, mapY, steps } = this.player.getPlayerData();
-    const { isWindowOpen } = this.core;
+    const { isWindowOpen } = this.scene;
     this.primText.text = `HP:${hp}/${maxHp} MP: ${mp}/${maxMp} STEP ${steps} : (${mapX},${mapY}) : locked:${isWindowOpen} `;
-    this.progressHp.setValue((hp/maxHp*100));
-    this.progressMp.setValue((mp/maxMp*100));
+    this.progressHp.setValue((hp / maxHp * 100));
+    this.progressMp.setValue((mp / maxMp * 100));
   }
 
 }
