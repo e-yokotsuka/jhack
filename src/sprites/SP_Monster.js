@@ -22,7 +22,6 @@ class SP_Monster extends SP_Actor {
     this.sprite = sprite;
     this.status.mapX = 0;
     this.status.mapY = 0;
-    console.log(`create enemy`)
   }
 
   getPrim = _ => this.sprite;
@@ -35,7 +34,6 @@ class SP_Monster extends SP_Actor {
     const { x, y } = this.mainMap.getRespawnPosition();
     this.status.hp = this.status.maxHp;
     this.move(x, y);
-    console.dir(this.status)
     // this.mainMap.center(this.status.mapX, this.status.mapY);
   }
 

@@ -1,8 +1,8 @@
 import { Container, Text } from 'pixi.js';
 
 import MP_AutoMap from '../map/MP_AutoMap';
-import SP_Monster from '../sprites/SP_Monster';
 import SP_Player from '../sprites/SP_Player';
+import SpawnManager from './SpawnManager'
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
 import UI_WindowManager from '../ui/UI_WindowManager';
@@ -25,7 +25,7 @@ class GameScene {
         const { core, app } = this;
         const scene = this;
         this.sceneContainer.removeChildren();
-
+        this.level = 1; // 階層
         this.mainMap = new MP_AutoMap({ core, scene });
         this.sceneContainer.addChild(this.mainMap.getPrim());
         this.debugTextPrim = new Text('debug key string', {
@@ -40,9 +40,8 @@ class GameScene {
         this.player = new SP_Player({ core, scene });
         this.sceneContainer.addChild(this.player.getPrim());
         this.player.respawn();
-        this.monster = new SP_Monster({ core, scene });
-        this.sceneContainer.addChild(this.monster.getPrim());
-        this.monster.respawn();
+        this.monsters = [];
+
 
         this.uiStatus = new UI_Status({ core, scene });
         this.sceneContainer.addChild(this.uiStatus.getPrim());
@@ -52,13 +51,15 @@ class GameScene {
         this.uiWindowManager = new UI_WindowManager({ core, scene });
         this.sceneContainer.addChild(this.uiWindowManager.getPrim());
         app.stage.addChild(this.sceneContainer);
+        this.spawnManager = new SpawnManager(this)
     }
 
     main(delta) {
+        this.core.setDebugText(1, `Monster Count:${this.monsters.length}`);
         this.mainMap.update(delta);
         this.uiStatus.update();
         this.player.update(delta);
-        this.monster.update(delta);
+        this.monsters.map(({ update }) => { update(delta) });
         this.uiMessageBox.update(delta);
         this.uiWindowManager.update(delta);
         this.debugTextPrim.text = this.core.getDebugText();
@@ -83,6 +84,8 @@ class GameScene {
     getPlayer = _ => this.player;
     getPlayerStatus = _ => this.player.status;
 
+    spawnEnemy = _ => this.spawnManager.spawnEnemy();
+
     // stepが更新された
     handleStepUpdate = (/* vx, vy*/) => {
         // プレイヤーの動作を行う（移動、アイテム使用、攻撃など）
@@ -93,7 +96,7 @@ class GameScene {
         //actionPlayer(); // プレイヤーの動作を行う
         //moveEnemy() // 敵の移動
         //actionEnemy() // 敵のアクション
-        //spawnEnemy() // 敵の出現
+        this.spawnEnemy()
         //    console.log(`vx:${vx}/vy:${vy}`);
     }
 
