@@ -79,6 +79,7 @@ class Core {
   }
 
   Initialize = async _ => {
+    console.assert(this.loaded, 'Resource not loaded.');
     this.currentScene.Initialize();
   }
 

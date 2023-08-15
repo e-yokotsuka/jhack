@@ -22,9 +22,8 @@ class GameScene {
     Load = async _ => await true;
 
     Initialize = _ => {
-        const { core, app, loaded } = this;
+        const { core, app } = this;
         const scene = this;
-        console.assert(loaded, 'Resource not loaded.');
         this.sceneContainer.removeChildren();
 
         this.mainMap = new MP_AutoMap({ core, scene });
