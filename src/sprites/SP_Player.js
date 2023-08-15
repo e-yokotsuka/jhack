@@ -1,4 +1,5 @@
 import { AVAILABLE_EQUIP_TYPES } from "../data/MS_Item";
+import { CELL_SIZE } from "../define";
 import MD_Player from '../model/MD_Player';
 import MS_Item from "../data/MS_Item";
 import SP_Actor from './SP_Actor';
@@ -175,8 +176,8 @@ class SP_Player extends SP_Actor {
     const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
     if (key) inputMap[key]();
 
-    sprite.x = mainMap.mapContainer.x + status.mapX * 32;
-    sprite.y = mainMap.mapContainer.y + status.mapY * 32;
+    sprite.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
+    sprite.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
     if (!isMove()) return; // 動いていない
     // 動いた
     afterUpdate();
