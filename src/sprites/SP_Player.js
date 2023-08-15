@@ -47,11 +47,23 @@ class SP_Player extends SP_Actor {
     this.getItem(MS_Item[6]);
     this.getItem(MS_Item[7]);
     this.getItem(MS_Item[8]);
+    const { status: { trialMove, stay } } = this;
+    this.inputMap = {
+      'w': _ => trialMove('u'),
+      's': _ => trialMove('d'),
+      'a': _ => trialMove('l'),
+      'd': _ => trialMove('r'),
+      '.': _ => stay(),
+      'ArrowUp': _ => trialMove('u'),
+      'ArrowDown': _ => trialMove('d'),
+      'ArrowLeft': _ => trialMove('l'),
+      'ArrowRight': _ => trialMove('r'),
+    };
   }
 
   getPrim = _ => this.sprite;
 
-  getPlayerData = _ => this.status;
+  getStatus = _ => this.status;
 
   respawn() {
     const { x, y } = this.mainMap.getRespawnPosition();
@@ -149,28 +161,17 @@ class SP_Player extends SP_Actor {
     const { core: { input },
       scene: { handleStepUpdate, isWindowOpen,/*, addText*/ },
       mainMap,
+      inputMap,
       status,
       status:
       { beforeUpdate,
         afterUpdate,
-        trialMove,
         isMove,
-        stay,
       },
       sprite } = this;
     if (isWindowOpen) return;
     beforeUpdate();
-    const inputMap = {
-      'w': _ => trialMove('u'),
-      's': _ => trialMove('d'),
-      'a': _ => trialMove('l'),
-      'd': _ => trialMove('r'),
-      '.': _ => stay(),
-      'ArrowUp': _ => trialMove('u'),
-      'ArrowDown': _ => trialMove('d'),
-      'ArrowLeft': _ => trialMove('l'),
-      'ArrowRight': _ => trialMove('r'),
-    };
+
     const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
     if (key) inputMap[key]();
 
