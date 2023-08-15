@@ -187,6 +187,12 @@ class SP_Player extends SP_Actor {
     const tile = mainMap.getTile(vx, vy);
     tile.hit({ actor: this, status }) || this.moveConfirmed(vx, vy);
   }
+
+  // ステータスプロパティのシンタックスシュガー
+
+  get mapX() { return this.status.mapX }
+  get mapY() { return this.status.mapY }
+
 }
 
 export default SP_Player;
