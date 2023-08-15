@@ -42,6 +42,8 @@ class Core {
     if (reset) this.reset();
   }
 
+  getScene = sceneId => this.scenes[sceneId];
+
   setDebugText = (index, text) => {
     this.debugText[`${index}`] = text;
   }
