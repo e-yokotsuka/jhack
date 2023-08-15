@@ -4,12 +4,19 @@ import MD_Status from "./MD_Status";
 
 class MD_Actor {
   constructor(status) {
-    Object.keys(MD_Status({ ...status })).forEach(key => this[key] = status[key]);
+    const defaultStatus = MD_Status({ ...status });
+    const keys = Object.keys(defaultStatus);
+    for (const key of keys) {
+      this[key] = key in status ? status[key] : defaultStatus[key]
+    }
   }
 
   //仮の移動を行う
   trialMove = (direction = '.') => {
     if (this.lock) return; //ロック中(UI表示中など)は、移動不可
+    this.walkCounter += this.speed;
+    if (this.walkCounter < 1) return;
+    this.walkCounter = (this.walkCounter - 1) % this.speed;
     const { mapX, mapY } = this;
     let virtualX = mapX;
     let virtualY = mapY;

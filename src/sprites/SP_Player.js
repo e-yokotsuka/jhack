@@ -48,13 +48,13 @@ class SP_Player extends SP_Actor {
     this.getItem(MS_Item[6]);
     this.getItem(MS_Item[7]);
     this.getItem(MS_Item[8]);
-    const { status: { trialMove, stay } } = this;
+    const { status: { trialMove } } = this;
     this.inputMap = {
       'w': _ => trialMove('u'),
       's': _ => trialMove('d'),
       'a': _ => trialMove('l'),
       'd': _ => trialMove('r'),
-      '.': _ => stay(),
+      '.': _ => this.status.stay(),
       'ArrowUp': _ => trialMove('u'),
       'ArrowDown': _ => trialMove('d'),
       'ArrowLeft': _ => trialMove('l'),
@@ -158,6 +158,16 @@ class SP_Player extends SP_Actor {
     this.status.items.splice(index, 1);
   }
 
+  checkCollision = _ => {
+    const { mainMap, status } = this;
+    const { virtualX: vx, virtualY: vy } = status;
+    const tile = mainMap.getTile(vx, vy);
+    const selfUuid = this.uuid;
+    const monsters = this.scene.getEnemys();
+    const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
+    return tile.hit({ actor: this, status }) || collisions.length
+  }
+
   update = (/*delta*/) => {
     const { core: { input },
       scene: { handleStepUpdate, isWindowOpen,/*, addText*/ },
@@ -172,7 +182,6 @@ class SP_Player extends SP_Actor {
       sprite } = this;
     if (isWindowOpen) return;
     beforeUpdate();
-
     const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
     if (key) inputMap[key]();
 
@@ -181,10 +190,9 @@ class SP_Player extends SP_Actor {
     if (!isMove()) return; // 動いていない
     // 動いた
     const { virtualX: vx, virtualY: vy } = status;
-    status.steps++;
     handleStepUpdate(vx, vy);
-    const tile = mainMap.getTile(vx, vy);
-    tile.hit({ actor: this, status }) || this.moveConfirmed(vx, vy);
+    this.checkCollision() || this.moveConfirmed(vx, vy);
+    status.steps++;
     afterUpdate();
   }
 

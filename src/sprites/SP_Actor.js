@@ -5,6 +5,7 @@ class SP_Actor {
     this.core = core;
     this.scene = scene;
     this.status = status;
+    this.uuid = this.getUUID();
   }
 
   move(x, y) {

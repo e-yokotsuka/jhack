@@ -25,7 +25,8 @@ const MD_Status = ({
   cha = 0,
   gender = MS_Gender.male.value,
   race = MS_Race.human,
-  force_update = false
+  force_update = false,
+  speed = 1
 }) => ({
   lv,
   exp,
@@ -60,6 +61,8 @@ const MD_Status = ({
     white: [{}, {}, {}, {}, {}, {}, {}, {}, {}]
   },
   steps: 0,//歩数
-  force_update,
+  speed,
+  walkCounter: 0,
+  force_update
 });
 export default MD_Status;

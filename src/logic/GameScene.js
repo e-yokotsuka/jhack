@@ -84,6 +84,7 @@ class GameScene {
     getPlayer = _ => this.player;
     getPlayerStatus = _ => this.player.status;
 
+    getEnemys = _ => this.monsters;
     spawnEnemy = _ => this.spawnManager.spawnEnemy();
 
     // stepが更新された

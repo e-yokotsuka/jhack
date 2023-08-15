@@ -77,9 +77,20 @@ class SP_Monster extends SP_Actor {
     return distance(this.scene.getPlayerStatus(), this.status);
   }
 
+  checkCollision = _ => {
+    const { mainMap } = this;
+    const { mapX: playerX, mapY: playerY } = this.scene.getPlayerStatus();
+    const { virtualX: vx, virtualY: vy } = this.status;
+    const tile = mainMap.getTile(vx, vy);
+    const selfUuid = this.uuid;
+    const monsters = this.scene.getEnemys();
+    const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
+    return (vx == playerX && vy == playerY) || tile.hit({ actor: this, status }) || collisions.length
+  }
+
   // 敵の行動ロジック
   doSomething() {
-    const { mainMap, status, status:
+    const { status, status:
       { beforeUpdate,
         afterUpdate,
         isMove,
@@ -90,9 +101,8 @@ class SP_Monster extends SP_Actor {
 
     if (!isMove()) return; // 動いていない
     const { virtualX: vx, virtualY: vy } = status;
-    const tile = mainMap.getTile(vx, vy);
     if (distance < 10) this.moveTowardsPlayer();
-    tile.hit({ actor: this, status }) || this.moveConfirmed(vx, vy);
+    this.checkCollision() || this.moveConfirmed(vx, vy);
     afterUpdate();
   }
 

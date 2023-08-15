@@ -8,6 +8,7 @@ class MD_Monster extends MD_Actor {
       lv: 1,
       hp: 10,
       mp: 10,
+      speed: 0.8,
       maxHp: 10,
       maxMp: 10,
       gender: MS_Gender.male.value,
