@@ -2,6 +2,7 @@ import { CELL_SIZE } from "../define";
 import MD_Monster from '../model/MD_Monster';
 import SP_Actor from './SP_Actor';
 import { Sprite } from 'pixi.js';
+import { distance } from '../tools/Calc'
 
 class SP_Monster extends SP_Actor {
 
@@ -58,6 +59,42 @@ class SP_Monster extends SP_Actor {
     return false;
   }
 
+  moveTowardsPlayer = _ => {
+    const playerMapX = this.scene.playerMapX;
+    const playerMapY = this.scene.playerMapY;
+    if (playerMapX < this.status.mapX) {
+      this.status.trialMove('l');
+    } else if (playerMapX > this.status.mapX) {
+      this.status.trialMove('r');
+    } else if (playerMapY < this.status.mapY) {
+      this.status.trialMove('u');
+    } else if (playerMapY > this.status.mapY) {
+      this.status.trialMove('d');
+    }
+  }
+
+  getPlayerDistance = _ => {
+    return distance(this.scene.getPlayerStatus(), this.status);
+  }
+
+  // 敵の行動ロジック
+  doSomething() {
+    const { mainMap, status, status:
+      { beforeUpdate,
+        afterUpdate,
+        isMove,
+      } } = this;
+    beforeUpdate();
+    const distance = this.getPlayerDistance();
+    if (distance < 10) this.moveTowardsPlayer();
+
+    if (!isMove()) return; // 動いていない
+    const { virtualX: vx, virtualY: vy } = status;
+    const tile = mainMap.getTile(vx, vy);
+    if (distance < 10) this.moveTowardsPlayer();
+    tile.hit({ actor: this, status }) || this.moveConfirmed(vx, vy);
+    afterUpdate();
+  }
 
   update = (/*delta*/) => {
     const { mainMap, status, sprite } = this;

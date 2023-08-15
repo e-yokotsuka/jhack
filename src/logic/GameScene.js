@@ -96,9 +96,16 @@ class GameScene {
         //actionPlayer(); // プレイヤーの動作を行う
         //moveEnemy() // 敵の移動
         //actionEnemy() // 敵のアクション
-        this.spawnEnemy()
+        this.spawnEnemy();
+        this.monsters.map(monster => monster.doSomething());
+
         //    console.log(`vx:${vx}/vy:${vy}`);
     }
+
+    // ステータスプロパティのシンタックスシュガー
+
+    get playerMapX() { return this.getPlayerStatus().mapX }
+    get playerMapY() { return this.getPlayerStatus().mapY }
 
 }
 

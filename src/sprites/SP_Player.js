@@ -180,12 +180,12 @@ class SP_Player extends SP_Actor {
     sprite.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
     if (!isMove()) return; // 動いていない
     // 動いた
-    afterUpdate();
     const { virtualX: vx, virtualY: vy } = status;
     status.steps++;
     handleStepUpdate(vx, vy);
     const tile = mainMap.getTile(vx, vy);
     tile.hit({ actor: this, status }) || this.moveConfirmed(vx, vy);
+    afterUpdate();
   }
 
   // ステータスプロパティのシンタックスシュガー

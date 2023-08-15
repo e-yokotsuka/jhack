@@ -25,4 +25,11 @@ const calculateMinMax = rollString => {
   return { minValue, maxValue };
 }
 
-export { diceRoll, calculateMinMax }
+// アクター同士の距離をはかる
+const distance = (actor1, eactor2) => {
+  const dx = actor1.mapX - eactor2.mapX;
+  const dy = actor1.mapY - eactor2.mapY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+export { diceRoll, calculateMinMax, distance }
