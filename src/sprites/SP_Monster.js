@@ -1,3 +1,4 @@
+import { CELL_SIZE } from "../define";
 import MD_Monster from '../model/MD_Monster';
 import SP_Actor from './SP_Actor';
 import { Sprite } from 'pixi.js';
@@ -18,22 +19,23 @@ class SP_Monster extends SP_Actor {
     });
     const sprite = new Sprite(tx_main[`${name}`]);
     sprite.interactive = false;
-    const { stage } = this.core.app;
-    stage.addChild(sprite);
     this.sprite = sprite;
     this.status.mapX = 0;
     this.status.mapY = 0;
+    console.log(`create enemy`)
   }
 
   getPrim = _ => this.sprite;
 
-  getSP_MonsterData = _ => this.status;
+  getStatus = _ => this.status;
 
-  respawn = _ => {
+  respawn = _ => this.spawn()
+
+  spawn = _ => {
     const { x, y } = this.mainMap.getRespawnPosition();
     this.status.hp = this.status.maxHp;
-    this.status.mapX = x;
-    this.status.mapY = y;
+    this.move(x, y);
+    console.dir(this.status)
     // this.mainMap.center(this.status.mapX, this.status.mapY);
   }
 
@@ -60,8 +62,17 @@ class SP_Monster extends SP_Actor {
 
 
   update = (/*delta*/) => {
+    const { mainMap, status, sprite } = this;
+    sprite.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
+    sprite.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
   }
 
+  // ステータスプロパティのシンタックスシュガー
+
+  get mapX() { return this.status.mapX }
+  get mapY() { return this.status.mapY }
+  get x() { return this.sprite.x }
+  get y() { return this.sprite.y }
 
 }
 
