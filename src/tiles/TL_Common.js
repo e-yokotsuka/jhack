@@ -1,5 +1,5 @@
 class TL_Common {
-    constructor({core,x,y,cellName,type='none',isBlocked=false,prim}){
+    constructor({ core, x, y, cellName, type = 'none', isBlocked = false, prim }) {
         console.assert(core);
         this.core = core;
         this.x = x;
@@ -12,6 +12,13 @@ class TL_Common {
     }
     changeTexture = name => this.prim.texture = this.core.getTexture(name);
     hit = _ => this.isBlocked;
+
+    serialize() {
+        const keys = ["x", "y", "cellName", "type", "isBlocked", "hitStep"];
+        const obj = {};
+        keys.forEach(key => obj[key] = this[key])
+        return obj;
+    }
 }
 
 export default TL_Common;

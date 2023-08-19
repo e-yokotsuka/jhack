@@ -30,6 +30,11 @@ class TL_Chest extends TL_Common {
 
     return this.isBlocked;
   }
+
+  serialize() {
+    const obj = { ...super.serialize(), item: this.item };
+    return obj;
+  }
 }
 
 export default TL_Chest;

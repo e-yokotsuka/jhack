@@ -165,6 +165,15 @@ class MP_AutoMap {
 
 
   serialize() {
+    const obj = {}
+    this.map.forEach((row, y) => {
+      const line = [];
+      row.forEach((tile, x) => {
+        line[x] = tile.serialize();
+      })
+      obj[y] = line;
+    })
+    console.log(JSON.stringify(obj));
     console.log("map の保存をおこなう")
   }
 

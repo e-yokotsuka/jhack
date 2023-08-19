@@ -25,6 +25,12 @@ class TL_Door extends TL_Common {
         }
         return this.isBlocked;
     }
+
+    serialize() {
+        const obj = { ...super.serialize(), close: this.close };
+        return obj;
+    }
+
 }
 
 export default TL_Door;
