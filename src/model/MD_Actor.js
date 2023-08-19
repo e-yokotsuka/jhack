@@ -98,6 +98,17 @@ class MD_Actor {
     this.force_update = false;
   }
 
+  serialize() {
+    const defaultStatus = MD_Status({});
+    const keys = Object.keys(defaultStatus);
+    const obj = {};
+    for (const key of keys) {
+      obj[key] = this[key]
+    }
+    const savedata = JSON.stringify(obj);
+    return savedata;
+  }
+
 }
 
 export default MD_Actor;

@@ -1,6 +1,7 @@
 import { Container, Text } from 'pixi.js';
 
 import MP_AutoMap from '../map/MP_AutoMap';
+import { SCENE_ID } from './Core'
 import SP_Player from '../sprites/SP_Player';
 import SpawnManager from './SpawnManager'
 import UI_MessageBox from '../ui/UI_MessageBox'
@@ -8,11 +9,11 @@ import UI_Status from '../ui/UI_Status';
 import UI_WindowManager from '../ui/UI_WindowManager';
 
 class GameScene {
-    constructor({ core, sceneId }) {
+    constructor({ core }) {
         this.core = core;
         this.app = core.app;
         this.input = core.input;
-        this.sceneId = sceneId;
+        this.sceneId = SCENE_ID.GAME;
         this.isWindowOpen = false;
         this.sceneContainer = new Container();
     }
@@ -103,10 +104,20 @@ class GameScene {
         //    console.log(`vx:${vx}/vy:${vy}`);
     }
 
+    save = _ => {
+        const ps = this.getPlayerStatus();
+        const str1 = ps.serialize();
+        const str2 = this.mainMap.serialize();
+        console.log(str1);
+        console.log(str2);
+        console.log("save game scene")
+    }
+
     // ステータスプロパティのシンタックスシュガー
 
     get playerMapX() { return this.getPlayerStatus().mapX }
     get playerMapY() { return this.getPlayerStatus().mapY }
+
 
 }
 

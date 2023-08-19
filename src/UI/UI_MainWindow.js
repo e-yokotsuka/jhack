@@ -1,7 +1,7 @@
 import UI_Window from "./UI_Window";
 
 class UI_MainWindow extends UI_Window {
-    constructor({ core,scene }) {
+    constructor({ core, scene }) {
         super({
             x: 32,
             y: 32,
@@ -31,7 +31,9 @@ class UI_MainWindow extends UI_Window {
                 },
                 {
                     label: "セーブ", action: _ => {
+                        core.save()
                         console.log("セーブ")
+
                     }
                 },
             ]

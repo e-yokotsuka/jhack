@@ -39,9 +39,9 @@ class SP_Actor {
     const newItem = { ...item }; //参照を切り離す
     newItem.uuid = this.getUUID()
     this.status.items.push(newItem);
-    const itemList = this.status.items.map(({ itemName, uuid, id, itemTypeName }) => `${uuid}:${itemName}:${id}:${itemTypeName}`).join('\n')
     addText(`${newItem.itemName}をGETした！`);
-    addText(`${itemList}`, 30);
+    // const itemList = this.status.items.map(({ itemName, uuid, id, itemTypeName }) => `${uuid}:${itemName}:${id}:${itemTypeName}`).join('\n')
+    // addText(`${itemList}`, 30);
   }
 
   //ドアをみつけた

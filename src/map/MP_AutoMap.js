@@ -162,6 +162,12 @@ class MP_AutoMap {
     this.lastMapY = y;
   }
 
+
+
+  serialize() {
+    console.log("map の保存をおこなう")
+  }
+
 }
 export default MP_AutoMap;
 

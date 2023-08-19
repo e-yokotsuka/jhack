@@ -29,8 +29,9 @@ class Core {
     this.mainScale = 1;
     this.debugText = {};
     this.input = new Input(); // アプリケーション内共通
+    const gameScene = new GameScene({ core: this });
     this.scenes = {
-      [SCENE_ID.GAME]: new GameScene({ core: this })
+      [gameScene.getSceneId()]: gameScene,
     };
     this.sceneId = START_SCENE_ID;
     this.changeScene(this.sceneId, false)
@@ -110,6 +111,10 @@ class Core {
   getPlayer = _ => this.currentScene.getSceneId() === SCENE_ID.GAME ? this.currentScene.getPlayer() : null;
   getPlayerStatus = _ => this.currentScene.getSceneId() === SCENE_ID.GAME ? this.currentScene.getPlayerStatus() : null;
 
+  save = _ => {
+    const gameScene = this.getScene(SCENE_ID.GAME);
+    gameScene.save();
+  }
 
 }
 
