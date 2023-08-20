@@ -1,6 +1,6 @@
 import { Container, Text } from 'pixi.js';
 
-import MP_AutoMap from '../map/MP_AutoMap';
+import MP_MapManager from '../map/MP_MapManager';
 import { SCENE_ID } from './Core'
 import SP_Player from '../sprites/SP_Player';
 import SpawnManager from './SpawnManager'
@@ -16,18 +16,22 @@ class GameScene {
         this.sceneId = SCENE_ID.GAME;
         this.isWindowOpen = false;
         this.sceneContainer = new Container();
+        this.levelMap = [];
     }
 
     getSceneId = _ => this.sceneId;
 
     Load = async _ => await true;
 
+    updateMap = _ => this.mainMap = this.mapManager.getLevelMap(this.level);
+
     Initialize = _ => {
         const { core, app } = this;
         const scene = this;
         this.sceneContainer.removeChildren();
-        this.level = 1; // 階層
-        this.mainMap = new MP_AutoMap({ core, scene });
+        this.level = 0; // 階層
+        this.mapManager = new MP_MapManager({ core, scene });
+        this.updateMap();
         this.sceneContainer.addChild(this.mainMap.getPrim());
         this.debugTextPrim = new Text('debug key string', {
             fontSize: 20,
@@ -66,6 +70,8 @@ class GameScene {
         this.debugTextPrim.text = this.core.getDebugText();
     }
 
+    goto = (v) => { console.dir(v) }
+
     Start = async _ => {
         const { app } = this;
         app.ticker.start();
@@ -98,8 +104,9 @@ class GameScene {
         //actionPlayer(); // プレイヤーの動作を行う
         //moveEnemy() // 敵の移動
         //actionEnemy() // 敵のアクション
-        this.spawnEnemy();
-        this.monsters.map(monster => monster.doSomething());
+
+        //this.spawnEnemy();
+        //this.monsters.map(monster => monster.doSomething());
 
         //    console.log(`vx:${vx}/vy:${vy}`);
     }

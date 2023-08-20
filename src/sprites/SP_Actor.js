@@ -84,6 +84,14 @@ class SP_Actor {
     addText(text, time);
   }
 
+  goToPrevLevel() {
+    console.log("goToPrevLevel")
+  }
+
+  goToNextLevel() {
+    console.log("goToNextLevel")
+  }
+
 }
 
 export default SP_Actor;

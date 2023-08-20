@@ -91,6 +91,18 @@ class SP_Player extends SP_Actor {
     addText(`しかし、発動前にヒョイっと避けた！`);
   }
 
+  goToPrevLevel(v) {
+    const { addText } = this;
+    addText(`上り階段じゃないか！いくぞ！${v}`);
+    this.scene.goto(v);
+  }
+
+  goToNextLevel(v) {
+    const { addText } = this;
+    addText(`下り階段じゃないか！いくぞ！${v}`);
+    this.scene.goto(v);
+  }
+
   applyDamage(point) {
     const { addText } = this;
     addText(`いてえ！  ${point} ポイントのダメージをくらった！`);

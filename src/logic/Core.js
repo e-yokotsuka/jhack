@@ -96,6 +96,7 @@ class Core {
       this.input.update();
       this.setDebugText(0, this.input.getDebugString(['w', 'a', 'd', 's', 'z', 'e']));
       stats.begin();
+      if (this.input.isDown('z')) this.Initialize();
       this.currentScene.main(delta);
       stats.end();
     });

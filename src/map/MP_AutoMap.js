@@ -1,9 +1,11 @@
+import { ABYSS_LEVEL_INDEX } from "../define";
 import ConectRoads from '../tools/ConectRoads';
 import { Container } from 'pixi.js';
 import EntranceCreater from '../tools/EntranceCreater';
 import MS_Item from "../data/MS_Item";
 import MS_Trap from '../data/MS_Trap';
 import MapSplitter from '../tools/MapSpliter';
+import PlaceStairs from '../tools/PlaceStairs'
 import PlaceTrap from '../tools/PlaceTrap';
 import PlaceTreasureBox from '../tools/PlaceTreasureBox';
 import RoadCreater from '../tools/RoadCreater';
@@ -15,19 +17,22 @@ import TL_Chest from '../tiles/TL_Chest';
 import TL_Door from '../tiles/TL_Door';
 import TL_Floor from '../tiles/TL_Floor';
 import TL_Road from '../tiles/TL_Road';
+import TL_Stairs from '../tiles/TL_Stairs';
 import TL_Trap from '../tiles/TL_Trap';
 import TL_Wall from '../tiles/TL_Wall';
 
 class MP_AutoMap {
-  constructor({ core, scene, width = 100, height = 50 }) {
+  constructor({ core, scene, level, width = 100, height = 50 }) {
     this.isDebugViewCollision = false;
     this.core = core;
     this.scene = scene;
+    this.level = level;
     this.width = width;
     this.height = height;
     this.lastMapX = 0;
     this.lastMapY = 0;
     this.resetCallback = [];
+    this.stairs = [];
     this.mapContainer = new Container();
     this.makeAutomap();
   }
@@ -46,7 +51,8 @@ class MP_AutoMap {
     this.roadArray2 = ConectRoads(this.roadArray, this.roomArray, this.rectArray);
     this.tresureBoxes = PlaceTreasureBox(this.roomArray, this.entranceArray, MS_Item);
     this.traps = PlaceTrap(this.roomArray, this.tresureBoxes, MS_Trap);
-
+    this.downStairs = this.level === ABYSS_LEVEL_INDEX ? [] : PlaceStairs({ roomArray: this.roomArray, xorArray: this.tresureBoxes });
+    this.upStairs = [];
     this.rectArray.forEach(({ x, y, width, height }) =>
       this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Blank({ core, x, y }) }));
 
@@ -65,8 +71,33 @@ class MP_AutoMap {
     this.tresureBoxes.forEach(({ x, y, item }) => this.putTile(new TL_Chest({ core, x, y, item })));
 
     this.traps.forEach(({ x, y, trap }) => this.putTile(new TL_Trap({ core, x, y, trap })));
-
+    this.downStairs.forEach(({ x, y, isUp }) => this.putTile(new TL_Stairs({ core, x, y, isUp })));
+    console.dir(this.downStairs);
     this.reset();
+  }
+
+  makeStairs = (levelMap) => {
+    // 最下層には下り階段はない。
+    if (this.level === ABYSS_LEVEL_INDEX) return;
+    const nextMap = levelMap[this.level + 1];
+    const { downStairs, core } = this; //下り階段
+    nextMap.upStairs = PlaceStairs({
+      roomArray: nextMap.roomArray,
+      xorArray: [...nextMap.tresureBoxes, ...nextMap.downStairs],
+      maxStairs: downStairs.length,
+      isUp: true,
+      force: true
+    });
+    nextMap.upStairs.forEach(({ x, y, isUp }, index) => {
+      console.log(`${nextMap.upStairs.length}===${downStairs.length}`)
+      console.assert(nextMap.upStairs.length === downStairs.length);
+      const up = nextMap.upStairs[index];
+      const down = this.downStairs[index];
+      const downTile = this.getTile(down.x, down.y);
+      downTile.setNext({ x: up.x, y: up.y, level: nextMap.level });
+      this.putTile(downTile);
+      nextMap.putTile(new TL_Stairs({ core, x, y, isUp, next: { x: down.x, y: down.y, level: this.level } }));
+    });
   }
 
   fill = (fnTile = _ => { }) => {
@@ -131,13 +162,11 @@ class MP_AutoMap {
   getTile = (x, y) => this.map[y][x];
 
   update = _ => {
-    const { core: { input }/*, mapContainer */ } = this;
     // const step = 4 * delta;
     // if (input.isDown('w')) mapContainer.y -= step;
     // if (input.isDown('s')) mapContainer.y += step;
     // if (input.isDown('a')) mapContainer.x -= step;
     // if (input.isDown('d')) mapContainer.x += step;
-    if (input.isDown('z')) this.makeAutomap();
   }
 
   getRespawnPosition = (retry = 0) => {
@@ -161,8 +190,6 @@ class MP_AutoMap {
     this.lastMapX = x;
     this.lastMapY = y;
   }
-
-
 
   serialize() {
     const obj = {}
