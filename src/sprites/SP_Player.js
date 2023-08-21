@@ -62,6 +62,13 @@ class SP_Player extends SP_Actor {
     };
   }
 
+  setMap = mainMap => {
+    this.mainMap = mainMap;
+    this.mainMap.addResetCallback(_ => {
+      this.respawn();
+    });
+  };
+
   getPrim = _ => this.sprite;
 
   getStatus = _ => this.status;

@@ -97,6 +97,7 @@ class MP_AutoMap {
       downTile.setNext({ x: up.x, y: up.y, level: nextMap.level });
       this.putTile(downTile);
       nextMap.putTile(new TL_Stairs({ core, x, y, isUp, next: { x: down.x, y: down.y, level: this.level } }));
+      nextMap.reDraw();
     });
   }
 
@@ -125,6 +126,11 @@ class MP_AutoMap {
   }
 
   reset = _ => {
+    this.reDraw();
+    this.resetCallback.forEach(func => func())
+  }
+
+  reDraw = _ => {
     const { map, mapContainer, core, isDebugViewCollision } = this;
     mapContainer.removeChildren();
     map.forEach((row, y) => {
@@ -139,7 +145,6 @@ class MP_AutoMap {
         mapContainer.addChild(t);
       })
     })
-    this.resetCallback.forEach(func => func())
   }
 
   _debugMapText = _ => {

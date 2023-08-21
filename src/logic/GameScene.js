@@ -16,6 +16,7 @@ class GameScene {
         this.sceneId = SCENE_ID.GAME;
         this.isWindowOpen = false;
         this.sceneContainer = new Container();
+        this.mapContainer = new Container();
         this.levelMap = [];
     }
 
@@ -23,7 +24,11 @@ class GameScene {
 
     Load = async _ => await true;
 
-    updateMap = _ => this.mainMap = this.mapManager.getLevelMap(this.level);
+    updateMap = _ => {
+        this.mainMap = this.mapManager.getLevelMap(this.level);
+        this.mapContainer.removeChildren();
+        this.mapContainer.addChild(this.mainMap.getPrim());
+    }
 
     Initialize = _ => {
         const { core, app } = this;
@@ -32,7 +37,7 @@ class GameScene {
         this.level = 0; // 階層
         this.mapManager = new MP_MapManager({ core, scene });
         this.updateMap();
-        this.sceneContainer.addChild(this.mainMap.getPrim());
+        this.sceneContainer.addChild(this.mapContainer);
         this.debugTextPrim = new Text('debug key string', {
             fontSize: 20,
             fill: 0xffffff,
@@ -70,7 +75,13 @@ class GameScene {
         this.debugTextPrim.text = this.core.getDebugText();
     }
 
-    goto = (v) => { console.dir(v) }
+    goto = ({ next: { x, y, level } }) => {
+        console.log(`${x} ${y} ${level}`)
+        this.level = level;
+        this.updateMap();
+        this.player.setMap(this.mainMap);
+        this.player.moveConfirmed(x, y);
+    }
 
     Start = async _ => {
         const { app } = this;
