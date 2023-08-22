@@ -9,6 +9,7 @@ class MD_Actor {
     for (const key of keys) {
       this[key] = key in status ? status[key] : defaultStatus[key]
     }
+    this.isTeleportation = false;
   }
 
   //仮の移動を行う
@@ -38,6 +39,13 @@ class MD_Actor {
   moveConfirmed = _ => {
     this.mapX = this.virtualX;
     this.mapY = this.virtualY;
+  }
+
+  teleportation = (x, y) => {
+    this.mapX = this.virtualX = x;
+    this.mapY = this.virtualY = y;
+    this.force_update = false;
+    this.isTeleportation = true;
   }
 
   // とどまる
@@ -96,6 +104,7 @@ class MD_Actor {
   // フレーム更新のupdate後に呼ばれる
   afterUpdate = _ => {
     this.force_update = false;
+    this.isTeleportation = false;
   }
 
   serialize() {

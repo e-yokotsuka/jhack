@@ -39,6 +39,7 @@ class MP_AutoMap {
 
   getPrim = _ => this.mapContainer;
 
+  getPosition = _ => ({ x: this.mapContainer.x, y: this.mapContainer.y })
 
   makeAutomap = _ => {
     const { scene: { core } } = this;
@@ -91,10 +92,9 @@ class MP_AutoMap {
     nextMap.upStairs.forEach(({ x, y, isUp }, index) => {
       console.log(`${nextMap.upStairs.length}===${downStairs.length}`)
       console.assert(nextMap.upStairs.length === downStairs.length);
-      const up = nextMap.upStairs[index];
       const down = this.downStairs[index];
       const downTile = this.getTile(down.x, down.y);
-      downTile.setNext({ x: up.x, y: up.y, level: nextMap.level });
+      downTile.setNext({ x, y, level: nextMap.level });
       this.putTile(downTile);
       nextMap.putTile(new TL_Stairs({ core, x, y, isUp, next: { x: down.x, y: down.y, level: this.level } }));
       nextMap.reDraw();
@@ -166,12 +166,13 @@ class MP_AutoMap {
 
   getTile = (x, y) => this.map[y][x];
 
-  update = _ => {
-    // const step = 4 * delta;
-    // if (input.isDown('w')) mapContainer.y -= step;
-    // if (input.isDown('s')) mapContainer.y += step;
-    // if (input.isDown('a')) mapContainer.x -= step;
-    // if (input.isDown('d')) mapContainer.x += step;
+  update = delta => {
+    const { core: { input }, mapContainer } = this;
+    const step = 32 * delta;
+    if (input.isDown('j')) mapContainer.y -= step;
+    if (input.isDown('u')) mapContainer.y += step;
+    if (input.isDown('k')) mapContainer.x -= step;
+    if (input.isDown('h')) mapContainer.x += step;
   }
 
   getRespawnPosition = (retry = 0) => {
@@ -194,6 +195,7 @@ class MP_AutoMap {
     mapContainer.y = (-(y * 32) + (height / 2));
     this.lastMapX = x;
     this.lastMapY = y;
+    console.log(`mapContainer.x:${mapContainer.x} mapContainer.y:${mapContainer.y}`)
   }
 
   serialize() {

@@ -16,6 +16,10 @@ class SP_Actor {
     this.moveConfirmed(x, y);
   }
 
+  teleportation(x, y) {
+    this.status.teleportation(x, y);
+  }
+
   moveConfirmed(/* x,y */) {
     const { status } = this;
     status.moveConfirmed();

@@ -179,7 +179,8 @@ class SP_Player extends SP_Actor {
 
   checkCollision = _ => {
     const { mainMap, status } = this;
-    const { virtualX: vx, virtualY: vy } = status;
+    const { virtualX: vx, virtualY: vy, } = status;
+
     const tile = mainMap.getTile(vx, vy);
     const selfUuid = this.uuid;
     const monsters = this.scene.getEnemys();

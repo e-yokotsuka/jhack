@@ -5,7 +5,7 @@ class TL_Stairs extends TL_Common {
     constructor({ core, x, y, isUp = true, next = {} }) {
         const cellName = isUp ? `rock_stairs_up` : `rock_stairs_down`;
         const prim = SP_Tile({ core, name: cellName });
-        super({ core, x, y, cellName, type: 'stairs', isBlocked: false, prim });
+        super({ core, x, y, cellName, type: 'stairs', isBlocked: true, prim });
         this.next = next;
         this.isUp = isUp;
     }

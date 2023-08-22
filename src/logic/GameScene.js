@@ -18,6 +18,7 @@ class GameScene {
         this.sceneContainer = new Container();
         this.mapContainer = new Container();
         this.levelMap = [];
+        this.frameCounter = 0;
     }
 
     getSceneId = _ => this.sceneId;
@@ -65,7 +66,6 @@ class GameScene {
     }
 
     main(delta) {
-        this.core.setDebugText(1, `Monster Count:${this.monsters.length}`);
         this.mainMap.update(delta);
         this.uiStatus.update();
         this.player.update(delta);
@@ -73,6 +73,10 @@ class GameScene {
         this.uiMessageBox.update(delta);
         this.uiWindowManager.update(delta);
         this.debugTextPrim.text = this.core.getDebugText();
+        const { x, y } = this.mainMap.getPosition();
+        this.core.setDebugText(1, `Monster Count:${this.monsters.length}`);
+        this.core.setDebugText(2, `Counter:${this.frameCounter++}`);
+        this.core.setDebugText(3, `MapX:${x},MapY:${y}`);
     }
 
     goto = ({ next: { x, y, level } }) => {
@@ -80,7 +84,10 @@ class GameScene {
         this.level = level;
         this.updateMap();
         this.player.setMap(this.mainMap);
-        this.player.moveConfirmed(x, y);
+        this.player.teleportation(x, y);
+        this.mainMap.center(x, y);
+        const { x: xx, y: yy } = this.mainMap.getPosition();
+        console.log(`${xx},${yy}`);
     }
 
     Start = async _ => {
