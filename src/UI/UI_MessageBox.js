@@ -1,29 +1,49 @@
-import { Text } from 'pixi.js';
+import { Container, Graphics, Text } from 'pixi.js';
 
-const DEFAULT_TIME = 5; //sec
+import { MAX_INFO_MESSAGE_LINES } from '../define'
 
 class UI_MessageBox {
 
   constructor(/*{core}*/) {
     this.msgs = [];
-    this.prim = new Text('', {
-      fontSize: 20,
+    this.infoMsgs = [];
+    this.dispText = "";
+    const contianer = new Container();
+    contianer.x = 8;
+    contianer.y = 400;
+    const panel = new Graphics();
+    panel.lineStyle(2, 0xFFFFFF, 1);
+    panel.beginFill(0x011896, 0.75);
+    panel.drawRoundedRect(0, 0, 400, 256, 8);
+    panel.endFill();
+    const text = new Text('', {
+      fontSize: 14,
       fill: 0xffffff,
       align: 'left',
     });
-    this.prim.x = 10;
-    this.prim.y = 30;
+    text.x = 6;
+    text.y = 6;
+    this.textPrim = text;
+    panel.addChild(text);
+    contianer.addChild(panel);
+    this.prim = contianer;
+    this.close();
   }
+
+  open = _ => this.prim.visible = true
+  close = _ => this.prim.visible = false
 
   getPrim = _ => this.prim;
 
-  addText = (text, time = DEFAULT_TIME) => this.msgs.push({ text, elapsedTime: 0, time: time * 60 }); // 60fr
+  addText = text => {
+    this.msgs.push({ text });
+    this.infoMsgs = this.msgs.slice(-MAX_INFO_MESSAGE_LINES)
+    this.dispText = this.infoMsgs.map(({ text }) => `${text}`).join('\n');
+  } // 60fr
 
-  update = delta => {
-    this.msgs = this.msgs.map(v => ({ ...v, elapsedTime: v.elapsedTime + delta }));
-    this.msgs = this.msgs.filter(({ time, elapsedTime }) => (elapsedTime <= time));
-    let text = this.msgs.map(({ text, elapsedTime, time }) => `${text}(${Math.floor(elapsedTime / 60)}/${Math.floor(time / 60)})`).join('\n');
-    this.prim.text = text;
+  update = _ => {
+    if (this.textPrim.text !== "") this.open()
+    if (this.textPrim.text !== this.dispText) this.textPrim.text = this.dispText;
   }
 
 }
