@@ -1,4 +1,5 @@
-import { ABYSS_LEVEL_INDEX } from "../define";
+import { ABYSS_LEVEL_INDEX, CELL_SIZE } from "../define";
+
 import ConectRoads from '../tools/ConectRoads';
 import { Container } from 'pixi.js';
 import EntranceCreater from '../tools/EntranceCreater';
@@ -168,7 +169,7 @@ class MP_AutoMap {
 
   update = delta => {
     const { core: { input }, mapContainer } = this;
-    const step = 32 * delta;
+    const step = CELL_SIZE * delta;
     if (input.isDown('j')) mapContainer.y -= step;
     if (input.isDown('u')) mapContainer.y += step;
     if (input.isDown('k')) mapContainer.x -= step;
@@ -191,8 +192,8 @@ class MP_AutoMap {
     const y = mapY ? mapY : this.lastMapY;
     const { core, mapContainer } = this;
     const { width, height } = core.getCanvasSize();
-    mapContainer.x = (-(x * 32) + (width / 2));
-    mapContainer.y = (-(y * 32) + (height / 2));
+    mapContainer.x = (-(x * CELL_SIZE) + (width / 2));
+    mapContainer.y = (-(y * CELL_SIZE) + (height / 2));
     this.lastMapX = x;
     this.lastMapY = y;
     console.log(`mapContainer.x:${mapContainer.x} mapContainer.y:${mapContainer.y}`)

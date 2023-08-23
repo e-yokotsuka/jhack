@@ -1,10 +1,11 @@
+import { CELL_SIZE } from "../define";
 import UI_Window from "./UI_Window";
 
 class UI_MainWindow extends UI_Window {
     constructor({ core, scene }) {
         super({
-            x: 32,
-            y: 32,
+            x: CELL_SIZE,
+            y: CELL_SIZE,
             core,
             scene
         });

@@ -1,8 +1,6 @@
+import { CELL_SIZE, DEFAULT_TEXT_COLOR } from '../define'
 import { Container, Graphics, Text } from 'pixi.js';
 
-import { DEFAULT_TEXT_COLOR } from '../define'
-
-const CELL_SIZE = 32;
 const MENU_MAX_ITEMS = 12;
 const X_PADDING = 4;
 const Y_PADDING = 4;
@@ -10,11 +8,11 @@ const MENU_RIGHT_PADDING = 16;
 const CURSOL_MARGIN = 4;
 
 class UI_Window {
-  constructor({ core,scene, x = 0, y = 0, w = 0, h = 0, menu }) {
+  constructor({ core, scene, x = 0, y = 0, w = 0, h = 0, menu }) {
     this.isOpen = false;
     this.hasMenu = !menu;
     this.core = core;
-    this.scene = scene;    
+    this.scene = scene;
     const container = new Container();
     this.prim = container;
     this.oldKeymap = [];
