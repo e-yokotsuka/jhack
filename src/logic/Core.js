@@ -35,6 +35,7 @@ class Core {
     };
     this.sceneId = START_SCENE_ID;
     this.changeScene(this.sceneId, false)
+    window.addEventListener("resize", (event) => { this.resize(event) }, false);
   }
 
   changeScene = (sceneId, reset = true) => {
