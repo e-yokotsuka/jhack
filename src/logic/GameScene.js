@@ -102,6 +102,7 @@ class GameScene {
 
     resize(width, height) {
         this.uiStatus.resize(width, height);
+        this.uiMessageBox.resize(width, height);
         this.mainMap.center();
     }
     windowOpen = isOpen => this.isWindowOpen = isOpen;

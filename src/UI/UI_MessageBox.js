@@ -1,6 +1,5 @@
 import { Container, Graphics, Text } from 'pixi.js';
-
-import { MAX_INFO_MESSAGE_LINES } from '../define'
+import { MAX_INFO_MESSAGE_LINES, MESSAGE_BOX_ABS_X, MESSAGE_BOX_ABS_Y, MESSAGE_BOX_HEIGHT } from '../define'
 
 class UI_MessageBox {
 
@@ -9,12 +8,12 @@ class UI_MessageBox {
     this.infoMsgs = [];
     this.dispText = "";
     const contianer = new Container();
-    contianer.x = 8;
+    contianer.x = MESSAGE_BOX_ABS_X;
     contianer.y = 400;
     const panel = new Graphics();
     panel.lineStyle(2, 0xFFFFFF, 1);
     panel.beginFill(0x011896, 0.75);
-    panel.drawRoundedRect(0, 0, 400, 256, 8);
+    panel.drawRoundedRect(0, 0, 400, MESSAGE_BOX_HEIGHT, 8);
     panel.endFill();
     const text = new Text('', {
       fontSize: 14,
@@ -33,6 +32,11 @@ class UI_MessageBox {
   open = _ => this.prim.visible = true
   close = _ => this.prim.visible = false
 
+  resize = (width, height) => {
+    console.log(`${height}`)
+    this.prim.x = MESSAGE_BOX_ABS_X;
+    this.prim.y = height - MESSAGE_BOX_HEIGHT - MESSAGE_BOX_ABS_Y;
+  }
   getPrim = _ => this.prim;
 
   addText = text => {
