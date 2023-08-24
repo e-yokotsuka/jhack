@@ -133,6 +133,8 @@ module.exports = {
             exclude: 'node_modules',
             eslintPath: require.resolve('eslint'),
             failOnError: !(isEnvDevelopment),
+            failOnWarning: false,
+            emitWarning: false,
             cache: true,
             resolvePluginsRelativeTo: __dirname,
         }),
