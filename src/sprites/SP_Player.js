@@ -178,13 +178,16 @@ class SP_Player extends SP_Actor {
   }
 
   checkCollision = _ => {
-    const { mainMap, status } = this;
-    const { virtualX: vx, virtualY: vy, } = status;
+    const { mainMap, status, addText } = this;
+    const { virtualX: vx, virtualY: vy } = status;
 
     const tile = mainMap.getTile(vx, vy);
     const selfUuid = this.uuid;
     const monsters = this.scene.getEnemys();
     const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
+    collisions.forEach(m => {
+      addText(`${this.getCharacterName()} は ${m.getCharacterName()} とぬめっと触れ合った`);
+    })
     return tile.hit({ actor: this, status }) || collisions.length
   }
 

@@ -3,9 +3,10 @@ import MS_Gender from "../data/MS_Gender";
 import MS_Race from "../data/MS_Race";
 
 class MD_Monster extends MD_Actor {
-  constructor() {
+  constructor(status) {
     super({
       lv: 1,
+      characterName: '',
       hp: 10,
       mp: 10,
       speed: 0.3,
@@ -18,7 +19,8 @@ class MD_Monster extends MD_Actor {
         y: 0
       },
       steps: 0,//歩数
-      items: []
+      items: [],
+      ...status
     });
   }
 }

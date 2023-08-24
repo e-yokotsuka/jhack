@@ -7,7 +7,7 @@ import MS_Race from "../data/MS_Race";
 class MD_Player extends MD_Actor {
   constructor() {
     super({
-      name: "ゆーしゃ",
+      characterName: "ゆーしゃ",
       lv: 1,
       hp: 10,
       mp: 10,

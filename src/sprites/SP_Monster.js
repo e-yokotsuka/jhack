@@ -10,6 +10,7 @@ class SP_Monster extends SP_Actor {
     const status = new MD_Monster({
       hp: 15, maxHp: 15,
       mp: 10, maxMp: 10,
+      characterName: 'ごぶりん'
     });
     super({ core, scene, status });
     const { textures: { tx_main } } = core;
@@ -78,14 +79,18 @@ class SP_Monster extends SP_Actor {
   }
 
   checkCollision = _ => {
-    const { mainMap } = this;
+    const { mainMap, addText } = this;
     const { mapX: playerX, mapY: playerY } = this.scene.getPlayerStatus();
     const { virtualX: vx, virtualY: vy } = this.status;
     const tile = mainMap.getTile(vx, vy);
     const selfUuid = this.uuid;
     const monsters = this.scene.getEnemys();
     const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
-    return (vx == playerX && vy == playerY) || tile.hit({ actor: this, status }) || collisions.length
+    if (vx == playerX && vy == playerY) collisions.push(this.scene.getPlayer());
+    collisions.forEach(m => {
+      addText(`${this.getCharacterName()} は ${m.getCharacterName()} と、ぬめぬめっと触れ合った`);
+    })
+    return tile.hit({ actor: this, status }) || collisions.length
   }
 
   // 敵の行動ロジック

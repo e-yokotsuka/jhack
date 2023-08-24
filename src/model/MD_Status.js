@@ -5,6 +5,7 @@ import MS_Race from "../data/MS_Race";
 
 const MD_Status = ({
   lv = 1,
+  characterName,
   exp = 0,
   nextExp = 0,
   hp = 0,
@@ -29,6 +30,7 @@ const MD_Status = ({
   speed = 1
 }) => ({
   lv,
+  characterName,
   exp,
   nextExp,
   hp,

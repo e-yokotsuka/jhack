@@ -96,6 +96,8 @@ class SP_Actor {
     console.log("goToNextLevel")
   }
 
+  getCharacterName = _ => this.status.characterName
+
 }
 
 export default SP_Actor;
