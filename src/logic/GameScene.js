@@ -86,6 +86,7 @@ class GameScene {
         this.player.setMap(this.mainMap);
         this.player.teleportation(x, y);
         this.mainMap.center(x, y);
+        this.resetEnemy();
         const { x: xx, y: yy } = this.mainMap.getPosition();
         console.log(`${xx},${yy}`);
     }
@@ -112,6 +113,7 @@ class GameScene {
 
     getEnemys = _ => this.monsters;
     spawnEnemy = _ => this.spawnManager.spawnEnemy();
+    resetEnemy = _ => this.spawnManager.resetEnemy();
 
     // stepが更新された
     handleStepUpdate = (/* vx, vy*/) => {
@@ -124,8 +126,8 @@ class GameScene {
         //moveEnemy() // 敵の移動
         //actionEnemy() // 敵のアクション
 
-        //this.spawnEnemy();
-        //this.monsters.map(monster => monster.doSomething());
+        this.spawnEnemy();
+        this.monsters.map(monster => monster.doSomething());
 
         //    console.log(`vx:${vx}/vy:${vy}`);
     }
