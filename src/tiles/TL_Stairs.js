@@ -1,13 +1,21 @@
+import { Container } from "pixi.js";
 import SP_Tile from "../sprites/SP_Tile";
 import TL_Common from "./TL_Common";
 
 class TL_Stairs extends TL_Common {
-    constructor({ core, x, y, isUp = true, next = {} }) {
+    constructor({ core, x, y, isUp = true, next = {}, floor }) {
         const cellName = isUp ? `rock_stairs_up` : `rock_stairs_down`;
-        const prim = SP_Tile({ core, name: cellName });
-        super({ core, x, y, cellName, type: 'stairs', isBlocked: true, prim });
+        super({ core, x, y, cellName, type: 'stairs', isBlocked: true });
         this.next = next;
         this.isUp = isUp;
+        this.floor = floor;
+    }
+    initPrim() {
+        const prim = new Container();
+        prim.addChild(this.floor.initPrim());
+        this.stairsPrim = SP_Tile({ core: this.core, name: this.cellName });
+        prim.addChild(this.stairsPrim);
+        return prim;
     }
 
     // eslint-disable-next-line no-unused-vars

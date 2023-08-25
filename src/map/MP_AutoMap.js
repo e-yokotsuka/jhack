@@ -70,10 +70,10 @@ class MP_AutoMap {
     this.entranceArray.forEach(({ x, y, width, height }) =>
       this.fillTilesInRect({ x, y, width, height, fnTile: ({ x, y }) => new TL_Door({ core, x, y }) }))
 
-    this.tresureBoxes.forEach(({ x, y, item }) => this.putTile(new TL_Chest({ core, x, y, item })));
+    this.tresureBoxes.forEach(({ x, y, item }) => this.putTile(new TL_Chest({ core, x, y, item, floor: this.getTile(x, y) })));
 
-    this.traps.forEach(({ x, y, trap }) => this.putTile(new TL_Trap({ core, x, y, trap })));
-    this.downStairs.forEach(({ x, y, isUp }) => this.putTile(new TL_Stairs({ core, x, y, isUp })));
+    this.traps.forEach(({ x, y, trap }) => this.putTile(new TL_Trap({ core, x, y, trap, floor: this.getTile(x, y) })));
+    this.downStairs.forEach(({ x, y, isUp }) => this.putTile(new TL_Stairs({ core, x, y, isUp, floor: this.getTile(x, y) })));
     console.dir(this.downStairs);
     this.reset();
   }
@@ -97,7 +97,7 @@ class MP_AutoMap {
       const downTile = this.getTile(down.x, down.y);
       downTile.setNext({ x, y, level: nextMap.level });
       this.putTile(downTile);
-      nextMap.putTile(new TL_Stairs({ core, x, y, isUp, next: { x: down.x, y: down.y, level: this.level } }));
+      nextMap.putTile(new TL_Stairs({ core, x, y, isUp, next: { x: down.x, y: down.y, level: this.level }, floor: nextMap.getTile(x, y) }));
       nextMap.reDraw();
     });
   }
@@ -132,18 +132,15 @@ class MP_AutoMap {
   }
 
   reDraw = _ => {
-    const { map, mapContainer, core, isDebugViewCollision } = this;
+    const { map, mapContainer } = this;
     mapContainer.removeChildren();
     map.forEach((row, y) => {
-      row.forEach(({ cellName, isBlocked }, x) => {
-        if (isDebugViewCollision && isBlocked) {
-          cellName = 'passage_of_golubria';
-        }
-        const t = SP_Tile({ core, name: cellName });
-        t.x = x * t.width;
-        t.y = y * t.height;
-        map[y][x].prim = t;
-        mapContainer.addChild(t);
+      row.forEach((tile, x) => {
+        const p = tile.initPrim();
+        p.x = x * p.width;
+        p.y = y * p.height;
+        map[y][x].prim = p;
+        mapContainer.addChild(p);
       })
     })
   }

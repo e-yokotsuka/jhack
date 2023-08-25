@@ -1,12 +1,25 @@
+import { Container } from "pixi.js";
 import SP_Tile from "../sprites/SP_Tile";
 import TL_Common from "./TL_Common";
 
 class TL_Chest extends TL_Common {
-  constructor({ core, x, y, item }) {
+  constructor({ core, x, y, item, floor }) {
     const cellName = item ? `chest2_closed` : `chest2_open`;
-    const prim = SP_Tile({ core, name: cellName });
-    super({ core, x, y, cellName, type: 'chest', isBlocked: true, prim });
+    super({ core, x, y, cellName, type: 'chest', isBlocked: true });
     this.item = item;
+    this.floor = floor;
+  }
+
+  initPrim() {
+    const prim = new Container();
+    prim.addChild(this.floor.initPrim());
+    this.chestPrim = SP_Tile({ core: this.core, name: this.cellName });
+    prim.addChild(this.chestPrim);
+    return prim;
+  }
+
+  changeTexture(name) {
+    this.chestPrim.texture = this.core.getTexture(name);
   }
 
   // eslint-disable-next-line no-unused-vars

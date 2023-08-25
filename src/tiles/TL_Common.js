@@ -1,5 +1,7 @@
+import SP_Tile from "../sprites/SP_Tile";
+
 class TL_Common {
-    constructor({ core, x, y, cellName, type = 'none', isBlocked = false, prim }) {
+    constructor({ core, x, y, cellName = 'travel_exclusion', type = 'none', isBlocked = false, prim }) {
         console.assert(core);
         this.core = core;
         this.x = x;
@@ -10,8 +12,16 @@ class TL_Common {
         this.prim = prim;
         this.hitStep = 0;
     }
-    changeTexture = name => this.prim.texture = this.core.getTexture(name);
+    changeTexture(name) {
+        this.prim.texture = this.core.getTexture(name);
+    }
+
     hit = _ => this.isBlocked;
+
+    initPrim() {
+        this.prim = SP_Tile({ core: this.core, name: this.cellName });
+        return this.prim;
+    }
 
     serialize() {
         const keys = ["x", "y", "cellName", "type", "isBlocked", "hitStep"];
