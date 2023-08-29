@@ -19,15 +19,15 @@ class IL_Recovery extends IL_Common {
             this.addText(`残念！回復する意味がない！\nあなたはこれっぽちも傷ついていない！`);
             return false;
         }
-        const n = diceRoll(value);
+        const n = diceRoll({ diceText: value });
         target.healHp(n, this.item);
         return true;
     }
 
-    getStringValue() {
+    getStringValue(status) {
         const { item } = this;
         if (item.value.includes('%')) return item.value;
-        const minmax = calculateMinMax(item.value);
+        const minmax = calculateMinMax({ diceText: item.value, status });
         return `${minmax.minValue}～${minmax.maxValue}`;
     }
 }

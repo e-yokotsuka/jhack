@@ -5,8 +5,8 @@ import IL_Common from "./IL_Common";
 import { calculateMinMax } from "../../tools/Calc"
 
 class IL_Wepon extends IL_Common {
-    constructor(core,scene, item) {
-        super(core,scene, item);
+    constructor(core, scene, item) {
+        super(core, scene, item);
     }
     use(/*target*/) {
         const { itemName } = this.item;
@@ -26,9 +26,9 @@ class IL_Wepon extends IL_Common {
         }
     }
 
-    getStringValue() {
+    getStringValue(status) {
         const { item } = this;
-        const minmax = calculateMinMax(item.value);
+        const minmax = calculateMinMax({ diceText: item.value, status });
         return `${minmax.minValue}～${minmax.maxValue}`;
     }
 

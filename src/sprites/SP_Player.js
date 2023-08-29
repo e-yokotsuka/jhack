@@ -79,12 +79,12 @@ class SP_Player extends SP_Actor {
     this.move(x, y);
   }
 
-  diceRoll = diceText => this.core.diceRoll(diceText);
+  diceRoll = (diceText, status) => this.core.diceRoll({ diceText, status });
 
   trappedIn({ dmg, difficulty, name }) {
-    const { addText } = this;
-    const s = this.diceRoll("1d20") + 0; //Todo
-    const point = (difficulty <= s) ? 0 : this.diceRoll(dmg);
+    const { addText, status } = this;
+    const s = this.diceRoll({ diceText: "1d20+dex", status });
+    const point = (difficulty <= s) ? 0 : this.diceRoll({ diceText: dmg });
     if (point) {
       addText(`ウップス!!  ${name}という、罠にハマった！`);
       this.applyDamage(point);

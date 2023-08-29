@@ -81,6 +81,11 @@ class SP_Actor {
   //所持itemをかえす
   getItems() { console.log("getItems") }
 
+  //攻撃
+  attack(/* target */) {
+  }
+
+
   getUUID = _ => uuidv4();
 
   addText = (text, time) => {
@@ -98,6 +103,19 @@ class SP_Actor {
 
   getCharacterName = _ => this.status.characterName
 
+  // パラメタ (シンタックスシュガー)
+  // 装備をかえす
+  get equipments() { return this.status.getEquipments() }
+  get hp() { return this.status.hp }
+  get mp() { return this.status.mp }
+  get maxHp() { return this.status.maxHp }
+  get maxMp() { return this.status.maxMp }
+  get str() { return this.status.str } // 強さ
+  get dex() { return this.status.dex } // 俊敏性
+  get con() { return this.status.con } // 体力
+  get intl() { return this.status.intl } // 知性
+  get wiz() { return this.status.wiz } //知恵
+  get cha() { return this.status.cha } // 魅力
 }
 
 export default SP_Actor;

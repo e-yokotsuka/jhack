@@ -71,6 +71,8 @@ class MD_Actor {
     equipment && equipment();
   }
 
+  getEquipments = _ => this.equipments;
+
   canEquip = item => AVAILABLE_EQUIP_TYPES.includes(item.itemType);
 
   //装備しているか？
