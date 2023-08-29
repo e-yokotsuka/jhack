@@ -85,6 +85,7 @@ class SP_Actor {
   attack(/* target */) {
   }
 
+  diceRoll = ({ diceText, status }) => this.core.diceRoll({ diceText, status });
 
   getUUID = _ => uuidv4();
 

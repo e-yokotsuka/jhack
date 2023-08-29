@@ -39,8 +39,6 @@ class SP_Monster extends SP_Actor {
     // this.mainMap.center(this.status.mapX, this.status.mapY);
   }
 
-  diceRoll = ({ diceText, status }) => this.core.diceRoll({ diceText, status });
-
   trappedIn = ({
     dmg,
     difficulty
