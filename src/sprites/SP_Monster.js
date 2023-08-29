@@ -39,13 +39,14 @@ class SP_Monster extends SP_Actor {
     // this.mainMap.center(this.status.mapX, this.status.mapY);
   }
 
-  diceRoll = diceText => this.core.diceRoll({ diceText });
+  diceRoll = ({ diceText, status }) => this.core.diceRoll({ diceText, status });
 
   trappedIn = ({
     dmg,
     difficulty
   }) => {
-    const s = this.diceRoll({ diceText: "1d20" }) + 0; //Todo
+    const { status } = this;
+    const s = this.diceRoll({ diceText: "1d20+dex", status }) + 0; //Todo
     return (difficulty <= s) ? 0 : this.diceRoll({ diceText: dmg });
   }
 

@@ -109,7 +109,7 @@ class Core {
 
   getTexture = texName => this.textures.tx_main[texName];
 
-  diceRoll = (diceText, status) => diceRoll({ diceText, status });
+  diceRoll = ({ diceText, status }) => diceRoll({ diceText, status });
 
   getPlayer = _ => this.currentScene.getSceneId() === SCENE_ID.GAME ? this.currentScene.getPlayer() : null;
   getPlayerStatus = _ => this.currentScene.getSceneId() === SCENE_ID.GAME ? this.currentScene.getPlayerStatus() : null;

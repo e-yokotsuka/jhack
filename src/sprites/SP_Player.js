@@ -79,7 +79,7 @@ class SP_Player extends SP_Actor {
     this.move(x, y);
   }
 
-  diceRoll = (diceText, status) => this.core.diceRoll({ diceText, status });
+  diceRoll = ({ diceText, status }) => this.core.diceRoll({ diceText, status });
 
   trappedIn({ dmg, difficulty, name }) {
     const { addText, status } = this;
