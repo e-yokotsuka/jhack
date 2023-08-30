@@ -49,6 +49,19 @@ export default [
     minimumDepth: 0,
     itemLogicClass: null
   },
+  {//装備を外すときには空を装備する
+    id: "kobushi",
+    uuid: "",
+    itemName: "こぶし",
+    itemType: ITEM_TYPE.empty,
+    itemTypeName: ITEM_TYPE_NAME[ITEM_TYPE.empty],
+    value: "1d4",
+    valueLabel: "こぶし",
+    price: 0,
+    rarity: 0,
+    minimumDepth: 0,
+    itemLogicClass: IL_Wepon
+  },
   {
     id: "yakuso",
     uuid: "",

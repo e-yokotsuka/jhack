@@ -4,6 +4,7 @@ export const LV_MAX_DIGITS = 4; // レベルの最大桁数
 export const HP_MAX_DIGITS = 5; // HP（ヒットポイント）の最大桁数
 export const MP_MAX_DIGITS = 5; // MP（マジックポイント）の最大桁数
 export const EMPTY_ITEM_INDEX = 0; // 空のアイテムのインデックス
+export const EMPTY_WEPON_INDEX = 1; // こぶし（非武装）のインデックス
 export const DEFAULT_TEXT_COLOR = 0xffffff; // デフォルトのテキストの色
 export const EQUIPPED_TEXT_COLOR = 0xff6633; // 装備されているアイテムのテキストの色
 export const MAX_DUNGEON_LEVEL = 9; // ダンジョンの階層

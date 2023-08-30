@@ -25,17 +25,65 @@ class SP_Actor {
     status.moveConfirmed();
   }
 
+  weponAttack({ offense, defense }) {
+    this.scene.battleLogic.weponAttack({ offense, defense });
+  }
+
+  determineInitiative(acters) {
+    return this.scene.battleLogic.determineInitiative(acters);
+  }
+
+  // 攻撃前
+  beforeAttack(wepon, target) {
+    const { characterName, addText } = this;
+    const { characterName: targetName } = target;
+    const { itemName } = wepon;
+    addText(`${characterName} は ${targetName} に ${itemName} で攻撃！`);
+  }
+
+  // 攻撃をはずした
+  attackMissed(wepon) {
+    const { addText } = this;
+    const { itemName } = wepon;
+    addText(`${itemName} を使った攻撃は外れた！`);
+  }
+
+  // 攻撃をブロックした
+  blockAttack(target) {
+    const { addText } = this;
+    const { characterName: targetName } = target;
+    addText(`${targetName}からの攻撃を防具で防いだ！`);
+  }
+
+  // ダメージをくらった
+  applyDamage(point, target) {
+    const { addText } = this;
+    if (target) {
+      const { characterName } = target;
+      addText(`いって！ ${characterName} の攻撃で ${point} ポイントのダメージをくらった！`);
+    } else {
+      addText(`いてえ！ ${point} ポイントのダメージをくらった！`);
+    }
+    const hp = this.status.hp - point;
+    this.status.hp = Math.max(hp, 0);
+    if (hp < 1) {
+      // 死亡
+      this.died();
+      return true;
+    }
+    return false;
+  }
+
+  died() {
+    const { addText } = this;
+    addText(`し  ん  だ  よ`);
+  }
+
   //罠をよけた
   escapeTrap() { console.log("escapeTrap") }
 
   //罠にはまった
   trappedIn() { console.log("trappedIn") }
-
-  //ダメージを食らった
-  applyDamage() { console.log("applyDamage") }
-
-  //死んだ
-  died() { console.log("died") }
 
   //アイテムを手に入れた
   getItem(item) {
@@ -107,6 +155,7 @@ class SP_Actor {
   // パラメタ (シンタックスシュガー)
   // 装備をかえす
   get equipments() { return this.status.getEquipments() }
+  get characterName() { return this.status.characterName }
   get hp() { return this.status.hp }
   get mp() { return this.status.mp }
   get maxHp() { return this.status.maxHp }
@@ -117,6 +166,10 @@ class SP_Actor {
   get intl() { return this.status.intl } // 知性
   get wiz() { return this.status.wiz } //知恵
   get cha() { return this.status.cha } // 魅力
+  get mapX() { return this.status.mapX }
+  get mapY() { return this.status.mapY }
+  get x() { return this.sprite.x }
+  get y() { return this.sprite.y }
 }
 
 export default SP_Actor;

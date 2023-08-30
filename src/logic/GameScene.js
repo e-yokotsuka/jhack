@@ -1,5 +1,6 @@
 import { Container, Text } from 'pixi.js';
 
+import BattleLogic from './BattleLogic';
 import MP_MapManager from '../map/MP_MapManager';
 import { SCENE_ID } from './Core'
 import SP_Player from '../sprites/SP_Player';
@@ -17,6 +18,7 @@ class GameScene {
         this.isWindowOpen = false;
         this.sceneContainer = new Container();
         this.mapContainer = new Container();
+        this.battleLogic = new BattleLogic(core);
         this.levelMap = [];
         this.frameCounter = 0;
     }
@@ -65,11 +67,13 @@ class GameScene {
         this.spawnManager = new SpawnManager(this)
     }
 
+    refreshMonsters = _ => this.monsters = this.monsters.filter(m => !m.isDie);
+
     main(delta) {
         this.mainMap.update(delta);
         this.uiStatus.update();
         this.player.update(delta);
-        this.monsters.map(({ update }) => { update(delta) });
+        this.monsters.forEach(({ update }) => { update(delta) });
         this.uiMessageBox.update(delta);
         this.uiWindowManager.update(delta);
         this.debugTextPrim.text = this.core.getDebugText();

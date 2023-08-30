@@ -1,6 +1,6 @@
 import MS_Item, { ITEM_TYPE } from "../../data/MS_Item";
 
-import { EMPTY_ITEM_INDEX } from "../../define"
+import { EMPTY_WEPON_INDEX } from "../../define"
 import IL_Common from "./IL_Common";
 import { calculateMinMax } from "../../tools/Calc"
 
@@ -18,7 +18,7 @@ class IL_Wepon extends IL_Common {
         const { itemName } = item;
         let equipItem = item;
         if (actor.isItemEquipped(item)) {
-            actor.equipment(MS_Item[EMPTY_ITEM_INDEX], ITEM_TYPE.weapon);
+            actor.equipment(MS_Item[EMPTY_WEPON_INDEX], ITEM_TYPE.weapon);
             this.addText(`${itemName}を外した！`);
         } else {
             actor.equipment(equipItem);

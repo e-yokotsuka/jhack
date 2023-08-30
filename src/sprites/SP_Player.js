@@ -108,22 +108,9 @@ class SP_Player extends SP_Actor {
     this.scene.goto(v);
   }
 
-  applyDamage(point) {
-    const { addText } = this;
-    addText(`いてえ！  ${point} ポイントのダメージをくらった！`);
-    const hp = this.status.hp - point;
-    this.status.hp = Math.max(hp, 0);
-    if (hp < 1) {
-      // 死亡
-      this.died();
-      return true;
-    }
-    return false;
-  }
-
   died() {
-    const { addText } = this;
-    addText(`し  ん  だ  よ`);
+    const { addText, characterName } = this;
+    addText(`${characterName}は、 し  ん  だ  ！！`);
     this.respawn();
   }
 
@@ -176,7 +163,7 @@ class SP_Player extends SP_Actor {
   }
 
   checkCollision = _ => {
-    const { mainMap, status, addText } = this;
+    const { mainMap, status } = this;
     const { virtualX: vx, virtualY: vy } = status;
 
     const tile = mainMap.getTile(vx, vy);
@@ -184,7 +171,9 @@ class SP_Player extends SP_Actor {
     const monsters = this.scene.getEnemys();
     const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
     collisions.forEach(m => {
-      addText(`${this.getCharacterName()} は ${m.getCharacterName()} とぬめっと触れ合った`);
+      const [first, second] = this.determineInitiative([this, m]);
+      this.weponAttack({ offense: first, defense: second });
+      this.weponAttack({ offense: second, defense: first });
     })
     return tile.hit({ actor: this, status }) || collisions.length
   }
@@ -216,11 +205,6 @@ class SP_Player extends SP_Actor {
     status.steps++;
     afterUpdate();
   }
-
-  // ステータスプロパティのシンタックスシュガー
-
-  get mapX() { return this.status.mapX }
-  get mapY() { return this.status.mapY }
 
 }
 

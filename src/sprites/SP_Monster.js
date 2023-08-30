@@ -48,15 +48,11 @@ class SP_Monster extends SP_Actor {
     return (difficulty <= s) ? 0 : this.diceRoll({ diceText: dmg });
   }
 
-  hit = dmg => {
-    const hp = this.status.hp - dmg;
-    this.status.hp = Math.max(hp, 0);
-    if (hp < 1) {
-      this.core.addText(`し  ん  だ  よ`);
-      this.respawn();
-      return true;
-    }
-    return false;
+  died() {
+    this.addText(`${this.characterName}は、 し  ん  だ  よ`);
+    this.getPrim().destroy();
+    this.isDie = true;
+    this.scene.refreshMonsters();
   }
 
   moveTowardsPlayer = _ => {
@@ -115,13 +111,6 @@ class SP_Monster extends SP_Actor {
     sprite.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
     sprite.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
   }
-
-  // ステータスプロパティのシンタックスシュガー
-
-  get mapX() { return this.status.mapX }
-  get mapY() { return this.status.mapY }
-  get x() { return this.sprite.x }
-  get y() { return this.sprite.y }
 
 }
 
