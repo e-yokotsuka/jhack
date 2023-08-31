@@ -11,9 +11,9 @@
 
 ### Installation
 
- `git clone git@github.com:e-yokotsuka/pixijs-boilerplate.git`
+ `git clone git@github.com:git@github.com:e-yokotsuka/jhack.git`
 
- `cd pixijs-boilerplate`
+ `cd jhack`
 
  `yarn`
 
@@ -23,7 +23,7 @@
 
  open
 
- `http://localhost:8082`
+ `http://localhost:8080`
 
   (develop environment)
 
@@ -35,6 +35,30 @@
 
  `yarn build`
 
-#### Thanks
+### Key Map
 
-* image provider: [publicdomainvectors.org](https://publicdomainvectors.org/)
+#### Player Controls
+
+| Action     | Key                  |
+| ---------- | -------------------- |
+| Move Right | `d` or `allow right` |
+| Move Left  | `a` or `allow left`  |
+| Move Up    | `w` or `allow up`    |
+| Move Down  | `s` or `allow down`  |
+
+#### Window Controls
+
+| Action                          | Key                  |
+| ------------------------------- | -------------------- |
+| Open Window                     | `e`                  |
+| Move Cursor Down                | `s` or `allow down`  |
+| Move Cursor Up                  | `w` or `allow up`    |
+| Select                          | `d` or `allow right` |
+| Use or Equip (also for unequip) | `d` or `allow right` |
+| Close Sub-window                | `a` or `allow left`  |
+
+
+### Thanks
+
+* Graphical Tiles: [Crawl Stone Soup Tiles](https://github.com/crawl/tiles)
+* Sounfd Effects: [soundeffect-lab.info](https://soundeffect-lab.info/sound/various/)
