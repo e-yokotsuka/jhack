@@ -78,7 +78,7 @@ class SP_Monster extends SP_Actor {
     const point = (difficulty <= s) ? 0 : this.diceRoll({ diceText: dmg });
     if (point) {
       addText(`${characterName}が、罠にハマってら！`);
-      this.applyDamage(point);
+      this.applyDamage({ point, silent: true });
       return true;
     }
     return false;

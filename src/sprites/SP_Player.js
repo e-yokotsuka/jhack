@@ -85,7 +85,7 @@ class SP_Player extends SP_Actor {
     const point = (difficulty <= s) ? 0 : this.diceRoll({ diceText: dmg });
     if (point) {
       addText(`ウップス!!  ${name}という、罠にハマった！`);
-      this.applyDamage(point);
+      this.applyDamage({ point });
       return true;
     }
     return false;

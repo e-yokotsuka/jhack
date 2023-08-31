@@ -56,13 +56,12 @@ class SP_Actor {
   }
 
   // ダメージをくらった
-  applyDamage(point, target) {
+  applyDamage({ point, target, silent = false }) {
     const { addText } = this;
-    if (target) {
-      const { characterName } = target;
-      addText(`いって！ ${characterName} の攻撃で ${point} ポイントのダメージをくらった！`);
-    } else {
-      addText(`いてえ！ ${point} ポイントのダメージをくらった！`);
+    if (!silent) {
+      target ?
+        addText(`いって！ ${target.characterName} の攻撃で ${point} ポイントのダメージをくらった！`) :
+        addText(`いてえ！ ${point} ポイントのダメージをくらった！`);
     }
     const hp = this.status.hp - point;
     this.status.hp = Math.max(hp, 0);
