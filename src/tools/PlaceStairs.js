@@ -15,17 +15,14 @@ const PlaceStairs = ({ roomArray,
   const numStairs = force ? maxStairs : Math.max(Math.floor(Math.random() * maxStairs), 1);
   const stairs = [];
 
-  while (stairs.length + 1 <= numStairs) {
+  while (stairs.length !== numStairs) {
+    if (!force && Math.random() > probability) continue;
     const room = roomArray[Math.floor(Math.random() * roomArray.length)];
-    for (let i = 0; i < numStairs; i++) {
-      if (!force && Math.random() > probability) continue;
-      const x = Math.floor(Math.random() * (room.width - 2)) + 1 + room.x;
-      const y = Math.floor(Math.random() * (room.height - 2)) + 1 + room.y;
-      if (isItemTile(x, y)) continue; // 既にアイテムタイルがある箇所はうわがかない。
-      // 同じ位置にはおかない
-      if (!stairs.find(({ x: fx, y: fy }) => (x === fx && y === fy))) stairs.push({ x, y, isUp, next: {} });
-    }
-
+    const x = Math.floor(Math.random() * (room.width - 2)) + 1 + room.x;
+    const y = Math.floor(Math.random() * (room.height - 2)) + 1 + room.y;
+    if (isItemTile(x, y)) continue; // 既にアイテムタイルがある箇所はうわがかない。
+    // 同じ位置にはおかない
+    if (!stairs.find(({ x: fx, y: fy }) => (x === fx && y === fy))) stairs.push({ x, y, isUp, next: {} });
   }
   return stairs;
 }

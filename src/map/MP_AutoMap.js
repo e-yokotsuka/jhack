@@ -98,8 +98,8 @@ class MP_AutoMap {
       downTile.setNext({ x, y, level: nextMap.level });
       this.putTile(downTile);
       nextMap.putTile(new TL_Stairs({ core, x, y, isUp, next: { x: down.x, y: down.y, level: this.level }, floor: nextMap.getTile(x, y) }));
-      nextMap.reDraw();
     });
+    nextMap.reDraw();
   }
 
   fill = (fnTile = _ => { }) => {
