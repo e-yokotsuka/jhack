@@ -2,6 +2,7 @@ import { CELL_SIZE } from "../define";
 import { Container } from "pixi.js";
 import MD_Monster from '../model/MD_Monster';
 import SP_Actor from './SP_Actor';
+import SP_Trace from "./SP_Trace";
 import { Sprite } from 'pixi.js';
 import UI_ProgressBar from '../ui/UI_ProgressBar';
 import { distance } from '../tools/Calc'
@@ -90,6 +91,9 @@ class SP_Monster extends SP_Actor {
     this.getPrim().destroy();
     this.isDie = true;
     this.scene.refreshMonsters();
+    // 痕跡を追加（血など）
+    const { core, scene, mapX, mapY } = this;
+    this.scene.addTrace(new SP_Trace({ core, scene, mapX, mapY }));
   }
 
   moveTowardsPlayer = _ => {

@@ -20,6 +20,7 @@ class GameScene {
         this.isWindowOpen = false;
         this.sceneContainer = new Container();
         this.mapContainer = new Container();
+        this.traceContainer = new Container();
         this.battleLogic = new BattleLogic(core);
         this.levelMap = [];
         this.frameCounter = 0;
@@ -50,6 +51,7 @@ class GameScene {
         this.mapManager = new MP_MapManager({ core, scene });
         this.updateMap();
         this.sceneContainer.addChild(this.mapContainer);
+        this.sceneContainer.addChild(this.traceContainer);
         this.debugTextPrim = new Text('debug key string', {
             fontSize: 20,
             fill: 0xffffff,
@@ -63,6 +65,7 @@ class GameScene {
         this.sceneContainer.addChild(this.player.getPrim());
         this.player.respawn();
         this.monsters = [];
+        this.traces = []; // 痕跡（血とか）
 
         this.uiStatus = new UI_Status({ core, scene });
         this.sceneContainer.addChild(this.uiStatus.getPrim());
@@ -77,11 +80,17 @@ class GameScene {
     }
 
     refreshMonsters = _ => this.monsters = this.monsters.filter(m => !m.isDie);
+    refreshTraces = _ => this.traces = this.traces.filter(m => !m.isDie);
+    addTrace = trace => {
+        this.traceContainer.addChild(trace.getPrim());
+        this.traces.push(trace);
+    }
 
     main(delta) {
         this.mainMap.update(delta);
         this.uiStatus.update();
         this.player.update(delta);
+        this.traces.forEach(({ update }) => { update(delta) });
         this.monsters.forEach(({ update }) => { update(delta) });
         this.uiMessageBox.update(delta);
         this.uiWindowManager.update(delta);
@@ -141,6 +150,7 @@ class GameScene {
 
         this.spawnEnemy();
         this.monsters.map(monster => monster.doSomething());
+        this.traces.map(trace => trace.doSomething());
 
         //    console.log(`vx:${vx}/vy:${vy}`);
     }
