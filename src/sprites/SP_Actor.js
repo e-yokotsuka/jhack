@@ -68,10 +68,17 @@ class SP_Actor {
     this.status.hp = Math.max(hp, 0);
     if (hp < 1) {
       // 死亡
-      this.died();
+      this.died(target);
       return true;
     }
     return false;
+  }
+
+  applyExp(target) {
+    const { addText, characterName } = this;
+    const { expReward } = target;
+    this.status.exp += expReward;
+    addText(`${characterName} は ${expReward} の経験値を得た！`);
   }
 
   died() {
@@ -166,10 +173,12 @@ class SP_Actor {
   get intl() { return this.status.intl } // 知性
   get wiz() { return this.status.wiz } //知恵
   get cha() { return this.status.cha } // 魅力
+  get expReward() { return this.status.expReward } // 付与経験値
   get mapX() { return this.status.mapX }
   get mapY() { return this.status.mapY }
   get x() { return this.sprite.x }
   get y() { return this.sprite.y }
+
 }
 
 export default SP_Actor;

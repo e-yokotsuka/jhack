@@ -1,7 +1,9 @@
 import { CELL_SIZE } from "../define";
+import { Container } from "pixi.js";
 import MD_Monster from '../model/MD_Monster';
 import SP_Actor from './SP_Actor';
 import { Sprite } from 'pixi.js';
+import UI_ProgressBar from '../ui/UI_ProgressBar';
 import { distance } from '../tools/Calc'
 
 class SP_Monster extends SP_Actor {
@@ -10,6 +12,7 @@ class SP_Monster extends SP_Actor {
     const status = new MD_Monster({
       hp: 15, maxHp: 15,
       mp: 10, maxMp: 10,
+      expReward: 100,
       characterName: 'ごぶりん'
     });
     super({ core, scene, status });
@@ -24,9 +27,36 @@ class SP_Monster extends SP_Actor {
     this.sprite = sprite;
     this.status.mapX = 0;
     this.status.mapY = 0;
+    this.progressHp = new UI_ProgressBar({
+      core,
+      y: 32,
+      borderColor: "#000000",
+      width: 33,
+      height: 3
+    });
+    this.progressMp = new UI_ProgressBar({
+      core,
+      fillColor: "#0f0fff",
+      backgroundColor: "#ff0f0f",
+      borderColor: "#000000",
+      y: 33 + 2,
+      width: 32,
+      height: 3
+    });
+    this.container = new Container();
+    this.container.addChild(this.sprite);
+    this.container.addChild(this.progressHp.getPrim());
+    this.container.addChild(this.progressMp.getPrim());
+    this.updateProgressBar();
   }
 
-  getPrim = _ => this.sprite;
+  updateProgressBar = _ => {
+    const { hp, maxHp, mp, maxMp } = this;
+    this.progressHp.setValue((hp / maxHp * 100));
+    this.progressMp.setValue((mp / maxMp * 100));
+  }
+
+  getPrim = _ => this.container;
 
   getStatus = _ => this.status;
 
@@ -48,8 +78,9 @@ class SP_Monster extends SP_Actor {
     return (difficulty <= s) ? 0 : this.diceRoll({ diceText: dmg });
   }
 
-  died() {
+  died(target) {
     this.addText(`${this.characterName}は、 し  ん  だ  よ`);
+    if (target) target.applyExp(this);
     this.getPrim().destroy();
     this.isDie = true;
     this.scene.refreshMonsters();
@@ -74,7 +105,7 @@ class SP_Monster extends SP_Actor {
   }
 
   checkCollision = _ => {
-    const { mainMap, addText } = this;
+    const { mainMap } = this;
     const { mapX: playerX, mapY: playerY } = this.scene.getPlayerStatus();
     const { virtualX: vx, virtualY: vy } = this.status;
     const tile = mainMap.getTile(vx, vy);
@@ -83,7 +114,9 @@ class SP_Monster extends SP_Actor {
     const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
     if (vx == playerX && vy == playerY) collisions.push(this.scene.getPlayer());
     collisions.forEach(m => {
-      addText(`${this.getCharacterName()} は ${m.getCharacterName()} と、ぬめぬめっと触れ合った`);
+      const [first, second] = this.determineInitiative([this, m]);
+      this.weponAttack({ offense: first, defense: second });
+      this.weponAttack({ offense: second, defense: first });
     })
     return tile.hit({ actor: this, status }) || collisions.length
   }
@@ -107,9 +140,10 @@ class SP_Monster extends SP_Actor {
   }
 
   update = (/*delta*/) => {
-    const { mainMap, status, sprite } = this;
-    sprite.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
-    sprite.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
+    const { mainMap, status, container } = this;
+    container.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
+    container.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
+    this.updateProgressBar();
   }
 
 }

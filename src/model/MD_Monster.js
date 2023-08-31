@@ -12,6 +12,7 @@ class MD_Monster extends MD_Actor {
       speed: 0.3,
       maxHp: 10,
       maxMp: 10,
+      expReward: 100,
       gender: MS_Gender.male.value,
       race: MS_Race.human,
       position: {

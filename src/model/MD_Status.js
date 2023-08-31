@@ -9,6 +9,7 @@ const MD_Status = ({
   characterName,
   exp = 0,
   nextExp = 0,
+  expReward,
   hp = 0,
   mp = 0,
   virtualX = 0,//移動先の座標
@@ -34,6 +35,7 @@ const MD_Status = ({
   characterName,
   exp,
   nextExp,
+  expReward,
   hp,
   mp,
   maxHp,

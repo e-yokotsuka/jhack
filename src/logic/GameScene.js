@@ -80,7 +80,7 @@ class GameScene {
         const { x, y } = this.mainMap.getPosition();
         this.core.setDebugText(1, `Monster Count:${this.monsters.length}`);
         this.core.setDebugText(2, `Counter:${this.frameCounter++}`);
-        this.core.setDebugText(3, `MapX:${x},MapY:${y}`);
+        this.core.setDebugText(3, `MapX:${x},MapY:${y},isLocked:${this.isWindowOpen}`);
     }
 
     goto = ({ next: { x, y, level } }) => {

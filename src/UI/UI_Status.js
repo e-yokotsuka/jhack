@@ -45,9 +45,9 @@ class UI_Status {
   }
 
   update = _ => {
-    const { hp, maxHp, mp, maxMp, mapX, mapY, steps } = this.player.getStatus();
-    const { isWindowOpen, level } = this.scene;
-    this.primText.text = `HP:${hp}/${maxHp} MP: ${mp}/${maxMp} STEP ${steps} : (${mapX},${mapY}) ${level + 1}F: locked:${isWindowOpen} `;
+    const { hp, maxHp, mp, maxMp, mapX, mapY, steps, exp } = this.player.getStatus();
+    const { level } = this.scene;
+    this.primText.text = `HP:${hp}/${maxHp} MP: ${mp}/${maxMp} STEP ${steps} : (${mapX},${mapY}) ${level + 1}F: EXP:${exp}`;
     this.progressHp.setValue((hp / maxHp * 100));
     this.progressMp.setValue((mp / maxMp * 100));
   }
