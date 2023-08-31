@@ -55,16 +55,16 @@ class GameScene {
         this.player.respawn();
         this.monsters = [];
 
-
         this.uiStatus = new UI_Status({ core, scene });
         this.sceneContainer.addChild(this.uiStatus.getPrim());
-        this.uiMessageBox = new UI_MessageBox({ core, scene });
-        this.sceneContainer.addChild(this.uiMessageBox.getPrim());
 
         this.uiWindowManager = new UI_WindowManager({ core, scene });
         this.sceneContainer.addChild(this.uiWindowManager.getPrim());
         app.stage.addChild(this.sceneContainer);
         this.spawnManager = new SpawnManager(this)
+
+        this.uiMessageBox = new UI_MessageBox({ core, scene });
+        this.sceneContainer.addChild(this.uiMessageBox.getPrim());
     }
 
     refreshMonsters = _ => this.monsters = this.monsters.filter(m => !m.isDie);
