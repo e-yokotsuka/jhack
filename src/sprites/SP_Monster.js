@@ -73,9 +73,15 @@ class SP_Monster extends SP_Actor {
     dmg,
     difficulty
   }) => {
-    const { status } = this;
-    const s = this.diceRoll({ diceText: "1d20+dex", status }) + 0; //Todo
-    return (difficulty <= s) ? 0 : this.diceRoll({ diceText: dmg });
+    const { addText, status, characterName } = this;
+    const s = this.diceRoll({ diceText: "1d20+dex", status });
+    const point = (difficulty <= s) ? 0 : this.diceRoll({ diceText: dmg });
+    if (point) {
+      addText(`${characterName}が、罠にハマってら！`);
+      this.applyDamage(point);
+      return true;
+    }
+    return false;
   }
 
   died(target) {
