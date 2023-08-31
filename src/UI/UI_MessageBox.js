@@ -13,7 +13,7 @@ class UI_MessageBox {
     const panel = new Graphics();
     panel.lineStyle(2, 0xFFFFFF, 1);
     panel.beginFill(0x011896, 0.75);
-    panel.drawRoundedRect(0, 0, 400, MESSAGE_BOX_HEIGHT, 8);
+    panel.drawRoundedRect(0, 0, 600, MESSAGE_BOX_HEIGHT, 8);
     panel.endFill();
     const text = new Text('', {
       fontSize: 14,
@@ -40,7 +40,8 @@ class UI_MessageBox {
   getPrim = _ => this.prim;
 
   addText = text => {
-    this.msgs.push({ text });
+    const lines = text.split('\n');
+    lines.forEach(text => this.msgs.push({ text }))
     this.infoMsgs = this.msgs.slice(-MAX_INFO_MESSAGE_LINES)
     this.dispText = this.infoMsgs.map(({ text }) => `${text}`).join('\n');
   } // 60fr
