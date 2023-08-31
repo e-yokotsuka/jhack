@@ -8,11 +8,13 @@ import SpawnManager from './SpawnManager'
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
 import UI_WindowManager from '../ui/UI_WindowManager';
+import { sound } from '@pixi/sound';
 
 class GameScene {
     constructor({ core }) {
         this.core = core;
         this.app = core.app;
+        this.sound = sound;
         this.input = core.input;
         this.sceneId = SCENE_ID.GAME;
         this.isWindowOpen = false;
@@ -25,7 +27,14 @@ class GameScene {
 
     getSceneId = _ => this.sceneId;
 
-    Load = async _ => await true;
+    Load = async _ => {
+
+        this.sound.add('iron_door_open', './assets/sound/鉄の扉を開ける.mp3');
+        this.sound.add('bow_arrow_hit', './assets/sound/弓矢が刺さる.mp3');
+        this.sound.add('sword_slash_2', './assets/sound/剣で斬る2.mp3');
+        this.sound.add('strike_8', './assets/sound/打撃8.mp3');
+        return await true;//あとで非同期処理が必要になるかもしれないので非同期関数としておく。
+    }
 
     updateMap = _ => {
         this.mainMap = this.mapManager.getLevelMap(this.level);

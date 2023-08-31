@@ -1,3 +1,4 @@
+import { sound } from '@pixi/sound';
 import { v4 as uuidv4 } from 'uuid';
 
 class SP_Actor {
@@ -38,6 +39,7 @@ class SP_Actor {
     const { characterName, addText } = this;
     const { characterName: targetName } = target;
     const { itemName } = wepon;
+    sound.play('sword_slash_2');
     addText(`${characterName} は ${targetName} に ${itemName} で攻撃！`);
   }
 
@@ -67,6 +69,7 @@ class SP_Actor {
     this.status.hp = Math.max(hp, 0);
     if (hp < 1) {
       // 死亡
+      sound.play('strike_8');
       this.died(target);
       return true;
     }

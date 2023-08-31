@@ -4,6 +4,7 @@ import MD_Player from '../model/MD_Player';
 import MS_Item from "../data/MS_Item";
 import SP_Actor from './SP_Actor';
 import { Sprite } from 'pixi.js';
+import { sound } from '@pixi/sound';
 
 class SP_Player extends SP_Actor {
 
@@ -133,6 +134,7 @@ class SP_Player extends SP_Actor {
 
   openDoor() {
     const { addText } = this;
+    sound.play('iron_door_open')
     addText(`ドアを開けた！`);
   }
 

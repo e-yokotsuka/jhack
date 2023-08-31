@@ -1,4 +1,5 @@
 import { diceRoll } from "../tools/Calc";
+import { sound } from '@pixi/sound';
 
 class BattleLogic {
     constructor(core) {
