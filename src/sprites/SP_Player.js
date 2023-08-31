@@ -149,12 +149,12 @@ class SP_Player extends SP_Actor {
 
   healHp(n, { itemName }) {
     const { addText } = this;
-    const { name, hp, maxHp } = this.status;
+    const { characterName, hp, maxHp } = this.status;
     const oldHp = hp;
     this.status.hp += n;
     this.status.hp = Math.min(this.status.hp, maxHp);
     const point = this.status.hp - oldHp;
-    addText(`${name} は、${itemName} を使用して ${point} ポイント回復した。\nうまし！`);
+    addText(`${characterName} は、${itemName} を使用して ${point} ポイント回復した。\nうまし！`);
   }
 
   // itemを使用したあとの処理
