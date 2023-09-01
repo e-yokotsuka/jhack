@@ -4,6 +4,7 @@ import GameScene from './GameScene';
 import Input from './Input';
 import Stats from 'stats.js';
 import { diceRoll } from '../tools/Calc';
+import { sound } from '@pixi/sound';
 
 const SCENE_ID = {
   GAME: "game"
@@ -36,6 +37,8 @@ class Core {
     this.sceneId = START_SCENE_ID;
     this.changeScene(this.sceneId, false)
     window.addEventListener("resize", (event) => { this.resize(event) }, false);
+    //
+    sound.muted = true;
   }
 
   changeScene = (sceneId, reset = true) => {

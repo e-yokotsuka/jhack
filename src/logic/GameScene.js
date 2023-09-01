@@ -2,12 +2,14 @@ import { Container, Text } from 'pixi.js';
 
 import BattleLogic from './BattleLogic';
 import MP_MapManager from '../map/MP_MapManager';
+import { PLAYER_MAP_BOUNDS } from '../define';
 import { SCENE_ID } from './Core'
 import SP_Player from '../sprites/SP_Player';
 import SpawnManager from './SpawnManager'
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
 import UI_WindowManager from '../ui/UI_WindowManager';
+import { distance } from '../tools/Calc';
 import { sound } from '@pixi/sound';
 
 class GameScene {
@@ -24,6 +26,8 @@ class GameScene {
         this.battleLogic = new BattleLogic(core);
         this.levelMap = [];
         this.frameCounter = 0;
+        // SOUND の MUTO
+        this.isMute = true;
     }
 
     getSceneId = _ => this.sceneId;
@@ -153,6 +157,20 @@ class GameScene {
         this.traces.map(trace => trace.doSomething());
 
         //    console.log(`vx:${vx}/vy:${vy}`);
+    }
+
+    play(name, target) {
+        if (this.isMute) return;
+        let dis = 0;
+        const { playerMapX, playerMapY } = this;
+        let volume = 1;
+        if (target) {
+            dis = distance(target, { mapX: playerMapX, mapY: playerMapY });
+            if (dis > PLAYER_MAP_BOUNDS) return;
+            volume = Math.max(0, 1 - (dis / PLAYER_MAP_BOUNDS));
+            console.log(`${target.characterName} : volume ${volume} : sound ${name}`)
+        }
+        sound.play(name, { volume })
     }
 
     save = _ => {

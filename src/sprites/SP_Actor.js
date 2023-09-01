@@ -1,4 +1,3 @@
-import { sound } from '@pixi/sound';
 import { v4 as uuidv4 } from 'uuid';
 
 class SP_Actor {
@@ -34,12 +33,16 @@ class SP_Actor {
     return this.scene.battleLogic.determineInitiative(acters);
   }
 
+  play(name) {
+    this.scene.play(name, this);
+  }
+
   // 攻撃前
   beforeAttack(wepon, target) {
     const { characterName, addText } = this;
     const { characterName: targetName } = target;
     const { itemName } = wepon;
-    sound.play('sword_slash_2');
+    this.play('sword_slash_2');
     addText(`${characterName} は ${targetName} に ${itemName} で攻撃！`);
   }
 
@@ -69,7 +72,7 @@ class SP_Actor {
     this.status.hp = Math.max(hp, 0);
     if (hp < 1) {
       // 死亡
-      sound.play('strike_8');
+      this.play('strike_8');
       this.died(target);
       return true;
     }
@@ -178,6 +181,7 @@ class SP_Actor {
   get expReward() { return this.status.expReward } // 付与経験値
   get mapX() { return this.status.mapX }
   get mapY() { return this.status.mapY }
+  get isPlayer() { return this.status.isPlayer }
   get x() { return this.sprite.x }
   get y() { return this.sprite.y }
 

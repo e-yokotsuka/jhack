@@ -1,4 +1,5 @@
-import { CELL_SIZE } from "../define";
+import { CELL_SIZE, PLAYER_MAP_BOUNDS } from "../define";
+
 import { Container } from "pixi.js";
 import MD_Monster from '../model/MD_Monster';
 import SP_Actor from './SP_Actor';
@@ -140,11 +141,11 @@ class SP_Monster extends SP_Actor {
       } } = this;
     beforeUpdate();
     const distance = this.getPlayerDistance();
-    if (distance < 10) this.moveTowardsPlayer();
+    if (distance < PLAYER_MAP_BOUNDS) this.moveTowardsPlayer();
 
     if (!isMove()) return; // 動いていない
     const { virtualX: vx, virtualY: vy } = status;
-    if (distance < 10) this.moveTowardsPlayer();
+    if (distance < PLAYER_MAP_BOUNDS) this.moveTowardsPlayer();
     this.checkCollision() || this.moveConfirmed(vx, vy);
     afterUpdate();
   }

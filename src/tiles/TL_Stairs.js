@@ -4,7 +4,7 @@ import TL_Common from "./TL_Common";
 
 class TL_Stairs extends TL_Common {
     constructor({ core, x, y, isUp = true, next = {}, floor }) {
-        const cellName = isUp ? `rock_stairs_up` : `rock_stairs_down`;
+        const cellName = isUp ? `stone_stairs_up` : `stone_stairs_down`;
         super({ core, x, y, cellName, type: 'stairs', isBlocked: true });
         this.next = next;
         this.isUp = isUp;

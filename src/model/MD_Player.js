@@ -9,6 +9,7 @@ class MD_Player extends MD_Actor {
   constructor() {
     super({
       characterName: "ゆーしゃ",
+      isPlayer: true,
       lv: 1,
       hp: 10,
       mp: 10,
