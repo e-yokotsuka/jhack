@@ -33,7 +33,6 @@ class UI_MessageBox {
   close = _ => this.prim.visible = false
 
   resize = (width, height) => {
-    console.log(`${height}`)
     this.prim.x = MESSAGE_BOX_ABS_X;
     this.prim.y = height - MESSAGE_BOX_HEIGHT - MESSAGE_BOX_ABS_Y;
   }

@@ -74,7 +74,6 @@ class MP_AutoMap {
 
     this.traps.forEach(({ x, y, trap }) => this.putTile(new TL_Trap({ core, x, y, trap, floor: this.getTile(x, y) })));
     this.downStairs.forEach(({ x, y, isUp }) => this.putTile(new TL_Stairs({ core, x, y, isUp, floor: this.getTile(x, y) })));
-    console.dir(this.downStairs);
     this.reset();
   }
 
@@ -91,7 +90,6 @@ class MP_AutoMap {
       force: true
     });
     nextMap.upStairs.forEach(({ x, y, isUp }, index) => {
-      console.log(`${nextMap.upStairs.length}===${downStairs.length}`)
       console.assert(nextMap.upStairs.length === downStairs.length);
       const down = this.downStairs[index];
       const downTile = this.getTile(down.x, down.y);
@@ -193,7 +191,6 @@ class MP_AutoMap {
     mapContainer.y = (-(y * CELL_SIZE) + (height / 2));
     this.lastMapX = x;
     this.lastMapY = y;
-    console.log(`mapContainer.x:${mapContainer.x} mapContainer.y:${mapContainer.y}`)
   }
 
   serialize() {

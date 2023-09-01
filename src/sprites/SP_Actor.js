@@ -1,11 +1,10 @@
-import { v4 as uuidv4 } from 'uuid';
+import { distance } from "../tools/Calc";
 
 class SP_Actor {
   constructor({ core, scene, status }) {
     this.core = core;
     this.scene = scene;
     this.status = status;
-    this.uuid = this.getUUID();
   }
 
   move(x, y) {
@@ -68,6 +67,7 @@ class SP_Actor {
         addText(`いって！ ${target.characterName} の攻撃で ${point} ポイントのダメージをくらった！`) :
         addText(`いてえ！ ${point} ポイントのダメージをくらった！`);
     }
+    if (target) this.addTarget(target.uuid);
     const hp = this.status.hp - point;
     this.status.hp = Math.max(hp, 0);
     if (hp < 1) {
@@ -77,6 +77,21 @@ class SP_Actor {
       return true;
     }
     return false;
+  }
+
+  getTargetList() {
+    return this.status.targetsIds.map(uuid => this.scene.getEnemyById(uuid));
+  }
+
+  selectAttackTarget() {
+    const list = this.getTargetList();
+    list.push(this.scene.getPlayer()); // プレイヤーを追加
+    const { mapX, mapY } = this;
+    list.sort((prev, curr) => {
+      return distance({ mapX, mapY }, { mapX: prev.mapX, mapY: prev.mapY })
+        - distance({ mapX, mapY }, { mapX: curr.mapX, mapY: curr.mapY });
+    })
+    return list[0];
   }
 
   applyExp(target) {
@@ -91,6 +106,10 @@ class SP_Actor {
     addText(`し  ん  だ  よ`);
   }
 
+  addTarget(uuid) { // プレイヤー以外は敵対アクターのuuidを格納する
+    if (!this.isPlayer && !this.status.targetsIds.includes(uuid))
+      this.status.targetsIds.push(uuid)
+  }
   //罠をよけた
   escapeTrap() { console.log("escapeTrap") }
 
@@ -147,7 +166,7 @@ class SP_Actor {
 
   diceRoll = ({ diceText, status }) => this.core.diceRoll({ diceText, status });
 
-  getUUID = _ => uuidv4();
+  getUUID = _ => this.status.uuid;
 
   addText = (text, time) => {
     const { scene: { addText } } = this;
@@ -168,6 +187,7 @@ class SP_Actor {
   // 装備をかえす
   get equipments() { return this.status.getEquipments() }
   get characterName() { return this.status.characterName }
+  get uuid() { return this.status.uuid }
   get hp() { return this.status.hp }
   get mp() { return this.status.mp }
   get maxHp() { return this.status.maxHp }

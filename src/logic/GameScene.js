@@ -137,6 +137,7 @@ class GameScene {
     getPlayer = _ => this.player;
     getPlayerStatus = _ => this.player.status;
 
+    getEnemyById = uuid => this.monsters.find(m => m.uuid == uuid);
     getEnemys = _ => this.monsters;
     spawnEnemy = _ => this.spawnManager.spawnEnemy();
     resetEnemy = _ => this.spawnManager.resetEnemy();
@@ -186,6 +187,7 @@ class GameScene {
 
     get playerMapX() { return this.getPlayerStatus().mapX }
     get playerMapY() { return this.getPlayerStatus().mapY }
+    get playerUUID() { return this.getPlayerStatus().uuid }
 
 
 }

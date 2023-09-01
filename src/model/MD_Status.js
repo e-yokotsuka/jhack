@@ -3,6 +3,7 @@ import { EMPTY_ITEM_INDEX, EMPTY_WEPON_INDEX } from "../define"
 import MS_Gender from "../data/MS_Gender";
 import MS_Item from "../data/MS_Item";
 import MS_Race from "../data/MS_Race";
+import { v4 as uuidv4 } from 'uuid';
 
 const MD_Status = ({
   lv = 1,
@@ -11,6 +12,7 @@ const MD_Status = ({
   exp = 0,
   nextExp = 0,
   expReward,
+  targetsIds = [],//敵とみなすID
   hp = 0,
   mp = 0,
   virtualX = 0,//移動先の座標
@@ -32,12 +34,14 @@ const MD_Status = ({
   force_update = false,
   speed = 1
 }) => ({
+  uuid: uuidv4(),
   lv,
   characterName,
   isPlayer,
   exp,
   nextExp,
   expReward,
+  targetsIds,
   hp,
   mp,
   maxHp,

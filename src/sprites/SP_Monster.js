@@ -97,36 +97,37 @@ class SP_Monster extends SP_Actor {
     this.scene.addTrace(new SP_Trace({ core, scene, mapX, mapY }));
   }
 
-  moveTowardsPlayer = _ => {
-    const playerMapX = this.scene.playerMapX;
-    const playerMapY = this.scene.playerMapY;
+  moveTowardsTarget = target => {
+    const targetMapX = target.mapX;
+    const targetMapY = target.mapY;
     if (Math.random() < 0.5) { // 左右と上下、どちらに動くか抽選する
-      if (playerMapX < this.status.mapX) {
+      if (targetMapX < this.status.mapX) {
         this.status.trialMove('l');
-      } else if (playerMapX > this.status.mapX) {
+      } else if (targetMapX > this.status.mapX) {
         this.status.trialMove('r');
       }
     } else {
-      if (playerMapY < this.status.mapY) {
+      if (targetMapY < this.status.mapY) {
         this.status.trialMove('u');
-      } else if (playerMapY > this.status.mapY) {
+      } else if (targetMapY > this.status.mapY) {
         this.status.trialMove('d');
       }
     }
   }
 
-  getPlayerDistance = _ => {
-    return distance(this.scene.getPlayerStatus(), this.status);
+  getTargetDistance = target => {
+    return distance(target, this);
   }
 
   checkCollision = _ => {
     const { mainMap } = this;
-    const { mapX: playerX, mapY: playerY } = this.scene.getPlayerStatus();
     const { virtualX: vx, virtualY: vy } = this.status;
     const tile = mainMap.getTile(vx, vy);
     const selfUuid = this.uuid;
     const monsters = this.scene.getEnemys();
     const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
+    const playerX = this.scene.playerMapX;
+    const playerY = this.scene.playerMapY;
     if (vx == playerX && vy == playerY) collisions.push(this.scene.getPlayer());
     collisions.forEach(m => {
       const [first, second] = this.determineInitiative([this, m]);
@@ -144,11 +145,13 @@ class SP_Monster extends SP_Actor {
         isMove,
       } } = this;
     beforeUpdate();
-    const distance = this.getPlayerDistance();
-    if (distance < PLAYER_MAP_BOUNDS) this.moveTowardsPlayer();
+    const target = this.selectAttackTarget()
+
+    const distance = this.getTargetDistance(target);
+    if (distance < PLAYER_MAP_BOUNDS) this.moveTowardsTarget(target);
     if (!isMove()) return; // 動いていない
     const { virtualX: vx, virtualY: vy } = status;
-    this.checkCollision() || this.moveConfirmed(vx, vy);
+    this.checkCollision(target) || this.moveConfirmed(vx, vy);
     afterUpdate();
   }
 

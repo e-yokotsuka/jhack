@@ -31,8 +31,6 @@ class TL_Stairs extends TL_Common {
 
     setNext = next => {
         this.next = next;
-        console.log(next);
-
     };
 }
 
