@@ -100,14 +100,18 @@ class SP_Monster extends SP_Actor {
   moveTowardsPlayer = _ => {
     const playerMapX = this.scene.playerMapX;
     const playerMapY = this.scene.playerMapY;
-    if (playerMapX < this.status.mapX) {
-      this.status.trialMove('l');
-    } else if (playerMapX > this.status.mapX) {
-      this.status.trialMove('r');
-    } else if (playerMapY < this.status.mapY) {
-      this.status.trialMove('u');
-    } else if (playerMapY > this.status.mapY) {
-      this.status.trialMove('d');
+    if (Math.random() < 0.5) { // 左右と上下、どちらに動くか抽選する
+      if (playerMapX < this.status.mapX) {
+        this.status.trialMove('l');
+      } else if (playerMapX > this.status.mapX) {
+        this.status.trialMove('r');
+      }
+    } else {
+      if (playerMapY < this.status.mapY) {
+        this.status.trialMove('u');
+      } else if (playerMapY > this.status.mapY) {
+        this.status.trialMove('d');
+      }
     }
   }
 
@@ -142,10 +146,8 @@ class SP_Monster extends SP_Actor {
     beforeUpdate();
     const distance = this.getPlayerDistance();
     if (distance < PLAYER_MAP_BOUNDS) this.moveTowardsPlayer();
-
     if (!isMove()) return; // 動いていない
     const { virtualX: vx, virtualY: vy } = status;
-    if (distance < PLAYER_MAP_BOUNDS) this.moveTowardsPlayer();
     this.checkCollision() || this.moveConfirmed(vx, vy);
     afterUpdate();
   }
