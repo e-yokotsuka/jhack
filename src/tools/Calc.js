@@ -42,9 +42,9 @@ const calculateModifier = param => Math.floor(param / MODIFIER)
 const calculateMinMax = ({ diceText, status }) => diceRoll({ diceText, status, isMinMax: true });
 
 // アクター同士の距離をはかる
-const distance = (actor1, eactor2) => {
-  const dx = actor1.mapX - eactor2.mapX;
-  const dy = actor1.mapY - eactor2.mapY;
+const distance = (actor1, actor2) => {
+  const dx = actor1.mapX - actor2.mapX;
+  const dy = actor1.mapY - actor2.mapY;
   return Math.sqrt(dx * dx + dy * dy);
 }
 
