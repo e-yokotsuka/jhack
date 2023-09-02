@@ -5,17 +5,25 @@ const BLOOD = ['blood_red', 'blood_red1', 'blood_red2', 'blood_red3', 'blood_red
 class SP_Trace {
 
   constructor({ core, scene, name, mapX, mapY, life = 100 }) {
-    const { textures: { tx_main } } = core;
     const texName = name ?? BLOOD[Math.floor(Math.random() * BLOOD.length)];
-    const sprite = new Sprite(tx_main[`${texName}`]);
-    sprite.interactive = false;
-    this.sprite = sprite;
+    this.core = core;
+    this.name = texName;
     this.life = life;
     this.maxLife = life;
     this.mapX = mapX;
     this.mapY = mapY;
     this.scene = scene;
     this.mainMap = scene.mainMap;
+    this.makePrim();
+  }
+
+  makePrim = () => {
+    const { core, name } = this;
+    const { textures: { tx_main } } = core;
+    const sprite = new Sprite(tx_main[`${name}`]);
+    sprite.interactive = false;
+    this.sprite = sprite;
+    this.sprite.alpha = this.life / this.maxLife;
   }
 
   getPrim = _ => this.sprite;
@@ -25,7 +33,7 @@ class SP_Trace {
     if (this.life < 0) {
       this.getPrim().destroy();
       this.isDie = true;
-      this.scene.refreshTraces();
+      this.scene.refreshMonsters();
       return;
     }
     this.sprite.alpha = this.life / this.maxLife;

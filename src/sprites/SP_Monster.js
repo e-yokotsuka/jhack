@@ -18,17 +18,31 @@ class SP_Monster extends SP_Actor {
       characterName: 'ごぶりん'
     });
     super({ core, scene, status });
-    const { textures: { tx_main } } = core;
+    this.status.mapX = 0;
+    this.status.mapY = 0;
     const { mainMap } = scene;
     this.mainMap = mainMap;
     this.mainMap.addResetCallback(_ => {
       this.respawn();
     });
+    // TODO DEBUG 階層ごとにキャラがかわっているかのテスト用
+    const m = ['great_orb_of_eyes', 'greater_naga', 'griffon', 'guardian_serpent', 'halfling', 'harpy', 'hell_knight', 'hill_giant', 'hippogriff']
+    this.name = scene.level === 0 ? name : m[scene.level];
+    this.makePrim();
+  }
+
+  updateProgressBar = _ => {
+    const { hp, maxHp, mp, maxMp } = this;
+    this.progressHp.setValue((hp / maxHp * 100));
+    this.progressMp.setValue((mp / maxMp * 100));
+  }
+
+  makePrim = () => {
+    const { core, name } = this;
+    const { textures: { tx_main } } = core;
     const sprite = new Sprite(tx_main[`${name}`]);
     sprite.interactive = false;
     this.sprite = sprite;
-    this.status.mapX = 0;
-    this.status.mapY = 0;
     this.progressHp = new UI_ProgressBar({
       core,
       y: 32,
@@ -50,12 +64,6 @@ class SP_Monster extends SP_Actor {
     this.container.addChild(this.progressHp.getPrim());
     this.container.addChild(this.progressMp.getPrim());
     this.updateProgressBar();
-  }
-
-  updateProgressBar = _ => {
-    const { hp, maxHp, mp, maxMp } = this;
-    this.progressHp.setValue((hp / maxHp * 100));
-    this.progressMp.setValue((mp / maxMp * 100));
   }
 
   getPrim = _ => this.container;

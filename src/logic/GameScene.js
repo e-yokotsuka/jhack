@@ -22,7 +22,6 @@ class GameScene {
         this.isWindowOpen = false;
         this.sceneContainer = new Container();
         this.mapContainer = new Container();
-        this.traceContainer = new Container();
         this.battleLogic = new BattleLogic(core);
         this.levelMap = [];
         this.frameCounter = 0;
@@ -42,6 +41,8 @@ class GameScene {
     }
 
     updateMap = _ => {
+        this.traces = [];
+        this.monsters = [];
         this.mainMap = this.mapManager.getLevelMap(this.level);
         this.mapContainer.removeChildren();
         this.mapContainer.addChild(this.mainMap.getPrim());
@@ -53,9 +54,10 @@ class GameScene {
         this.sceneContainer.removeChildren();
         this.level = 0; // 階層
         this.mapManager = new MP_MapManager({ core, scene });
+        this.spawnManager = new SpawnManager(this)
         this.updateMap();
         this.sceneContainer.addChild(this.mapContainer);
-        this.sceneContainer.addChild(this.traceContainer);
+        this.sceneContainer.addChild(this.spawnManager.getPrim());
         this.debugTextPrim = new Text('debug key string', {
             fontSize: 20,
             fill: 0xffffff,
@@ -77,16 +79,15 @@ class GameScene {
         this.uiWindowManager = new UI_WindowManager({ core, scene });
         this.sceneContainer.addChild(this.uiWindowManager.getPrim());
         app.stage.addChild(this.sceneContainer);
-        this.spawnManager = new SpawnManager(this)
 
         this.uiMessageBox = new UI_MessageBox({ core, scene });
         this.sceneContainer.addChild(this.uiMessageBox.getPrim());
     }
 
-    refreshMonsters = _ => this.monsters = this.monsters.filter(m => !m.isDie);
-    refreshTraces = _ => this.traces = this.traces.filter(m => !m.isDie);
+    refreshMonsters = _ => this.spawnManager.refreshMonsters();
+
     addTrace = trace => {
-        this.traceContainer.addChild(trace.getPrim());
+        this.spawnManager.addTrace(trace);
         this.traces.push(trace);
     }
 
@@ -112,7 +113,7 @@ class GameScene {
         this.player.setMap(this.mainMap);
         this.player.teleportation(x, y);
         this.mainMap.center(x, y);
-        this.resetEnemy();
+        this.resetSpawnManager(level);
         const { x: xx, y: yy } = this.mainMap.getPosition();
         console.log(`${xx},${yy}`);
     }
@@ -140,7 +141,7 @@ class GameScene {
     getEnemyById = uuid => this.monsters.find(m => m.uuid == uuid);
     getEnemys = _ => this.monsters;
     spawnEnemy = _ => this.spawnManager.spawnEnemy();
-    resetEnemy = _ => this.spawnManager.resetEnemy();
+    resetSpawnManager = level => this.spawnManager.reset(level);
 
     // stepが更新された
     handleStepUpdate = (/* vx, vy*/) => {
