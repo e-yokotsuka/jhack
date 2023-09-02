@@ -8,6 +8,7 @@ class SpawnManager {
     constructor(gameScene) {
         this.gameScene = gameScene;
         this.contianer = new Container();
+        this.levelMonster = [];
         const { sceneContainer } = gameScene;
         sceneContainer.addChild(this.contianer);
     }

@@ -83,6 +83,7 @@ class MD_Actor {
       [ITEM_TYPE.shield]: _ => (this.equipments.shield.uuid == item.uuid),
       [ITEM_TYPE.ring]: _ => (this.equipments.ring.uuid == item.uuid),
     }[item.itemType];
+    console.log(`${this.equipments.weapon.uuid} == ${item.uuid}`)
     return isEquipped && isEquipped();
   }
 

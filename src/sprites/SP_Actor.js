@@ -1,4 +1,5 @@
 import { distance } from "../tools/Calc";
+import { v4 as uuidv4 } from 'uuid';
 
 class SP_Actor {
   constructor({ core, scene, status }) {
@@ -120,7 +121,7 @@ class SP_Actor {
   getItem(item) {
     const { addText } = this;
     const newItem = { ...item }; //参照を切り離す
-    newItem.uuid = this.getUUID()
+    newItem.uuid = uuidv4()
     this.status.items.push(newItem);
     addText(`${newItem.itemName}をGETした！`);
     // const itemList = this.status.items.map(({ itemName, uuid, id, itemTypeName }) => `${uuid}:${itemName}:${id}:${itemTypeName}`).join('\n')
