@@ -50,7 +50,7 @@ class BattleLogic {
         let defenseValue = diceRoll({ diceText: `${dArmour.value}`, status: offense });
         defenseValue += diceRoll({ diceText: `${sShield.value}+con`, status: offense });
         const point = dmg - defenseValue;
-        point > 0 ? defense.applyDamage({ point, target: offense }) : defense.blockAttack(defense)
+        point > 0 ? defense.applyDamage({ point, target: offense }) : defense.blockAttack(offense)
     }
 
 }
