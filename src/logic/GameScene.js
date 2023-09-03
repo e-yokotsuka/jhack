@@ -25,8 +25,9 @@ class GameScene {
         this.battleLogic = new BattleLogic(core);
         this.levelMap = [];
         this.frameCounter = 0;
-        // SOUND の MUTO
-        this.isMute = true;
+
+        // this.sound.unmuteAll();
+        this.sound.muteAll(); // Mute (TODO: 現在はハードコード)
     }
 
     getSceneId = _ => this.sceneId;
@@ -165,7 +166,6 @@ class GameScene {
     }
 
     play(name, target) {
-        if (this.isMute) return;
         let dis = 0;
         const { playerMapX, playerMapY } = this;
         let volume = 1;
