@@ -111,6 +111,7 @@ class SP_Player extends SP_Actor {
   died() {
     const { addText, characterName } = this;
     addText(`${characterName}は、 し  ん  だ  ！！`);
+    this.scene.windowClose();
     this.respawn();
   }
 
@@ -158,11 +159,6 @@ class SP_Player extends SP_Actor {
     addText(`${characterName} は、${itemName} を使用して ${point} ポイント回復した。\nうまし！`);
   }
 
-  // itemを使用したあとの処理
-  itemUsed(item, index) {
-    this.status.items.splice(index, 1);
-  }
-
   checkCollision = _ => {
     const { mainMap, status } = this;
     const { virtualX: vx, virtualY: vy } = status;
@@ -173,8 +169,9 @@ class SP_Player extends SP_Actor {
     const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
     collisions.forEach(m => {
       const [first, second] = this.determineInitiative([this, m]);
-      this.weponAttack({ offense: first, defense: second });
-      this.weponAttack({ offense: second, defense: first });
+      // WindowOpen中は仕返しが出来ない
+      if (!first.isStay) this.weponAttack({ offense: first, defense: second });
+      if (!second.isStay) this.weponAttack({ offense: second, defense: first });
     })
     return tile.hit({ actor: this, status }) || collisions.length
   }
@@ -191,7 +188,7 @@ class SP_Player extends SP_Actor {
         isMove,
       },
       sprite } = this;
-    if (isWindowOpen) return;
+    if (isWindowOpen && !this.isForceUpdate) return;
     beforeUpdate();
     const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
     if (key) inputMap[key]();

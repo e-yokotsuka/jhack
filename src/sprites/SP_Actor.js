@@ -146,6 +146,12 @@ class SP_Actor {
   //装備
   equipment(item, forceItemType) { this.status.equipment(item, forceItemType) }
 
+  // itemを使用したあとの処理
+  itemUsed(item, index) {
+    this.status.items.splice(index, 1);
+    this.status.stay({ force: true });
+  }
+
   //装備可能なアイテム一覧
   equipmentItems() { return [] }
 
@@ -203,6 +209,8 @@ class SP_Actor {
   get mapX() { return this.status.mapX }
   get mapY() { return this.status.mapY }
   get isPlayer() { return this.status.isPlayer }
+  get isStay() { return this.status.isStay }
+  get isForceUpdate() { return this.status.force_update }
   get x() { return this.sprite.x }
   get y() { return this.sprite.y }
 

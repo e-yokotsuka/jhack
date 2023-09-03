@@ -49,7 +49,7 @@ class MD_Actor {
   }
 
   // とどまる
-  stay() { this.lock ? null : this.isStay = true; }
+  stay({ force = false }) { force ? this.force_update = true : this.isStay = true; }
 
   //ロック
   lock() { this.lock = true; }
@@ -69,6 +69,7 @@ class MD_Actor {
       [ITEM_TYPE.ring]: _ => (this.equipments.ring = item),
     }[forceItemType ? forceItemType : item.itemType];
     equipment && equipment();
+    this.stay({ force: true });
   }
 
   getEquipments = _ => this.equipments;

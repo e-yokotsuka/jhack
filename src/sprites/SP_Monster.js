@@ -129,7 +129,7 @@ class SP_Monster extends SP_Actor {
 
   checkCollision = _ => {
     const { mainMap } = this;
-    const { virtualX: vx, virtualY: vy } = this.status;
+    const { virtualX: vx, virtualY: vy, isWindowOpen } = this.status;
     const tile = mainMap.getTile(vx, vy);
     const selfUuid = this.uuid;
     const monsters = this.scene.getEnemys();
@@ -139,8 +139,9 @@ class SP_Monster extends SP_Actor {
     if (vx == playerX && vy == playerY) collisions.push(this.scene.getPlayer());
     collisions.forEach(m => {
       const [first, second] = this.determineInitiative([this, m]);
-      this.weponAttack({ offense: first, defense: second });
-      this.weponAttack({ offense: second, defense: first });
+      // Windowオープン中はプレイヤーは反撃できない。
+      if (!(isWindowOpen && first.isPlayer)) this.weponAttack({ offense: first, defense: second });
+      if (!(isWindowOpen && second.isPlayer)) this.weponAttack({ offense: second, defense: first });
     })
     return tile.hit({ actor: this, status }) || collisions.length
   }

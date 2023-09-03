@@ -134,6 +134,7 @@ class GameScene {
         this.mainMap.center();
     }
     windowOpen = isOpen => this.isWindowOpen = isOpen;
+    windowClose = _ => this.uiWindowManager.close();
     addText = (text, time) => this.uiMessageBox?.addText(text, time);
     getPlayer = _ => this.player;
     getPlayerStatus = _ => this.player.status;
