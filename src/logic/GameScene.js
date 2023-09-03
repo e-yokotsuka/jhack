@@ -33,10 +33,12 @@ class GameScene {
 
     Load = async _ => {
 
-        this.sound.add('iron_door_open', './assets/sound/鉄の扉を開ける.mp3');
-        this.sound.add('bow_arrow_hit', './assets/sound/弓矢が刺さる.mp3');
-        this.sound.add('sword_slash_2', './assets/sound/剣で斬る2.mp3');
-        this.sound.add('strike_8', './assets/sound/打撃8.mp3');
+        this.sound.add({
+            iron_door_open: './assets/sound/鉄の扉を開ける.mp3',
+            bow_arrow_hit: './assets/sound/弓矢が刺さる.mp3',
+            sword_slash_2: './assets/sound/剣で斬る2.mp3',
+            strike_8: './assets/sound/打撃8.mp3'
+        });
         return await true;//あとで非同期処理が必要になるかもしれないので非同期関数としておく。
     }
 
