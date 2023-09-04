@@ -78,7 +78,7 @@ class UI_Window {
 
     const panel = new Graphics();
     panel.lineStyle(2, 0xFFFFFF, 1);
-    panel.beginFill(0x650A5A, 0.25);
+    panel.beginFill(0x011896, 0.75);
     panel.drawRoundedRect(this.x, this.y, this.w, this.h + Y_PADDING, 4);
     panel.endFill();
 
