@@ -62,3 +62,4 @@
 
 * Graphical Tiles: [Crawl Stone Soup Tiles](https://github.com/crawl/tiles)
 * Sounfd Effects: [soundeffect-lab.info](https://soundeffect-lab.info/sound/various/)
+* icons [Material Symbols(icons)](https://fonts.google.com/icons)
