@@ -100,6 +100,11 @@ class SP_Actor {
     const { expReward } = target;
     this.status.exp += expReward;
     addText(`${characterName} は ${expReward} の経験値を得た！`);
+    this.checkExp();
+  }
+
+  checkExp(){
+    
   }
 
   died() {

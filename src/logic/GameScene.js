@@ -1,6 +1,7 @@
 import { Container, Text } from 'pixi.js';
 
 import BattleLogic from './BattleLogic';
+import CommonScene from './CommonScene';
 import MP_MapManager from '../map/MP_MapManager';
 import { PLAYER_MAP_BOUNDS } from '../define';
 import { SCENE_ID } from './Core'
@@ -12,33 +13,25 @@ import UI_WindowManager from '../ui/UI_WindowManager';
 import { distance } from '../tools/Calc';
 import { sound } from '@pixi/sound';
 
-class GameScene {
+class GameScene extends CommonScene {
     constructor({ core }) {
-        this.core = core;
-        this.app = core.app;
-        this.sound = sound;
-        this.input = core.input;
-        this.sceneId = SCENE_ID.GAME;
+        super({ core, sceneId: SCENE_ID.GAME });
         this.isWindowOpen = false;
         this.sceneContainer = new Container();
         this.mapContainer = new Container();
         this.battleLogic = new BattleLogic(core);
         this.levelMap = [];
         this.frameCounter = 0;
-
-        // this.sound.unmuteAll();
-        this.sound.muteAll(); // Mute (TODO: 現在はハードコード)
     }
 
-    getSceneId = _ => this.sceneId;
-
-    Load = async _ => {
-
+    async Load() {
         this.sound.add({
             iron_door_open: './assets/sound/鉄の扉を開ける.mp3',
             bow_arrow_hit: './assets/sound/弓矢が刺さる.mp3',
             sword_slash_2: './assets/sound/剣で斬る2.mp3',
-            strike_8: './assets/sound/打撃8.mp3'
+            strike_8: './assets/sound/打撃8.mp3',
+            unmute: './assets/sound/決定ボタンを押す42.mp3',
+
         });
         return await true;//あとで非同期処理が必要になるかもしれないので非同期関数としておく。
     }
@@ -51,7 +44,7 @@ class GameScene {
         this.mapContainer.addChild(this.mainMap.getPrim());
     }
 
-    Initialize = _ => {
+    Initialize() {
         const { core, app } = this;
         const scene = this;
         this.sceneContainer.removeChildren();
@@ -121,7 +114,7 @@ class GameScene {
         console.log(`${xx},${yy}`);
     }
 
-    Start = async _ => {
+    async Start() {
         const { app } = this;
         app.ticker.start();
     }
@@ -187,6 +180,10 @@ class GameScene {
         console.log("save game scene")
     }
 
+    onMute(isMute) {
+        this.addText(isMute ? 'あたりは静寂につつまれた！' : '音を盛大に鳴らすことになった！');
+        if (!isMute) this.play('unmute');
+    }
     // ステータスプロパティのシンタックスシュガー
 
     get playerMapX() { return this.getPlayerStatus().mapX }

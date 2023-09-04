@@ -1,8 +1,9 @@
-import { Application, Assets } from 'pixi.js';
+import { Application, Assets, Sprite, Texture } from 'pixi.js';
 
 import GameScene from './GameScene';
 import Input from './Input';
 import Stats from 'stats.js';
+import UI_Common from '../ui/UI_Common';
 import { diceRoll } from '../tools/Calc';
 import { sound } from '@pixi/sound';
 
@@ -37,6 +38,7 @@ class Core {
     this.sceneId = START_SCENE_ID;
     this.changeScene(this.sceneId, false)
     window.addEventListener("resize", (event) => { this.resize(event) }, false);
+    sound.muteAll(); // デフォルトは音をミュート
   }
 
   changeScene = (sceneId, reset = true) => {
@@ -74,18 +76,29 @@ class Core {
     }
   }
 
+  muteSwitchCallback = isMute => {
+    isMute ? sound.muteAll() : sound.unmuteAll();
+    this.currentScene.onMute(isMute);
+  }
+
   Load = async _ => {
     this.loaded = true;
     // texturesはアプリケーション内共通
     const { textures } = await Assets.load('./assets/sprites/main.json', p => console.info(p));
+    console.dir(textures)
     this.textures = {};
+    textures["ui_sound_on"] = Texture.from('./assets/sprites/icons/outline_volume_up_white_24dp.png');
+    textures["ui_sound_off"] = Texture.from('./assets/sprites/icons/outline_volume_off_white_24dp.png');
     this.textures["tx_main"] = textures;
+    this.uiCommon = new UI_Common({ core: this, muteSwitchCallback: this.muteSwitchCallback });
     return await this.currentScene.Load();
   }
 
   Initialize = async _ => {
     console.assert(this.loaded, 'Resource not loaded.');
+    this.app.stage.removeChildren();
     this.currentScene.Initialize();
+    this.app.stage.addChild(this.uiCommon.getPrim());
     this.resize();
   }
 
@@ -101,6 +114,7 @@ class Core {
       stats.begin();
       if (this.input.isDown('z')) this.Initialize();
       this.currentScene.main(delta);
+      this.uiCommon.update(delta);
       stats.end();
     });
   }
@@ -114,7 +128,10 @@ class Core {
 
   getPlayer = _ => this.currentScene.getSceneId() === SCENE_ID.GAME ? this.currentScene.getPlayer() : null;
   getPlayerStatus = _ => this.currentScene.getSceneId() === SCENE_ID.GAME ? this.currentScene.getPlayerStatus() : null;
-
+  createSpriteByName = name => {
+    const { textures: { tx_main } } = this;
+    return new Sprite(tx_main[`${name}`]);
+  }
   save = _ => {
     const gameScene = this.getScene(SCENE_ID.GAME);
     gameScene.save();
