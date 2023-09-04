@@ -73,9 +73,16 @@ class SP_Monster extends SP_Actor {
   respawn = _ => this.spawn()
 
   spawn = _ => {
-    const { x, y } = this.mainMap.getRespawnPosition();
+    let err = false;
+    let pos = { x: -1, y: -1 };
+    do { // 主人公と同じ位置に出現しないように
+      const playerX = this.scene.playerMapX;
+      const playerY = this.scene.playerMapY;
+      pos = this.mainMap.getRespawnPosition();
+      err = (playerX === pos.x || playerY === pos.y);
+    } while (err);
     this.status.hp = this.status.maxHp;
-    this.move(x, y);
+    this.move(pos.x, pos.y);
     // this.mainMap.center(this.status.mapX, this.status.mapY);
   }
 
