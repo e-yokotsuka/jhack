@@ -1,4 +1,5 @@
-import { Container, Text } from 'pixi.js';
+import { BLEND_MODES, Container, Text } from 'pixi.js';
+import { EMITTYPE, ParticleEffect, SPAWNTYPE } from "pixi-particle-lib";
 
 import BattleLogic from './BattleLogic';
 import CommonScene from './CommonScene';
@@ -13,6 +14,52 @@ import UI_WindowManager from '../ui/UI_WindowManager';
 import { distance } from '../tools/Calc';
 import { sound } from '@pixi/sound';
 
+const perticleParam = {
+    perticle: {
+        lifeTime: 1000, // 生存時間
+        startLifetime: 5,
+        startSpeed: 5,
+        startScale: 0.5,
+        endScale: 0.1,
+        damping: 0.03,
+        isSolidColor: false,
+        startColor: { r: 240, g: 140, b: 140, a: 1 },
+        endColor: { r: 230, g: 190, b: 180, a: 0 },
+        gravityModifier: 0,
+        isAutoRandomSeed: false,
+        randomSeed: 0,
+        imageId: "griffon",
+        rotation: 0
+    },
+    emmiter: {
+        isLoop: true,
+        useGround: false,
+        groundY: 100,
+        speed: 5,
+        airResistance: 0.01,
+        maxParticles: 100,
+        maxParticlesParSec: 15,
+        spawnType: SPAWNTYPE.ARC,
+        blendMode: BLEND_MODES.ADD,
+        gravity: 0,
+        duration: 5000, // 持続時間
+        arcParam: {
+            startDegree: 335,
+            endDegree: 25,
+        },
+        circleParam: {
+            radius: 10
+        },
+        lineParam: {
+            degree: 0,
+            width: 500,
+            emitType: EMITTYPE.UNIFORM
+        }
+    },
+    control: {
+        isPause: false,
+    }
+}
 class GameScene extends CommonScene {
     constructor({ core }) {
         super({ core, sceneId: SCENE_ID.GAME });
@@ -78,6 +125,19 @@ class GameScene extends CommonScene {
 
         this.uiMessageBox = new UI_MessageBox({ core, scene });
         this.sceneContainer.addChild(this.uiMessageBox.getPrim());
+
+        // TODO: パーティクル用にテクスチャを積みなおすのもあまりよくない
+        // もっと効率の良い方法を考慮する
+        const textures = {};
+        for (let key of Object.keys(core.textures.tx_main)) {
+            textures[key] = { texture: core.textures.tx_main[key] }
+        }
+        this.p = new ParticleEffect({
+            param: perticleParam,
+            textures,
+            x: 100, y: 100
+        });
+        this.sceneContainer.addChild(this.p.getPrim())
     }
 
     refreshMonsters = _ => this.spawnManager.refreshMonsters();
@@ -88,6 +148,11 @@ class GameScene extends CommonScene {
     }
 
     main(delta) {
+        // TODO : ↓お試し実装
+        this.p.update(delta);
+        this.p.x = this.player.x;
+        this.p.y = this.player.y;
+        // TODO : ↑お試し実装
         this.mainMap.update(delta);
         this.uiStatus.update();
         this.player.update(delta);

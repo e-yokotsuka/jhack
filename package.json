@@ -7,8 +7,10 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@pixi/particle-emitter": "^5.0.8",
     "@pixi/sound": "^5.0.0",
     "@pixi/ui": "^0.5.8",
+    "pixi-particle-lib": "github:e-yokotsuka/pixi-particle-lib",
     "pixi.js": "^7.2.4",
     "stats.js": "^0.17.0",
     "uuid": "^9.0.0"
