@@ -103,8 +103,8 @@ class SP_Actor {
     this.checkExp();
   }
 
-  checkExp(){
-    
+  checkExp() {
+    this.scene.battleLogic.levelup({ offense: this });
   }
 
   died() {
@@ -210,6 +210,7 @@ class SP_Actor {
   get intl() { return this.status.intl } // 知性
   get wiz() { return this.status.wiz } //知恵
   get cha() { return this.status.cha } // 魅力
+  get modifiers() { return this.status.modifiers } // 初期修正値
   get expReward() { return this.status.expReward } // 付与経験値
   get mapX() { return this.status.mapX }
   get mapY() { return this.status.mapY }

@@ -10,7 +10,7 @@ const MD_Status = ({
   characterName,
   isPlayer = false,
   exp = 0,
-  nextExp = 0,
+  nextExp = 200,
   expReward,
   targetsIds = [],//敵とみなすID
   hp = 0,
@@ -29,31 +29,40 @@ const MD_Status = ({
   intl = 10,
   wiz = 10,
   cha = 10,
+  modifiers = { // 修正値
+    str: 0,
+    dex: 0,
+    con: 0,
+    intl: 0,
+    wiz: 0,
+    cha: 0,
+  },
   gender = MS_Gender.male.value,
   race = MS_Race.human,
   force_update = false,
   speed = 1
 }) => ({
   uuid: uuidv4(),
-  lv,
-  characterName,
-  isPlayer,
-  exp,
-  nextExp,
+  lv, // レベル
+  characterName, //キャラクター名
+  isPlayer, // プレイヤーか？
+  exp, // 経験値
+  nextExp, // 次のレベルアップに必要な経験値
   expReward,
   targetsIds,
   hp,
   mp,
-  maxHp,
-  maxMp,
+  maxHp, // 最大体力
+  maxMp, // 最大精神力
   isStay,
   lock,
-  str,
-  dex,
-  con,
-  intl,
-  wiz,
-  cha,
+  str, // 強さ
+  dex, // 俊敏さ
+  con, // 強靭さ
+  intl, // 知性
+  wiz, // 知恵
+  cha, // カリスマ
+  modifiers,
   gender,
   race,
   virtualX,

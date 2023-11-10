@@ -53,6 +53,48 @@ class BattleLogic {
         point > 0 ? defense.applyDamage({ point, target: offense }) : defense.blockAttack(offense)
     }
 
+    getRandomBonus(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    calculateNextExp(level) {
+        return Math.pow(level, 2) * 100;
+    }
+
+    levelup({ offense }) {
+        const { status, addText, characterName } = offense;
+        if (status.exp >= status.nextExp) {
+            status.lv++;
+            addText(`${characterName} は ${status.lv} にレベルアップ！`);
+            status.nextExp = status.exp + this.calculateNextExp(status.lv);
+            // ステータスを一定値 + ランダムな値で増やす
+            const hp = 2 + this.getRandomBonus(0, 5 + status.str / 10);
+            const mp = 2 + this.getRandomBonus(0, 3 + status.intl / 10);
+            const str = 2 + this.getRandomBonus(0, 3);
+            const dex = 2 + this.getRandomBonus(0, 3);
+            const con = 2 + this.getRandomBonus(0, 3);
+            const intl = 2 + this.getRandomBonus(0, 3);
+            const wiz = 2 + this.getRandomBonus(0, 3);
+            const cha = 2 + this.getRandomBonus(0, 3);
+            status.maxHp += hp;
+            status.maxMp += mp;
+            status.str += str;
+            status.dex += dex;
+            status.con += con;
+            status.intl += intl;
+            status.wiz += wiz;
+            status.cha += cha;
+            addText(`${characterName}の HPが ${hp} あがった！`);
+            addText(`${characterName}の MPが ${mp} あがった！`);
+            addText(`${characterName}の 強さが ${str} あがった！`);
+            addText(`${characterName}の 俊敏さが ${dex} あがった！`);
+            addText(`${characterName}の 強靭さが ${con} あがった！`);
+            addText(`${characterName}の 知性が ${intl} あがった！`);
+            addText(`${characterName}の 知恵が ${wiz} あがった！`);
+            addText(`${characterName}の カリスマが ${cha} あがった！`);
+        }
+    }
+
 }
 
 export default BattleLogic;

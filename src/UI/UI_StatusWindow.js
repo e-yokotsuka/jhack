@@ -2,6 +2,7 @@ import { CELL_SIZE, HP_MAX_DIGITS, LV_MAX_DIGITS, MAX_NAME_LENGTH, MP_MAX_DIGITS
 import { Graphics, Text } from 'pixi.js';
 
 import UI_Window from "./UI_Window";
+import { calculateModifier } from "../tools/Calc";
 import { padEnd } from '../tools/Formatter'
 
 class UI_StatusWindow extends UI_Window {
@@ -11,7 +12,7 @@ class UI_StatusWindow extends UI_Window {
             scene,
             x, y,
             w: CELL_SIZE * 20,
-            h: CELL_SIZE * 10,
+            h: CELL_SIZE * 15,
         });
         this.inputMap = {
             'ArrowLeft': _ => this.isOpen && this.scene.uiWindowManager.closeStatusWindow(),
@@ -27,8 +28,13 @@ class UI_StatusWindow extends UI_Window {
         const itemText =
             `レベル：${padEnd(status.lv, LV_MAX_DIGITS, " ")} 名前：${padEnd(status.name, MAX_NAME_LENGTH)}
 HP：${padEnd(status.hp, HP_MAX_DIGITS, " ")}/${padEnd(status.maxHp, HP_MAX_DIGITS, " ")} MP：${padEnd(status.mp, MP_MAX_DIGITS, " ")}/${padEnd(status.maxMp, MP_MAX_DIGITS, " ")}
+強さ:${status.str}(${calculateModifier(status.str, status.modifiers.str)})
+俊敏さ:${status.dex}(${calculateModifier(status.dex, status.modifiers.dex)})
+強靭さ:${status.con}(${calculateModifier(status.con, status.modifiers.con)})
+知性:${status.intl}(${calculateModifier(status.intl, status.modifiers.intl)})
+知恵:${status.wiz}(${calculateModifier(status.wiz, status.modifiers.wiz)})
+カリスマ:${status.cha}(${calculateModifier(status.cha, status.modifiers.cha)})
 
-装備：
   武器：${weapon.itemName}
   鎧  ：${armour.itemName}
   盾  ：${shield.itemName}

@@ -32,6 +32,7 @@ class MD_Player extends MD_Actor {
       items: []
     });
   }
+
 }
 export default MD_Player;
 

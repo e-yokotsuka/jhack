@@ -23,6 +23,12 @@ class SP_Player extends SP_Actor {
     const sprite = new Sprite(tx_main[`${name}`]);
     sprite.interactive = false;
     this.sprite = sprite;
+    this.status.modifiers.str = this.diceRoll({ diceText: '1d4+0' });
+    this.status.modifiers.dex = this.diceRoll({ diceText: '1d4+0' });
+    this.status.modifiers.con = this.diceRoll({ diceText: '1d4+0' });
+    this.status.modifiers.intl = this.diceRoll({ diceText: '1d4+0' });
+    this.status.modifiers.wiz = this.diceRoll({ diceText: '1d4+0' });
+    this.status.modifiers.cha = this.diceRoll({ diceText: '1d4+0' });
     this.status.mapX = 0;
     this.status.mapY = 0;
     this.getItem(MS_Item[1]);

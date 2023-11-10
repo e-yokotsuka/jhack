@@ -16,7 +16,7 @@ const diceRoll = ({ diceText, status, isMinMax = false }) => {
   const [rolls, faces] = diceText.split('d').map(v => v.split('+')[0]);
   const modifiers = diceText.split('+').map(
     n => status && PARAMSET.includes(n) ?
-      calculateModifier(status[`${n}`]) : n ?
+      calculateModifier(status[`${n}`], status.modifiers[`${n}`]) : n ?
         parseInt(n, 10) : 0);
   let result = modifiers[0];
   let minValue = modifiers[0];
@@ -35,9 +35,9 @@ const checkDicePattern = (str) => {
   const regex = /\b\d+d\d+\b/g;
   return regex.test(str);
 }
-// 修正値を求める為の定数。最大パラメータを２１分割して修正値を求める
-const MODIFIER = Math.floor(99999 / 21);
-const calculateModifier = param => Math.floor(param / MODIFIER)
+// 修正値を求める為の定数。最大パラメータを51分割して修正値を求める
+const MODIFIER = Math.floor(999 / 51);
+const calculateModifier = (param, modifier) => Math.floor(param / MODIFIER) + modifier;
 
 const calculateMinMax = ({ diceText, status }) => diceRoll({ diceText, status, isMinMax: true });
 

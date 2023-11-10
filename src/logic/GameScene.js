@@ -126,15 +126,9 @@ class GameScene extends CommonScene {
         this.uiMessageBox = new UI_MessageBox({ core, scene });
         this.sceneContainer.addChild(this.uiMessageBox.getPrim());
 
-        // TODO: パーティクル用にテクスチャを積みなおすのもあまりよくない
-        // もっと効率の良い方法を考慮する
-        const textures = {};
-        for (let key of Object.keys(core.textures.tx_main)) {
-            textures[key] = { texture: core.textures.tx_main[key] }
-        }
         this.p = new ParticleEffect({
             param: perticleParam,
-            textures,
+            textures: core.textures.tx_main,
             x: 100, y: 100
         });
         this.sceneContainer.addChild(this.p.getPrim())
