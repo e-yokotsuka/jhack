@@ -15,9 +15,7 @@ class UI_MainWindow extends UI_Window {
                     label: "どうぐ", action: this.selectItemMenu
                 },
                 {
-                    label: "まほう", action: _ => {
-                        console.log("まほう")
-                    }
+                    label: "まほう", action: this.selectMagicMenu
                 },
                 {
                     label: "そうび", action: this.selectEqipmentMenu
@@ -46,6 +44,12 @@ class UI_MainWindow extends UI_Window {
         const { scene: { uiWindowManager } } = this;
         console.log("どうぐ");
         uiWindowManager.openItemMenu();
+    }
+
+    selectMagicMenu = _ => {
+        const { scene: { uiWindowManager } } = this;
+        console.log("まほう");
+        uiWindowManager.openMagicMenu();
     }
 
     selectEqipmentMenu = _ => {

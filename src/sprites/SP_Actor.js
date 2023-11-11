@@ -1,3 +1,4 @@
+import { MAGIC_ATTRIBUTE } from "../data/MS_Magics";
 import { distance } from "../tools/Calc";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -129,8 +130,20 @@ class SP_Actor {
     newItem.uuid = uuidv4()
     this.status.items.push(newItem);
     addText(`${newItem.itemName}をGETした！`);
-    // const itemList = this.status.items.map(({ itemName, uuid, id, itemTypeName }) => `${uuid}:${itemName}:${id}:${itemTypeName}`).join('\n')
-    // addText(`${itemList}`, 30);
+  }
+
+  // 魔法を覚える
+  learnSpell(magic) {
+    const { addText } = this;
+    const newMagic = { ...magic }; //参照を切り離す
+    newMagic.uuid = uuidv4()
+    if (newMagic.magicAttribute === MAGIC_ATTRIBUTE.white) {
+      this.status.magics.white.push(newMagic);
+    }
+    if (newMagic.magicAttribute === MAGIC_ATTRIBUTE.black) {
+      this.status.magics.black.push(newMagic);
+    }
+    addText(`スペル ${newMagic.magicName}を徹夜して覚えた！`);
   }
 
   //ドアをみつけた
@@ -148,12 +161,20 @@ class SP_Actor {
   //精神力を回復
   healMp() { console.log("healMp") }
 
+  //精神力を使う
+  useMp(useMp) { this.status.mp = Math.max(0, this.status.mp - useMp) }
+
   //装備
   equipment(item, forceItemType) { this.status.equipment(item, forceItemType) }
 
   // itemを使用したあとの処理
   itemUsed(item, index) {
     this.status.items.splice(index, 1);
+    this.status.stay({ force: true });
+  }
+
+  // magicを使用したあとの処理
+  magicUsed(/* magic */) {
     this.status.stay({ force: true });
   }
 

@@ -3,6 +3,8 @@ import UI_ConfirmWindow from './UI_ConfirmWindow';
 import UI_EquipmentWindow from './UI_EquipmentWindow';
 import UI_ItemStatusWindow from "./UI_ItemStatusWindow"
 import UI_ItemWindow from "./UI_ItemWindow";
+import UI_MagicStatusWindow from './UI_MagicStatusWindow';
+import UI_MagicWindow from './UI_MagicWindow';
 import UI_MainWindow from './UI_MainWindow';
 import UI_StatusWindow from './UI_StatusWindow';
 
@@ -18,12 +20,15 @@ class UI_WindowManager {
         this.confirmWindow = new UI_ConfirmWindow({ core, scene });
         this.statusWindow = new UI_StatusWindow({ core, scene, x: x + w, y });
         this.itemStatusWindow = new UI_ItemStatusWindow({ core, scene });
+        this.magicWindow = new UI_MagicWindow({ core, scene, x: x + w, y });
+        this.magicStatusWindow = new UI_MagicStatusWindow({ core, scene });
 
-
-        this.windows = [
+        this.windows = [// 順番重要。親ウインドウが子より上にないといけない。
             this.mainWindow,
             this.itemWindow,
+            this.magicWindow,
             this.equipmentWindow,
+            this.magicStatusWindow,
             this.itemStatusWindow,
             this.confirmWindow,
             this.statusWindow
@@ -47,16 +52,7 @@ class UI_WindowManager {
         this.mainWindow.open();
     }
 
-    openItemMenu = _ => {
-        this.mainWindow.lock();
-        this.itemWindow.open();
-    }
 
-    closeItemMenu = _ => {
-        this.itemWindow.close();
-        this.itemStatusWindow.close();
-        this.mainWindow.unLock();
-    }
     openEquipmentMenu = _ => {
         this.mainWindow.lock();
         this.equipmentWindow.open();
@@ -81,12 +77,41 @@ class UI_WindowManager {
         this.confirmWindow.forceUnLock();
     }
 
+    openItemMenu = _ => {
+        this.mainWindow.lock();
+        this.itemWindow.open();
+    }
+
+    closeItemMenu = _ => {
+        this.itemWindow.close();
+        this.itemStatusWindow.close();
+        this.mainWindow.unLock();
+    }
+
     openItemStatusWindow = (win, action, item) => {
         const { x, w } = win;
         const { y } = this.getMainWindowPos();
         this.itemStatusWindow.x = x + w;
         this.itemStatusWindow.y = y;
         this.itemStatusWindow.open(action, item);
+    }
+
+    openMagicMenu = _ => {
+        this.mainWindow.lock();
+        this.magicWindow.open();
+    }
+
+    closeMagicMenu = _ => {
+        this.magicWindow.close();
+        this.magicStatusWindow.close();
+        this.mainWindow.unLock();
+    }
+    openMagicStatusWindow = (win, action, magic) => {
+        const { x, w } = win;
+        const { y } = this.getMainWindowPos();
+        this.magicStatusWindow.x = x + w;
+        this.magicStatusWindow.y = y;
+        this.magicStatusWindow.open(action, magic);
     }
 
     openStatusWindow = _ => {

@@ -77,9 +77,9 @@ const MD_Status = ({
     ring: MS_Item[EMPTY_ITEM_INDEX],
     shield: MS_Item[EMPTY_ITEM_INDEX],
   },
-  magic: {
-    black: [{}, {}, {}, {}, {}, {}, {}, {}, {}],
-    white: [{}, {}, {}, {}, {}, {}, {}, {}, {}]
+  magics: {
+    black: [],
+    white: []
   },
   steps: 0,//歩数
   speed,

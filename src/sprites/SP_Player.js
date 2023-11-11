@@ -2,6 +2,7 @@ import { AVAILABLE_EQUIP_TYPES } from "../data/MS_Item";
 import { CELL_SIZE } from "../define";
 import MD_Player from '../model/MD_Player';
 import MS_Item from "../data/MS_Item";
+import MS_Magic from "../data/MS_Magics";
 import SP_Actor from './SP_Actor';
 import { Sprite } from 'pixi.js';
 
@@ -54,6 +55,11 @@ class SP_Player extends SP_Actor {
     this.getItem(MS_Item[6]);
     this.getItem(MS_Item[7]);
     this.getItem(MS_Item[8]);
+
+    this.getItem(MS_Item[8]);
+    this.learnSpell(MS_Magic[0]);
+    this.learnSpell(MS_Magic[1]);
+
     const { status: { trialMove } } = this;
     this.inputMap = {
       'w': _ => trialMove('u'),
@@ -146,6 +152,8 @@ class SP_Player extends SP_Actor {
 
   items = _ => this.status.items;
 
+  magics = _ => [...this.status.magics.white, ...this.status.magics.black];
+
   getEquipments = _ => this.status.equipments;
 
   isItemEquipped = item => this.status.isItemEquipped(item);
@@ -155,14 +163,15 @@ class SP_Player extends SP_Actor {
     return this.items().filter(({ itemType }) => AVAILABLE_EQUIP_TYPES.includes(itemType));
   }
 
-  healHp(n, { itemName }) {
+  healHp(n, { itemName, magicName }) {
     const { addText } = this;
     const { characterName, hp, maxHp } = this.status;
     const oldHp = hp;
     this.status.hp += n;
     this.status.hp = Math.min(this.status.hp, maxHp);
     const point = this.status.hp - oldHp;
-    addText(`${characterName} は、${itemName} を使用して ${point} ポイント回復した。\nうまし！`);
+    addText(`${characterName} は、${itemName || magicName} を使用して ${point} ポイント回復した。`);
+    itemName ? addText(`うまし！！`) : addText(`シャキーン！`);
   }
 
   checkCollision = _ => {
