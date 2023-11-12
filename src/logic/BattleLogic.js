@@ -1,3 +1,4 @@
+import { SCENE_ID } from "./Core";
 import { diceRoll } from "../tools/Calc";
 import { sound } from '@pixi/sound';
 
@@ -94,6 +95,78 @@ class BattleLogic {
             addText(`${characterName}の カリスマが ${cha} あがった！`);
         }
     }
+
+    // 範囲内にいる敵を特定する
+    // 壁の外などの敵は除外
+    getEnemiesInRange = (self, range) => {
+        const actors = this.findEnemiesInRange(self, range);
+        return this.getApproachEnemys(self, actors);
+    }
+
+    findEnemiesInRange = (self, range) => {
+        this.scene = this.scene || this.core.getScene(SCENE_ID.GAME);
+        const monsters = this.scene.getEnemys();
+        const actors = [...monsters, this.scene.getPlayer()];
+        return actors.filter(monster => {
+            const distanceX = Math.abs(monster.mapX - self.mapX);
+            const distanceY = Math.abs(monster.mapY - self.mapY);
+            return distanceX <= range && distanceY <= range && monster.uuid != self.uuid;
+        });
+    }
+
+    getApproachEnemys = (self, actors) => {
+        if (!actors.length) return [];
+        const pMapX = self.mapX;
+        const pMapY = self.mapY;
+        const map = this.scene.currentMap;
+        const approachEnemys = actors
+            .map(monster => {
+                if (this.isApproachEnemy({ map, pMapX, pMapY, mMapX: monster.mapX, mMapY: monster.mapY, })) {
+                    return monster;
+                }
+            })
+            .filter((element) => element !== undefined)
+            .sort((a, b) => {
+                const distA = Math.sqrt(Math.pow(a.mapX - pMapX, 2) + Math.pow(a.mapY - pMapY, 2));
+                const distB = Math.sqrt(Math.pow(b.mapX - pMapX, 2) + Math.pow(b.mapY - pMapY, 2));
+                return distA - distB;
+            });
+        return approachEnemys;
+    }
+
+    isApproachEnemy = ({ map, pMapX, pMapY, mMapX, mMapY }) => {
+        // 直線距離でのチェックを行う関数
+        const lineOfSightClear = (x1, y1, x2, y2) => {
+            const dx = Math.abs(x2 - x1);
+            const dy = Math.abs(y2 - y1);
+            const sx = (x1 < x2) ? 1 : -1;
+            const sy = (y1 < y2) ? 1 : -1;
+
+            let err = dx - dy;
+
+            for (; ;) {
+                if (map.getTile(x1, y1).isBlocked) {
+                    return false; // 障害物がある場合はfalseを返す
+                }
+                if (x1 === x2 && y1 === y2) {
+                    break; //自分と相手座標が一致したらループを抜ける
+                }
+                const e2 = 2 * err;
+                if (e2 > -dy) {
+                    err -= dy;
+                    x1 += sx;
+                }
+                if (e2 < dx) {
+                    err += dx;
+                    y1 += sy;
+                }
+            }
+            return true; // 障害物がなければtrueを返す
+        };
+        // プレイヤーと敵の座標を元に直線距離で障害物がないかチェック
+        return lineOfSightClear(pMapX, pMapY, mMapX, mMapY);
+    };
+
 
 }
 

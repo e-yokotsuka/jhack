@@ -24,6 +24,7 @@ import TL_Wall from '../tiles/TL_Wall';
 
 class MP_AutoMap {
   constructor({ core, scene, level, width = 100, height = 50 }) {
+    this.map = null;
     this.isDebugViewCollision = false;
     this.core = core;
     this.scene = scene;

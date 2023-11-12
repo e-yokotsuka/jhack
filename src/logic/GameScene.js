@@ -193,7 +193,6 @@ class GameScene extends CommonScene {
     addText = (text, time) => this.uiMessageBox?.addText(text, time);
     getPlayer = _ => this.player;
     getPlayerStatus = _ => this.player.status;
-
     getEnemyById = uuid => this.monsters.find(m => m.uuid == uuid);
     getEnemys = _ => this.monsters;
     spawnEnemy = _ => this.spawnManager.spawnEnemy();
@@ -243,11 +242,14 @@ class GameScene extends CommonScene {
         this.addText(isMute ? 'あたりは静寂につつまれた！' : '音を盛大に鳴らすことになった！');
         if (!isMute) this.play('unmute');
     }
-    // ステータスプロパティのシンタックスシュガー
 
+    getEnemiesInRange = (self, range) => this.battleLogic.getEnemiesInRange(self, range)
+
+    // ステータスプロパティのシンタックスシュガー
     get playerMapX() { return this.getPlayerStatus().mapX }
     get playerMapY() { return this.getPlayerStatus().mapY }
     get playerUUID() { return this.getPlayerStatus().uuid }
+    get currentMap() { return this.mainMap }
 
 
 }

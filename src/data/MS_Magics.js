@@ -1,3 +1,4 @@
+import ML_FireBoll from "../logic/magics/ML_FireBoll";
 import ML_Recovery from "../logic/magics/ML_Recovery";
 
 const MAGIC_TYPE = {
@@ -55,5 +56,19 @@ export default [
     valueLabel: "回復値",
     mp: 4,
     magicLogicClass: ML_Recovery
+  },
+  {
+    id: "fireboll",
+    uuid: "",
+    level: 2,
+    range: 5,
+    magicName: "ファイヤーボール",
+    magicAttribute: MAGIC_ATTRIBUTE.black,
+    magicType: MAGIC_TYPE.attack,
+    magicTypeName: MAGIC_TYPE_NAME[MAGIC_TYPE.attack],
+    value: "2d10+0",
+    valueLabel: "火炎ダメージ",
+    mp: 4,
+    magicLogicClass: ML_FireBoll
   },
 ]

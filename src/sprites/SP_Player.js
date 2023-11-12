@@ -59,6 +59,7 @@ class SP_Player extends SP_Actor {
     this.getItem(MS_Item[8]);
     this.learnSpell(MS_Magic[0]);
     this.learnSpell(MS_Magic[1]);
+    this.learnSpell(MS_Magic[2]);
 
     const { status: { trialMove } } = this;
     this.inputMap = {
