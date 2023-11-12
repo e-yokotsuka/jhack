@@ -66,7 +66,7 @@ export default [
     magicAttribute: MAGIC_ATTRIBUTE.black,
     magicType: MAGIC_TYPE.attack,
     magicTypeName: MAGIC_TYPE_NAME[MAGIC_TYPE.attack],
-    value: "2d10+0",
+    value: "2d10+intl",
     valueLabel: "火炎ダメージ",
     mp: 4,
     magicLogicClass: ML_FireBoll

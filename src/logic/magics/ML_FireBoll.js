@@ -14,7 +14,7 @@ class ML_FireBoll extends ML_Common {
             console.log(enemys)
             enemys.forEach(enemy => {
                 // あとでバトルロジックへ移動
-                const point = diceRoll({ diceText: value });
+                const point = diceRoll({ diceText: value, status: self });
                 console.log(`${value}=${point}`)
                 console.log(enemy)
                 enemy.applyDamage({ point, target: self });
