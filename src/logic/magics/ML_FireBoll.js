@@ -12,16 +12,16 @@ class ML_FireBoll extends ML_Common {
             const self = scene.getPlayer();
             const enemys = scene.getEnemiesInRange(self, 10);
             console.log(enemys)
-            enemys.forEach(enemy => {
+            for (const enemy of enemys) {
                 // あとでバトルロジックへ移動
                 const point = diceRoll({ diceText: value, status: self });
                 console.log(`${value}=${point}`)
                 console.log(enemy)
                 enemy.applyDamage({ point, target: self });
-                this.addText(`X: ${enemy.mapX} Y:${enemy.mapY}`);
-                return;
-            });
-            target.useMp(mp);
+                this.addText(`X: ${enemy.mapX} Y:${enemy.mapY}MP:${mp}`);
+                break;
+            }
+            return mp;
         }
     }
 

@@ -24,7 +24,7 @@ class ML_Common {
 
     addText = text => this.scene.addText(text);
     getStringValue() { return "" }
-
+    effects() { console.log('ML Effects') }
 }
 
 export default ML_Common;

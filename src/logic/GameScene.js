@@ -3,6 +3,7 @@ import { EMITTYPE, ParticleEffect, SPAWNTYPE } from "pixi-particle-lib";
 
 import BattleLogic from './BattleLogic';
 import CommonScene from './CommonScene';
+import EffectManager from './EffectManager';
 import MP_MapManager from '../map/MP_MapManager';
 import { PLAYER_MAP_BOUNDS } from '../define';
 import { SCENE_ID } from './Core'
@@ -14,52 +15,6 @@ import UI_WindowManager from '../ui/UI_WindowManager';
 import { distance } from '../tools/Calc';
 import { sound } from '@pixi/sound';
 
-const perticleParam = {
-    perticle: {
-        lifeTime: 1000, // 生存時間
-        startLifetime: 5,
-        startSpeed: 5,
-        startScale: 0.5,
-        endScale: 0.1,
-        damping: 0.03,
-        isSolidColor: false,
-        startColor: { r: 240, g: 140, b: 140, a: 1 },
-        endColor: { r: 230, g: 190, b: 180, a: 0 },
-        gravityModifier: 0,
-        isAutoRandomSeed: false,
-        randomSeed: 0,
-        imageId: "griffon",
-        rotation: 0
-    },
-    emmiter: {
-        isLoop: true,
-        useGround: false,
-        groundY: 100,
-        speed: 5,
-        airResistance: 0.01,
-        maxParticles: 100,
-        maxParticlesParSec: 15,
-        spawnType: SPAWNTYPE.ARC,
-        blendMode: BLEND_MODES.ADD,
-        gravity: 0,
-        duration: 5000, // 持続時間
-        arcParam: {
-            startDegree: 335,
-            endDegree: 25,
-        },
-        circleParam: {
-            radius: 10
-        },
-        lineParam: {
-            degree: 0,
-            width: 500,
-            emitType: EMITTYPE.UNIFORM
-        }
-    },
-    control: {
-        isPause: false,
-    }
-}
 class GameScene extends CommonScene {
     constructor({ core }) {
         super({ core, sceneId: SCENE_ID.GAME });
@@ -67,6 +22,7 @@ class GameScene extends CommonScene {
         this.sceneContainer = new Container();
         this.mapContainer = new Container();
         this.battleLogic = new BattleLogic(core);
+        this.effectManager = new EffectManager(core);
         this.levelMap = [];
         this.frameCounter = 0;
     }
@@ -80,7 +36,10 @@ class GameScene extends CommonScene {
             unmute: './assets/sound/決定ボタンを押す42.mp3',
 
         });
-        return await true;//あとで非同期処理が必要になるかもしれないので非同期関数としておく。
+        await this.effectManager.add({
+            splay: { path: './assets/particle/taki.json', imageId: 'griffon' }
+        });
+        return true;
     }
 
     updateMap = _ => {
@@ -126,10 +85,12 @@ class GameScene extends CommonScene {
         this.uiMessageBox = new UI_MessageBox({ core, scene });
         this.sceneContainer.addChild(this.uiMessageBox.getPrim());
 
+        const param = this.effectManager.getPatam('splay');
         this.p = new ParticleEffect({
-            param: perticleParam,
+            param,
             textures: core.textures.tx_main,
-            x: 100, y: 100
+            x: 100, y: 100,
+            isAutoDeserialize: true
         });
         this.sceneContainer.addChild(this.p.getPrim())
     }

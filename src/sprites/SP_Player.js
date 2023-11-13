@@ -11,7 +11,7 @@ class SP_Player extends SP_Actor {
   constructor({ core, scene, name = "human" }) {
     const status = new MD_Player({
       hp: 15, maxHp: 15,
-      mp: 10, maxMp: 10,
+      mp: 1000, maxMp: 1000,
     });
     super({ core, scene, status });
     const { textures: { tx_main } } = core;
