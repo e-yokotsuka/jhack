@@ -17,6 +17,7 @@ class ML_FireBoll extends ML_Common {
                 const point = diceRoll({ diceText: value, status: self });
                 console.log(`${value}=${point}`)
                 console.log(enemy)
+                scene.showEffect({ key: 'fireboll', x: enemy.cx, y: enemy.cy })
                 enemy.applyDamage({ point, target: self });
                 this.addText(`X: ${enemy.mapX} Y:${enemy.mapY}MP:${mp}`);
                 break;

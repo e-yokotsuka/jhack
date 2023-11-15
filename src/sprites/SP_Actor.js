@@ -1,3 +1,4 @@
+import { CELL_SIZE } from "../define";
 import { MAGIC_ATTRIBUTE } from "../data/MS_Magics";
 import { distance } from "../tools/Calc";
 import { v4 as uuidv4 } from 'uuid';
@@ -240,6 +241,8 @@ class SP_Actor {
   get isForceUpdate() { return this.status.force_update }
   get x() { return this.sprite.x }
   get y() { return this.sprite.y }
+  get cx() { return this.sprite.x + (CELL_SIZE / 2) }
+  get cy() { return this.sprite.y + (CELL_SIZE / 2) }
 
 }
 

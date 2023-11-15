@@ -1,7 +1,11 @@
+import { EMITTYPE, ParticleEffect, SPAWNTYPE } from "pixi-particle-lib";
+
 class EffectManager {
-    constructor(core) {
+    constructor(core, container) {
         this.core = core;
         this.effects = {};
+        this.effectPrims = {};
+        this.container = container;
     }
 
     async add(_effects = {}) {
@@ -32,8 +36,30 @@ class EffectManager {
         });
     }
 
-    getPatam(key) {
+    getParam(key) {
         return this.effects[key];
+    }
+
+    setEffectPrim({ key, x, y }) {
+        const param = this.getParam(key);
+        if (!(key in this.effectPrims)) this.effectPrims[key] = [];
+        const effectPrim = new ParticleEffect({
+            param,
+            textures: this.core.textures.tx_main,
+            x, y,
+            isAutoDeserialize: true
+        });
+        this.effectPrims[key].push(effectPrim);
+        this.container.addChild(effectPrim.getPrim());
+        return effectPrim;
+    }
+
+    update(delta) {
+        const keys = Object.keys(this.effectPrims);
+        keys.forEach(key => {
+            this.effectPrims[key].forEach(effect => effect.update(delta));
+            this.effectPrims[key] = this.effectPrims[key].filter(effect => effect.isDead == false);
+        });
     }
 
 }

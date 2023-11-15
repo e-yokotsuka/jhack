@@ -175,6 +175,11 @@ class SP_Monster extends SP_Actor {
     this.updateProgressBar();
   }
 
+  get x() { return this.container.x }
+  get y() { return this.container.y }
+  get cx() { return this.container.x + (CELL_SIZE / 2) }
+  get cy() { return this.container.y + (CELL_SIZE / 2) }
+
 }
 
 export default SP_Monster;

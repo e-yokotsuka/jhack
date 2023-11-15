@@ -1,5 +1,4 @@
-import { BLEND_MODES, Container, Text } from 'pixi.js';
-import { EMITTYPE, ParticleEffect, SPAWNTYPE } from "pixi-particle-lib";
+import { Container, Text } from 'pixi.js';
 
 import BattleLogic from './BattleLogic';
 import CommonScene from './CommonScene';
@@ -21,8 +20,11 @@ class GameScene extends CommonScene {
         this.isWindowOpen = false;
         this.sceneContainer = new Container();
         this.mapContainer = new Container();
+        this.actorContainer = new Container();
+        this.effectContainer = new Container();
+        this.uiContainer = new Container();
         this.battleLogic = new BattleLogic(core);
-        this.effectManager = new EffectManager(core);
+        this.effectManager = new EffectManager(core, this.effectContainer);
         this.levelMap = [];
         this.frameCounter = 0;
     }
@@ -37,7 +39,8 @@ class GameScene extends CommonScene {
 
         });
         await this.effectManager.add({
-            splay: { path: './assets/particle/taki.json', imageId: 'griffon' }
+            fireboll: { path: './assets/particle/fireboll.json', imageId: 'bolt04' },
+            taki: { path: './assets/particle/taki.json', imageId: 'bolt04' }
         });
         return true;
     }
@@ -59,40 +62,35 @@ class GameScene extends CommonScene {
         this.spawnManager = new SpawnManager(this)
         this.updateMap();
         this.sceneContainer.addChild(this.mapContainer);
-        this.sceneContainer.addChild(this.spawnManager.getPrim());
+        this.sceneContainer.addChild(this.actorContainer);
+        this.sceneContainer.addChild(this.effectContainer);
+        this.sceneContainer.addChild(this.uiContainer);
+
+        this.actorContainer.addChild(this.spawnManager.getPrim());
         this.debugTextPrim = new Text('debug key string', {
             fontSize: 20,
             fill: 0xffffff,
             align: 'center',
         });
-        this.sceneContainer.addChild(this.debugTextPrim);
+        this.uiContainer.addChild(this.debugTextPrim);
         this.debugTextPrim.x = 100;
         this.debugTextPrim.y = 0;
 
         this.player = new SP_Player({ core, scene });
-        this.sceneContainer.addChild(this.player.getPrim());
+        this.actorContainer.addChild(this.player.getPrim());
         this.player.respawn();
         this.monsters = [];
         this.traces = []; // 痕跡（血とか）
 
         this.uiStatus = new UI_Status({ core, scene });
-        this.sceneContainer.addChild(this.uiStatus.getPrim());
+        this.uiContainer.addChild(this.uiStatus.getPrim());
 
         this.uiWindowManager = new UI_WindowManager({ core, scene });
-        this.sceneContainer.addChild(this.uiWindowManager.getPrim());
+        this.uiContainer.addChild(this.uiWindowManager.getPrim());
         app.stage.addChild(this.sceneContainer);
 
         this.uiMessageBox = new UI_MessageBox({ core, scene });
-        this.sceneContainer.addChild(this.uiMessageBox.getPrim());
-
-        const param = this.effectManager.getPatam('splay');
-        this.p = new ParticleEffect({
-            param,
-            textures: core.textures.tx_main,
-            x: 100, y: 100,
-            isAutoDeserialize: true
-        });
-        this.sceneContainer.addChild(this.p.getPrim())
+        this.uiContainer.addChild(this.uiMessageBox.getPrim());
     }
 
     refreshMonsters = _ => this.spawnManager.refreshMonsters();
@@ -103,11 +101,7 @@ class GameScene extends CommonScene {
     }
 
     main(delta) {
-        // TODO : ↓お試し実装
-        this.p.update(delta);
-        this.p.x = this.player.x;
-        this.p.y = this.player.y;
-        // TODO : ↑お試し実装
+        this.effectManager.update(delta);
         this.mainMap.update(delta);
         this.uiStatus.update();
         this.player.update(delta);
@@ -158,7 +152,7 @@ class GameScene extends CommonScene {
     getEnemys = _ => this.monsters;
     spawnEnemy = _ => this.spawnManager.spawnEnemy();
     resetSpawnManager = level => this.spawnManager.reset(level);
-
+    showEffect = ({ key, x, y }) => this.effectManager.setEffectPrim({ key, x, y });
     // stepが更新された
     handleStepUpdate = (/* vx, vy*/) => {
         // プレイヤーの動作を行う（移動、アイテム使用、攻撃など）
