@@ -8,6 +8,7 @@ import { PLAYER_MAP_BOUNDS } from '../define';
 import { SCENE_ID } from './Core'
 import SP_Player from '../sprites/SP_Player';
 import SpawnManager from './SpawnManager'
+import UI_DIsplayPoint from '../ui/UI_DIsplayPoint';
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
 import UI_WindowManager from '../ui/UI_WindowManager';
@@ -25,6 +26,7 @@ class GameScene extends CommonScene {
         this.uiContainer = new Container();
         this.battleLogic = new BattleLogic(core);
         this.effectManager = new EffectManager(core, this.effectContainer);
+        this.ui_DIsplayPoint = new UI_DIsplayPoint(core, this)
         this.levelMap = [];
         this.frameCounter = 0;
     }
@@ -91,6 +93,7 @@ class GameScene extends CommonScene {
 
         this.uiMessageBox = new UI_MessageBox({ core, scene });
         this.uiContainer.addChild(this.uiMessageBox.getPrim());
+        this.uiContainer.addChild(this.ui_DIsplayPoint.getPrim());
     }
 
     refreshMonsters = _ => this.spawnManager.refreshMonsters();
@@ -109,6 +112,7 @@ class GameScene extends CommonScene {
         this.monsters.forEach(({ update }) => { update(delta) });
         this.uiMessageBox.update(delta);
         this.uiWindowManager.update(delta);
+        this.ui_DIsplayPoint.update(delta);
         this.debugTextPrim.text = this.core.getDebugText();
         const { x, y } = this.mainMap.getPosition();
         this.core.setDebugText(1, `Monster Count:${this.monsters.length}`);
@@ -170,6 +174,7 @@ class GameScene extends CommonScene {
 
         //    console.log(`vx:${vx}/vy:${vy}`);
     }
+    addDisplayPoint = ({ x, y, pointText }) => this.ui_DIsplayPoint.addDisplayPoint({ x, y, pointText });
 
     play(name, target) {
         let dis = 0;

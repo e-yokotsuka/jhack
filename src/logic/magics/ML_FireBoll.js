@@ -2,7 +2,7 @@ import ML_Common from "./ML_Common";
 import { calculateMinMax } from "../../tools/Calc"
 import { diceRoll } from "../../tools/Calc";
 
-class ML_FireBoll extends ML_Common {
+class ML_Fireboll extends ML_Common {
     constructor(core, scene, magic) {
         super(core, scene, magic);
         this.use.bind(this);
@@ -15,11 +15,9 @@ class ML_FireBoll extends ML_Common {
             for (const enemy of enemys) {
                 // あとでバトルロジックへ移動
                 const point = diceRoll({ diceText: value, status: self });
-                console.log(`${value}=${point}`)
-                console.log(enemy)
                 scene.showEffect({ key: 'fireboll', x: enemy.cx, y: enemy.cy })
                 enemy.applyDamage({ point, target: self });
-                this.addText(`X: ${enemy.mapX} Y:${enemy.mapY}MP:${mp}`);
+                this.addText(`X: ${enemy.mapX} Y:${enemy.mapY}MP:${mp}DAMAGE:${point}`);
                 break;
             }
             return mp;
@@ -34,4 +32,4 @@ class ML_FireBoll extends ML_Common {
     }
 }
 
-export default ML_FireBoll;
+export default ML_Fireboll;

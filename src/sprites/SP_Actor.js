@@ -64,13 +64,14 @@ class SP_Actor {
 
   // ダメージをくらった
   applyDamage({ point, target, silent = false }) {
-    const { addText } = this;
+    const { addText, scene, x, y } = this;
     if (!silent) {
       target ?
         addText(`いって！ ${target.characterName} の攻撃で ${point} ポイントのダメージをくらった！`) :
         addText(`いてえ！ ${point} ポイントのダメージをくらった！`);
     }
     if (target) this.addTarget(target.uuid);
+    scene.addDisplayPoint({ x: x + (CELL_SIZE / 2), y, pointText: `${point}` });
     const hp = this.status.hp - point;
     this.status.hp = Math.max(hp, 0);
     if (hp < 1) {
