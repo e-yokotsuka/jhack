@@ -22,10 +22,11 @@ class UI_MagicStatusWindow extends UI_Window {
 
     // override
     open(action = _ => { }, magic = {}) {
+        const { status } = this.scene.getPlayer();
         this.action = action;
         this.magic = magic;
         const logic = new magic.magicLogicClass(this.core, this.scene, magic);
-        const stringValue = logic.getStringValue();
+        const stringValue = logic.getStringValue(status);
         const magicText = `
 魔法名：${magic.magicName}
 魔法タイプ：${magic.magicTypeName}

@@ -14,18 +14,30 @@
 const PARAMSET = ['str', 'dex', 'con', 'intl', 'wiz', 'cha'];
 const diceRoll = ({ diceText, status, isMinMax = false }) => {
   const [rolls, faces] = diceText.split('d').map(v => v.split('+')[0]);
-  const modifiers = diceText.split('+').map(
-    n => status && PARAMSET.includes(n) ?
-      calculateModifier(status[`${n}`], status.modifiers[`${n}`]) : n ?
-        parseInt(n, 10) : 0);
-  let result = modifiers[0];
-  let minValue = modifiers[0];
-  let maxValue = modifiers[0];
+  let modifiers = diceText.split('+');
+  modifiers.shift();
+  modifiers = modifiers.map(n => {
+    if (status && PARAMSET.includes(n)) {
+      // statusオブジェクトが存在し、PARAMSETにnが含まれている場合
+      return calculateModifier(Number(status[n]), Number(status.modifiers[n]));
+    } else if (n) {
+      // nが真偽値でtrueになる値（空文字やnull、undefined、0などではない）の場合
+      return Number(n);
+    } else {
+      // 上記のどちらでもない場合（nが空文字やnull、undefined、0の場合）
+      return 0;
+    }
+  });
+
+  const modifier = modifiers.reduce((m, sum) => sum + m, 0);
+  let result = modifier;
+  let minValue = modifier;
+  let maxValue = modifier;
   if (checkDicePattern(diceText)) {
     for (let i = 0; i < rolls; i++) {
       result += Math.floor(Math.random() * faces);
       minValue += 1;
-      maxValue += faces;
+      maxValue += +faces;
     }
   }
   return isMinMax ? { minValue, maxValue } : result + modifiers.slice(1).reduce((a, b) => a + b, 0);
