@@ -13,13 +13,14 @@ class ML_Recovery extends ML_Common {
                 if (Math.random() <= 0.1) {
                     target.useMp(mp);
                     this.addText(`無駄にMPを消費した！\nあなたはもっと頭を使うべきだ！`);
-                    return true;
+                    return mp;
                 }
                 this.addText(`残念！回復する意味がない！\nあなたはこれっぽちも傷ついていない！`);
-                return false;
+                return 0;
             }
             const n = diceRoll({ diceText: value });
             target.healHp(n, this.magic);
+            return mp;
         }
     }
 
