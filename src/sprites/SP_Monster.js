@@ -10,12 +10,29 @@ import { distance } from '../tools/Calc'
 
 class SP_Monster extends SP_Actor {
 
-  constructor({ core, scene, name = "goblin" }) {
+  constructor({ core, scene, monsterSetting }) {
+    const {
+      lv,
+      skin,
+      characterName,
+      speed,
+      maxHp,
+      maxMp,
+      expReward,
+      expGold,
+      gender,
+      race,
+    } = monsterSetting;
     const status = new MD_Monster({
-      hp: 15, maxHp: 15,
-      mp: 10, maxMp: 10,
-      expReward: 100,
-      characterName: 'ごぶりん'
+      lv,
+      hp: maxHp, maxHp,
+      mp: maxMp, maxMp,
+      gender,
+      race,
+      expGold,
+      expReward,
+      speed,
+      characterName
     });
     super({ core, scene, status });
     this.status.mapX = 0;
@@ -25,9 +42,7 @@ class SP_Monster extends SP_Actor {
     this.mainMap.addResetCallback(_ => {
       this.respawn();
     });
-    // TODO DEBUG 階層ごとにキャラがかわっているかのテスト用
-    const m = ['great_orb_of_eyes', 'greater_naga', 'griffon', 'guardian_serpent', 'halfling', 'harpy', 'hell_knight', 'hill_giant', 'hippogriff']
-    this.name = scene.level === 0 ? name : m[scene.level];
+    this.skin = skin;
     this.makePrim();
   }
 
@@ -38,9 +53,9 @@ class SP_Monster extends SP_Actor {
   }
 
   makePrim = () => {
-    const { core, name } = this;
+    const { core, skin } = this;
     const { textures: { tx_main } } = core;
-    const sprite = new Sprite(tx_main[`${name}`]);
+    const sprite = new Sprite(tx_main[`${skin}`]);
     sprite.interactive = false;
     this.sprite = sprite;
     this.progressHp = new UI_ProgressBar({
