@@ -67,7 +67,7 @@ class SP_Player extends SP_Actor {
       's': _ => trialMove('d'),
       'a': _ => trialMove('l'),
       'd': _ => trialMove('r'),
-      '.': _ => this.status.stay(),
+      '.': _ => this.status.stay({}),
       'ArrowUp': _ => trialMove('u'),
       'ArrowDown': _ => trialMove('d'),
       'ArrowLeft': _ => trialMove('l'),
