@@ -6,7 +6,7 @@ class ML_Fireboll extends ML_Common {
     constructor(core, scene, magic) {
         super(core, scene, magic);
         this.use.bind(this);
-        this.logicHandler = target => {
+        this.logicHandler = _ => {
             const { value, mp } = this.magic;
             // あとで敵も使えるように
             const self = scene.getPlayer();
