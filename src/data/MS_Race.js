@@ -1,14 +1,29 @@
 export default {
   unknown: {
     value: 'unknown',
-    img: 'none'
   },
   human: {
     value: 'human',
-    img: 'human'
   },
   elf: {
     value: 'elf',
-    img: 'elf'
-  }
+  },
+  celestial: {
+    value: 'celestial'
+  },
+  amorphous: {
+    value: 'amorphous'
+  },
+  humanoid: {
+    value: 'humanoid'
+  },
+  fey: {
+    value: 'fey'
+  },
+  beast: {
+    value: 'beast'
+  },
+  giant: {
+    value: 'giant'
+  },
 };
