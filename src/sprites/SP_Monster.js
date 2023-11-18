@@ -15,6 +15,7 @@ class SP_Monster extends SP_Actor {
       lv,
       skin,
       characterName,
+      currentBehavior,
       speed,
       maxHp,
       maxMp,
@@ -32,7 +33,8 @@ class SP_Monster extends SP_Actor {
       expGold,
       expReward,
       speed,
-      characterName
+      characterName,
+      currentBehavior
     });
     super({ core, scene, status });
     this.status.mapX = 0;

@@ -1,6 +1,23 @@
 import { AVAILABLE_EQUIP_TYPES, ITEM_TYPE } from "../data/MS_Item";
 
+import BehaviorTypes from "./MD_Status";
 import MD_Status from "./MD_Status";
+
+// 性格特性に基づいた行動パターンを示すオブジェクト
+const behaviorPatterns = {
+  [BehaviorTypes.FRIENDLY]: {
+    attackPlayers: false,
+    attackMonsters: false
+  },
+  [BehaviorTypes.AGGRESSIVE]: {
+    attackPlayers: true,
+    attackMonsters: false
+  },
+  [BehaviorTypes.VERY_AGGRESSIVE]: {
+    attackPlayers: true,
+    attackMonsters: true
+  }
+};
 
 class MD_Actor {
   constructor(status) {
@@ -110,6 +127,8 @@ class MD_Actor {
     this.force_update = false;
     this.isTeleportation = false;
   }
+
+  getBehaviorPatterns = _ => behaviorPatterns[this.currentBehavior];
 
   serialize() {
     const defaultStatus = MD_Status({});

@@ -5,10 +5,17 @@ import MS_Item from "../data/MS_Item";
 import MS_Race from "../data/MS_Race";
 import { v4 as uuidv4 } from 'uuid';
 
+export const BehaviorTypes = {
+  FRIENDLY: "friendly", // 友好的
+  AGGRESSIVE: "aggressive", // 好戦的
+  VERY_AGGRESSIVE: "very_aggressive" // 超好戦的
+};
+
 const MD_Status = ({
   lv = 1,
   characterName,
   isPlayer = false,
+  currentBehavior = BehaviorTypes.FRIENDLY,
   exp = 0,
   nextExp = 200,
   expReward,
@@ -46,6 +53,7 @@ const MD_Status = ({
   lv, // レベル
   characterName, //キャラクター名
   isPlayer, // プレイヤーか？
+  currentBehavior, // 関係
   exp, // 経験値
   nextExp, // 次のレベルアップに必要な経験値
   expReward,
