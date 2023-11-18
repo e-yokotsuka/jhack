@@ -1,5 +1,7 @@
 import { CELL_SIZE } from "../define";
+import { Container } from "pixi.js";
 import { MAGIC_ATTRIBUTE } from "../data/MS_Magics";
+import UI_DIsplayPoint from "../ui/UI_DIsplayPoint";
 import { distance } from "../tools/Calc";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -8,6 +10,13 @@ class SP_Actor {
     this.core = core;
     this.scene = scene;
     this.status = status;
+    this.ui_DIsplayPoint = new UI_DIsplayPoint(core, this)
+    this.container = new Container();
+    this.uiContainer = new Container();
+    this.uiContainer.addChild(this.ui_DIsplayPoint.getPrim())
+    this.mainContainer = new Container();
+    this.mainContainer.addChild(this.container);
+    this.mainContainer.addChild(this.uiContainer);
   }
 
   move(x, y) {
@@ -25,6 +34,11 @@ class SP_Actor {
   moveConfirmed(/* x,y */) {
     const { status } = this;
     status.moveConfirmed();
+  }
+
+
+  update(delta) {
+    this.ui_DIsplayPoint.update(delta);
   }
 
   weponAttack({ offense, defense }) {
@@ -64,14 +78,14 @@ class SP_Actor {
 
   // ダメージをくらった
   applyDamage({ point, target, silent = false }) {
-    const { addText, scene, x, y } = this;
+    const { addText, cx, cy } = this;
     if (!silent) {
       target ?
         addText(`いって！ ${target.characterName} の攻撃で ${point} ポイントのダメージをくらった！`) :
         addText(`いてえ！ ${point} ポイントのダメージをくらった！`);
     }
     if (target) this.addTarget(target.uuid);
-    scene.addDisplayPoint({ x: x + (CELL_SIZE / 2), y, pointText: `${point}` });
+    this.addDisplayPoint({ x: CELL_SIZE / 2, pointText: `${point}` });
     const hp = this.status.hp - point;
     this.status.hp = Math.max(hp, 0);
     if (hp < 1) {
@@ -82,6 +96,8 @@ class SP_Actor {
     }
     return false;
   }
+
+  addDisplayPoint = ({ x, y, pointText }) => this.ui_DIsplayPoint.addDisplayPoint({ x, y, pointText });
 
   getTargetList() {
     return this.status.targetsIds.map(uuid => this.scene.getEnemyById(uuid));
@@ -218,6 +234,8 @@ class SP_Actor {
 
   getCharacterName = _ => this.status.characterName
 
+  getPrim = _ => this.mainContainer;
+
   // パラメタ (シンタックスシュガー)
   // 装備をかえす
   get equipments() { return this.status.getEquipments() }
@@ -240,10 +258,10 @@ class SP_Actor {
   get isPlayer() { return this.status.isPlayer }
   get isStay() { return this.status.isStay }
   get isForceUpdate() { return this.status.force_update }
-  get x() { return this.sprite.x }
-  get y() { return this.sprite.y }
-  get cx() { return this.sprite.x + (CELL_SIZE / 2) }
-  get cy() { return this.sprite.y + (CELL_SIZE / 2) }
+  get x() { return this.mainContainer.x }
+  get y() { return this.mainContainer.y }
+  get cx() { return this.mainContainer.x + (CELL_SIZE / 2) }
+  get cy() { return this.mainContainer.y + (CELL_SIZE / 2) }
 
 }
 

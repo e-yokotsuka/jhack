@@ -4,18 +4,19 @@ class UI_DIsplayPoint {
     constructor(core, scene) {
         this.core = core;
         this.scene = scene;
-        this.contianer = new Container();
+        this.container = new Container();
         this.texts = []
     }
 
-    addDisplayPoint({ x, y, pointText }) {
-        const text = new Text(pointText, {
+    addDisplayPoint({ x = 0, y = 0, pointText }) {
+        const text = new Text(`${pointText}`, {
             fontSize: 40,
             fill: 0xffffff,
             align: 'center',
             stroke: "#000000",
             strokeThickness: 2
         });
+        text.anchor.set(0.5);
         text.x = x;
         text.y = y;
         this.texts.push({
@@ -23,10 +24,10 @@ class UI_DIsplayPoint {
             subY: 5,
             destroyed: false
         })
-        this.contianer.addChild(text)
+        this.container.addChild(text)
     }
 
-    getPrim = _ => this.contianer;
+    getPrim = _ => this.container;
 
     update = delta => {
         this.texts.forEach(({ text, subY }, index) => {

@@ -74,14 +74,11 @@ class SP_Monster extends SP_Actor {
       width: 32,
       height: 3
     });
-    this.container = new Container();
     this.container.addChild(this.sprite);
     this.container.addChild(this.progressHp.getPrim());
     this.container.addChild(this.progressMp.getPrim());
     this.updateProgressBar();
   }
-
-  getPrim = _ => this.container;
 
   getStatus = _ => this.status;
 
@@ -183,17 +180,13 @@ class SP_Monster extends SP_Actor {
     afterUpdate();
   }
 
-  update = (/*delta*/) => {
-    const { mainMap, status, container } = this;
-    container.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
-    container.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
+  update = (delta) => {
+    super.update(delta);
+    const { mainMap, status, mainContainer } = this;
+    mainContainer.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
+    mainContainer.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
     this.updateProgressBar();
   }
-
-  get x() { return this.container.x }
-  get y() { return this.container.y }
-  get cx() { return this.container.x + (CELL_SIZE / 2) }
-  get cy() { return this.container.y + (CELL_SIZE / 2) }
 
 }
 

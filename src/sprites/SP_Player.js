@@ -23,7 +23,7 @@ class SP_Player extends SP_Actor {
     this.healHp.bind(this);
     const sprite = new Sprite(tx_main[`${name}`]);
     sprite.interactive = false;
-    this.sprite = sprite;
+    this.container.addChild(sprite);
     this.status.modifiers.str = this.diceRoll({ diceText: '1d4+0' });
     this.status.modifiers.dex = this.diceRoll({ diceText: '1d4+0' });
     this.status.modifiers.con = this.diceRoll({ diceText: '1d4+0' });
@@ -81,8 +81,6 @@ class SP_Player extends SP_Actor {
       this.respawn();
     });
   };
-
-  getPrim = _ => this.sprite;
 
   getStatus = _ => this.status;
 
@@ -192,7 +190,8 @@ class SP_Player extends SP_Actor {
     return tile.hit({ actor: this, status }) || collisions.length
   }
 
-  update = (/*delta*/) => {
+  update = (delta) => {
+    super.update(delta);
     const { core: { input },
       scene: { handleStepUpdate, isWindowOpen,/*, addText*/ },
       mainMap,
@@ -203,14 +202,14 @@ class SP_Player extends SP_Actor {
         afterUpdate,
         isMove,
       },
-      sprite } = this;
+      mainContainer } = this;
     if (isWindowOpen && !this.isForceUpdate) return;
     beforeUpdate();
     const key = Object.keys(inputMap).find(key => input.isSingleDown(key));
     if (key) inputMap[key]();
 
-    sprite.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
-    sprite.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
+    mainContainer.x = mainMap.mapContainer.x + status.mapX * CELL_SIZE;
+    mainContainer.y = mainMap.mapContainer.y + status.mapY * CELL_SIZE;
     if (!isMove()) return; // 動いていない
     // 動いた
     const { virtualX: vx, virtualY: vy } = status;
