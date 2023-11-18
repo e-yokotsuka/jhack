@@ -184,8 +184,8 @@ class SP_Player extends SP_Actor {
     collisions.forEach(m => {
       const [first, second] = this.determineInitiative([this, m]);
       // WindowOpen中は仕返しが出来ない
-      if (!first.isStay) this.weponAttack({ offense: first, defense: second });
-      if (!second.isStay) this.weponAttack({ offense: second, defense: first });
+      if (!first.isStay) this.weaponAttack({ offense: first, defense: second });
+      if (!second.isStay) this.weaponAttack({ offense: second, defense: first });
     })
     return tile.hit({ actor: this, status }) || collisions.length
   }

@@ -41,8 +41,8 @@ class SP_Actor {
     this.ui_DIsplayPoint.update(delta);
   }
 
-  weponAttack({ offense, defense }) {
-    this.scene.battleLogic.weponAttack({ offense, defense });
+  weaponAttack({ offense, defense }) {
+    this.scene.battleLogic.weaponAttack({ offense, defense });
   }
 
   determineInitiative(acters) {

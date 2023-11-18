@@ -30,7 +30,7 @@ class BattleLogic {
         return oDexRoll >= dDexRoll
     }
 
-    weponAttack({ offense, defense }) {
+    weaponAttack({ offense, defense }) {
         const {
             weapon: oWepon,
             //ring: oRing,
