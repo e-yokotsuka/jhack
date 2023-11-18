@@ -156,8 +156,11 @@ class SP_Monster extends SP_Actor {
     collisions.forEach(m => {
       const [first, second] = this.determineInitiative([this, m]);
       // Windowオープン中はプレイヤーは反撃できない。
-      if (!(isWindowOpen && first.isPlayer)) this.weponAttack({ offense: first, defense: second });
-      if (!(isWindowOpen && second.isPlayer)) this.weponAttack({ offense: second, defense: first });
+      if (!isWindowOpen) {
+        if (!first.isPlayer) this.weaponAttack({ offense: first, defense: second });
+        if (!second.isPlayer) this.weaponAttack({ offense: second, defense: first });
+      }
+
     })
     return tile.hit({ actor: this, status }) || collisions.length
   }

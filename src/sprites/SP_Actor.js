@@ -78,7 +78,7 @@ class SP_Actor {
 
   // ダメージをくらった
   applyDamage({ point, target, silent = false }) {
-    const { addText, cx, cy } = this;
+    const { addText } = this;
     if (!silent) {
       target ?
         addText(`いって！ ${target.characterName} の攻撃で ${point} ポイントのダメージをくらった！`) :
