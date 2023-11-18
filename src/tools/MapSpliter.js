@@ -1,11 +1,14 @@
 const RETRY_SIZE = 5;
 const MIN_SIZE = 8;
+const MIN_RATIO = 0.4;
+const MAX_RATIO = 0.6;
+
 // 大きな矩形をランダムサイズに分割
 const splitRect = ({ width, height, retry = 0 }) => {
   if (retry > RETRY_SIZE) {
     return [{ x: 0, y: 0, width, height, parent: false }];
   }
-  const a = Math.random();
+  const a = MIN_RATIO + Math.random() * (MAX_RATIO - MIN_RATIO);
   const splitSetting =
     width > height
       ? {
