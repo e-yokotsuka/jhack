@@ -56,6 +56,11 @@ class GameScene extends CommonScene {
     Initialize() {
         const { core, app } = this;
         const scene = this;
+        this.mapContainer.removeChildren();
+        this.actorContainer.removeChildren();
+        this.effectContainer.removeChildren();
+        this.mapContainer.removeChildren();
+        this.uiContainer.removeChildren();
         this.sceneContainer.removeChildren();
         this.level = 0; // 階層
         this.mapManager = new MP_MapManager({ core, scene });
