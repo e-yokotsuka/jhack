@@ -1,6 +1,6 @@
 import { CELL_SIZE, PLAYER_MAP_BOUNDS } from "../define";
 
-import { Container } from "pixi.js";
+import { BehaviorTypes } from "../model/MD_Status";
 import MD_Monster from '../model/MD_Monster';
 import SP_Actor from './SP_Actor';
 import SP_Trace from "./SP_Trace";
@@ -147,25 +147,34 @@ class SP_Monster extends SP_Actor {
 
   checkCollision = _ => {
     const { mainMap } = this;
-    const { virtualX: vx, virtualY: vy, isWindowOpen } = this.status;
+    const { virtualX: vx, virtualY: vy, isWindowOpen, currentBehavior } = this.status;
     const tile = mainMap.getTile(vx, vy);
     const selfUuid = this.uuid;
     const monsters = this.scene.getEnemys();
-    const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
-    const playerX = this.scene.playerMapX;
-    const playerY = this.scene.playerMapY;
-    if (vx == playerX && vy == playerY) collisions.push(this.scene.getPlayer());
+    const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) =>
+      uuid != selfUuid && mapX === vx && mapY === vy
+    );
+    const player = this.scene.getPlayer();
+    const playerX = player.mapX;
+    const playerY = player.mapY;
+
+    if (vx == playerX && vy == playerY) collisions.push(player);
+
     collisions.forEach(m => {
       const [first, second] = this.determineInitiative([this, m]);
-      // Windowオープン中はプレイヤーは反撃できない。
-      if (!isWindowOpen) {
+      if (currentBehavior === BehaviorTypes.FRIENDLY || isWindowOpen) {
+        return;
+      }
+
+      if (currentBehavior === BehaviorTypes.VERY_AGGRESSIVE || first.isPlayer || second.isPlayer) {
         if (!first.isPlayer) this.weaponAttack({ offense: first, defense: second });
         if (!second.isPlayer) this.weaponAttack({ offense: second, defense: first });
       }
+    });
 
-    })
-    return tile.hit({ actor: this, status }) || collisions.length
+    return tile.hit({ actor: this, status }) || collisions.length;
   }
+
 
   // 敵の行動ロジック
   doSomething() {
@@ -176,9 +185,10 @@ class SP_Monster extends SP_Actor {
       } } = this;
     beforeUpdate();
     const target = this.selectAttackTarget()
-
-    const distance = this.getTargetDistance(target);
-    if (distance < PLAYER_MAP_BOUNDS) this.moveTowardsTarget(target);
+    if (target) {
+      const distance = this.getTargetDistance(target);
+      if (distance < PLAYER_MAP_BOUNDS) this.moveTowardsTarget(target);
+    }
     if (!isMove()) return; // 動いていない
     const { virtualX: vx, virtualY: vy } = status;
     this.checkCollision(target) || this.moveConfirmed(vx, vy);

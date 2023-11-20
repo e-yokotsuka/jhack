@@ -1,3 +1,4 @@
+import { BehaviorTypes } from "../model/MD_Status";
 import { CELL_SIZE } from "../define";
 import { Container } from "pixi.js";
 import { MAGIC_ATTRIBUTE } from "../data/MS_Magics";
@@ -85,6 +86,10 @@ class SP_Actor {
         addText(`いてえ！ ${point} ポイントのダメージをくらった！`);
     }
     if (target) this.addTarget(target.uuid);
+    if (target && this.status.currentBehavior === BehaviorTypes.FRIENDLY) {
+      // 殴られたら敵になる
+      this.status.currentBehavior = BehaviorTypes.AGGRESSIVE;
+    }
     this.addDisplayPoint({ x: CELL_SIZE / 2, pointText: `${point}` });
     const hp = this.status.hp - point;
     this.status.hp = Math.max(hp, 0);
@@ -103,16 +108,36 @@ class SP_Actor {
     return this.status.targetsIds.map(uuid => this.scene.getEnemyById(uuid));
   }
 
+  hasTarget() {
+    return this.status.targetsIds?.length;
+  }
+
+
   selectAttackTarget() {
     const list = this.getTargetList();
     list.push(this.scene.getPlayer()); // プレイヤーを追加
-    const { mapX, mapY } = this;
-    list.sort((prev, curr) => {
+    const { mapX, mapY, scene } = this;
+
+    // filterメソッドの結果を新しい配列として保存する
+    const filteredList = list.filter(m => {
+      if (m) {
+        const { mapX: mMapX, mapY: mMapY } = m;
+        return scene.isApproachActor({ pMapX: mapX, pMapY: mapY, mMapX, mMapY });
+      }
+      return false;
+    });
+
+    // sortメソッドで距離に基づいてソートする
+    const sortedList = filteredList.sort((prev, curr) => {
+      console.log(prev, curr)
       return distance({ mapX, mapY }, { mapX: prev.mapX, mapY: prev.mapY })
         - distance({ mapX, mapY }, { mapX: curr.mapX, mapY: curr.mapY });
-    })
-    return list[0];
+    });
+
+    // ソートされたリストの最初の要素を返す
+    return sortedList[0];
   }
+
 
   applyExp(target) {
     const { addText, characterName } = this;

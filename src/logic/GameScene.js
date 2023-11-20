@@ -204,6 +204,7 @@ class GameScene extends CommonScene {
     }
 
     getEnemiesInRange = (self, range) => this.battleLogic.getEnemiesInRange(self, range)
+    isApproachActor = ({ pMapX, pMapY, mMapX, mMapY }) => this.battleLogic.isApproachEnemy({ map: this.currentMap, pMapX, pMapY, mMapX, mMapY })
 
     // ステータスプロパティのシンタックスシュガー
     get playerMapX() { return this.getPlayerStatus().mapX }
