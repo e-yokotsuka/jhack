@@ -11,7 +11,6 @@ class ML_Fireboll extends ML_Common {
             // あとで敵も使えるように
             const self = scene.getPlayer();
             const enemys = scene.getEnemiesInRange(self, 10);
-            console.log(enemys)
             for (const enemy of enemys) {
                 // あとでバトルロジックへ移動
                 const point = diceRoll({ diceText: value, status: self });

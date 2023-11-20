@@ -13,7 +13,6 @@ class TL_Door extends TL_Common {
     hit = ({ actor = null, status }) => {
         if (!this.close) return this.isBlocked;
         const { close, hitStep } = this;
-        console.log(hitStep)
         if (hitStep + 1 == status.steps && close) {
             this.close = false;
             this.isBlocked = false;

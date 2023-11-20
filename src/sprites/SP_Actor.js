@@ -108,15 +108,24 @@ class SP_Actor {
     return this.status.targetsIds.map(uuid => this.scene.getEnemyById(uuid));
   }
 
+  setTargetList(enemies) {
+    this.status.targetsIds = enemies.map(enemie => enemie.uuid);
+  }
+
   hasTarget() {
     return this.status.targetsIds?.length;
   }
 
 
   selectAttackTarget() {
+    const { mapX, mapY, scene, currentBehavior } = this;
+    // 敵がいない場合でVERY_AGGRESSIVEの場合は自ら敵を探す
+    if (!this.hasTarget() && currentBehavior === BehaviorTypes.VERY_AGGRESSIVE) {
+      const enemies = scene.getEnemiesInRange(this, 10);
+      this.setTargetList(enemies);
+    }
     const list = this.getTargetList();
     list.push(this.scene.getPlayer()); // プレイヤーを追加
-    const { mapX, mapY, scene } = this;
 
     // filterメソッドの結果を新しい配列として保存する
     const filteredList = list.filter(m => {
@@ -129,7 +138,6 @@ class SP_Actor {
 
     // sortメソッドで距離に基づいてソートする
     const sortedList = filteredList.sort((prev, curr) => {
-      console.log(prev, curr)
       return distance({ mapX, mapY }, { mapX: prev.mapX, mapY: prev.mapY })
         - distance({ mapX, mapY }, { mapX: curr.mapX, mapY: curr.mapY });
     });
@@ -278,6 +286,7 @@ class SP_Actor {
   get cha() { return this.status.cha } // 魅力
   get modifiers() { return this.status.modifiers } // 初期修正値
   get expReward() { return this.status.expReward } // 付与経験値
+  get currentBehavior() { return this.status.currentBehavior } // 属性
   get mapX() { return this.status.mapX }
   get mapY() { return this.status.mapY }
   get isPlayer() { return this.status.isPlayer }

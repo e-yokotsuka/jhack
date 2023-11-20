@@ -56,8 +56,6 @@ class SpawnManager {
     }
 
     setLevelMonster = level => {
-        console.log(`setLevelMonster ${level}`)
-        console.dir(this.levelMonster[level])
         this.contianerMonster.removeChildren();
         this.contianerTrace.removeChildren();
         const monsters = this.levelMonster[level];

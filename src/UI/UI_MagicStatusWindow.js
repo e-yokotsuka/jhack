@@ -64,7 +64,6 @@ ${magic.valueLabel}：${stringValue}
 
     // override
     selected() {
-        console.log("selected")
         const { isOpen } = this;
         if (!isOpen) return;
         this.action(this.magic);

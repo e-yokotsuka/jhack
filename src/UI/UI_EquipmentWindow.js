@@ -52,7 +52,6 @@ class UI_EquipmentWindow extends UI_Window {
         }) : [{
             label: "装備できるものがない！",
             action: _ => {
-                console.log("装備できるものがない！");
                 const { scene: { uiWindowManager } } = this;
                 uiWindowManager.closeEquipmentMenu();
             }

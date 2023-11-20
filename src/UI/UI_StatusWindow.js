@@ -23,7 +23,6 @@ class UI_StatusWindow extends UI_Window {
     // override
     open() {
         const status = this.scene.getPlayerStatus();
-        console.dir(status);
         const { armour, weapon, ring, shield } = status.equipments;
         const itemText =
             `レベル：${padEnd(status.lv, LV_MAX_DIGITS, " ")} 名前：${padEnd(status.name, MAX_NAME_LENGTH)}

@@ -53,7 +53,6 @@ class UI_ItemWindow extends UI_Window {
         }) : [{
             label: "なにも持っていない！",
             action: _ => {
-                console.log("なにも持っていない！");
                 const { core: { uiWindowManager } } = this;
                 uiWindowManager.closeItemMenu();
             }

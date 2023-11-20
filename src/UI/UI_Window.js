@@ -105,7 +105,6 @@ class UI_Window {
   leftSideX = _ => this.x + this.w;
 
   close() {
-    console.log("close")
     this.prim.removeChildren();
     this.isOpen = false;
     this.lock();

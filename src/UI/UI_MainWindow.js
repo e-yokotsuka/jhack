@@ -42,25 +42,21 @@ class UI_MainWindow extends UI_Window {
 
     selectItemMenu = _ => {
         const { scene: { uiWindowManager } } = this;
-        console.log("どうぐ");
         uiWindowManager.openItemMenu();
     }
 
     selectMagicMenu = _ => {
         const { scene: { uiWindowManager } } = this;
-        console.log("まほう");
         uiWindowManager.openMagicMenu();
     }
 
     selectEqipmentMenu = _ => {
         const { scene: { uiWindowManager } } = this;
-        console.log("そうび");
         uiWindowManager.openEquipmentMenu();
     }
 
     selectStatus = _ => {
         const { scene: { uiWindowManager } } = this;
-        console.log("つよさ");
         uiWindowManager.openStatusWindow();
     }
 

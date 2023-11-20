@@ -52,7 +52,6 @@ class UI_MagicWindow extends UI_Window {
         }) : [{
             label: "まだ、なにも覚えていない。勉強不足だ！",
             action: _ => {
-                console.log("まだ、なにも覚えていない。");
                 const { core: { uiWindowManager } } = this;
                 uiWindowManager.closeMagicMenu();
             }

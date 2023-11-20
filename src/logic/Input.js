@@ -9,7 +9,6 @@ class Input {
 
   okKeyDown = e => {
     e.preventDefault();
-    // console.log(`DOWN '${e.key}'`)
     this.keyStatus[e.key] = {
       down: true,
       isSingleDown: true
@@ -18,7 +17,6 @@ class Input {
 
   onKeyUp = e => {
     e.preventDefault();
-    // console.log(`UP '${e.key}'`)
     this.keyStatus[e.key] = {
       down: false
     }

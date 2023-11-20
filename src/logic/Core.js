@@ -60,7 +60,6 @@ class Core {
 
   resize = _ => {
     const { width, height } = this.getCanvasSize();
-    console.log(`canvas w:${width}/h${height}`);
     this.app.renderer.resize(width, height);
     this.currentScene.resize(width, height);
   }
@@ -85,7 +84,6 @@ class Core {
     this.loaded = true;
     // texturesはアプリケーション内共通
     const { textures } = await Assets.load('./assets/sprites/main.json', p => console.info(p));
-    console.dir(textures)
     this.textures = {};
     textures["ui_sound_on"] = Texture.from('./assets/sprites/icons/outline_volume_up_white_24dp.png');
     textures["ui_sound_off"] = Texture.from('./assets/sprites/icons/outline_volume_off_white_24dp.png');

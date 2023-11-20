@@ -12,8 +12,6 @@ const getRoomAttribute = rectArray => {
       attribute.isBottom = attribute.isBottom ? true : rectUtil.isBottom(target);
       attribute.isRight = attribute.isRight ? true : rectUtil.isRight(target);
     });
-    // console.log(myself);
-    // console.log(attribute);
     roomAttributeArray.push(attribute);
   });
   return roomAttributeArray;

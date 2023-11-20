@@ -18,7 +18,6 @@ class EffectManager {
                     throw new Error('Network response was not ok');
                 }
                 const json = await response.json(); // awaitを追加
-                console.log(json);
                 return { key, json, imageId }; // 正常に解決されたJSONデータを返す
             } catch (error) {
                 console.error('There has been a problem with your fetch operation:', error);

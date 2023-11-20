@@ -122,7 +122,6 @@ class GameScene extends CommonScene {
     }
 
     goto = ({ next: { x, y, level } }) => {
-        console.log(`${x} ${y} ${level}`)
         this.level = level;
         this.updateMap();
         this.player.setMap(this.mainMap);
@@ -130,7 +129,6 @@ class GameScene extends CommonScene {
         this.mainMap.center(x, y);
         this.resetSpawnManager(level);
         const { x: xx, y: yy } = this.mainMap.getPosition();
-        console.log(`${xx},${yy}`);
     }
 
     async Start() {
@@ -172,8 +170,6 @@ class GameScene extends CommonScene {
         this.spawnEnemy();
         this.monsters.map(monster => monster.doSomething());
         this.traces.map(trace => trace.doSomething());
-
-        //    console.log(`vx:${vx}/vy:${vy}`);
     }
 
     play(name, target) {
@@ -184,7 +180,6 @@ class GameScene extends CommonScene {
             dis = distance(target, { mapX: playerMapX, mapY: playerMapY });
             if (dis > PLAYER_MAP_BOUNDS) return;
             volume = Math.max(0, 1 - (dis / PLAYER_MAP_BOUNDS));
-            console.log(`${target.characterName} : volume ${volume} : sound ${name}`)
         }
         sound.play(name, { volume })
     }
