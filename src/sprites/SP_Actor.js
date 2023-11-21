@@ -18,6 +18,11 @@ class SP_Actor {
     this.mainContainer = new Container();
     this.mainContainer.addChild(this.container);
     this.mainContainer.addChild(this.uiContainer);
+    this.mainContainer.interactive = true;
+    this.mainContainer.on('click', _ => {
+      const { addText } = this;
+      addText(`${this.status.targetsIds}`);
+    })
   }
 
   move(x, y) {
@@ -146,6 +151,9 @@ class SP_Actor {
     return sortedList[0];
   }
 
+  applyTargetsIds(targetIds) {
+    this.status.targetsIds = this.status.targetsIds.filter(uuid => !targetIds.includes(uuid));
+  }
 
   applyExp(target) {
     const { addText, characterName } = this;
@@ -165,8 +173,11 @@ class SP_Actor {
   }
 
   addTarget(uuid) { // プレイヤー以外は敵対アクターのuuidを格納する
-    if (!this.isPlayer && !this.status.targetsIds.includes(uuid))
+    if (!this.isPlayer && !this.status.targetsIds.includes(uuid)) {
       this.status.targetsIds.push(uuid)
+    }
+    // 攻撃を最後にうけたやつを敵とみなす
+    this.status.targetsIds.sort((a, b) => (b.key === uuid) - (a.key === uuid));
   }
   //罠をよけた
   escapeTrap() { console.log("escapeTrap") }

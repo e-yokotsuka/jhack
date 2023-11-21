@@ -50,8 +50,16 @@ class SpawnManager {
 
     refreshMonsters() {
         const { level } = this.gameScene;
+        const deadMonster = this.levelMonster[level].filter(m => m.isDie);
+        const deadMonsterIds = deadMonster.map(({ uuid }) => uuid);
         this.levelMonster[level] = this.levelMonster[level].filter(m => !m.isDie);
         this.levelTrace[level] = this.levelTrace[level].filter(m => !m.isDie);
+        if (deadMonsterIds.length) {
+            this.levelMonster[level].forEach(m => {
+                // 死んだ敵をターゲットから削除
+                m.applyTargetsIds(deadMonsterIds);
+            })
+        }
         this.reset(level);
     }
 
