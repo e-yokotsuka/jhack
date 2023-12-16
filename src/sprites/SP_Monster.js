@@ -78,7 +78,7 @@ class SP_Monster extends SP_Actor {
     });
     this.container.addChild(this.sprite);
     this.container.addChild(this.progressHp.getPrim());
-    this.container.addChild(this.progressMp.getPrim());
+    if (this.maxMp) this.container.addChild(this.progressMp.getPrim());
     this.updateProgressBar();
   }
 

@@ -44,6 +44,7 @@ const MD_Status = ({
     wiz: 0,
     cha: 0,
   },
+  effects = [],
   gender = MS_Gender.male.value,
   race = MS_Race.human,
   force_update = false,
@@ -71,6 +72,7 @@ const MD_Status = ({
   wiz, // 知恵
   cha, // カリスマ
   modifiers,
+  effects, // 眠り、マヒなどの効果
   gender,
   race,
   virtualX,

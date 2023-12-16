@@ -1,8 +1,7 @@
 import ML_Common from "./ML_Common";
 import { calculateMinMax } from "../../tools/Calc"
-import { diceRoll } from "../../tools/Calc";
 
-class ML_Fireboll extends ML_Common {
+class ML_Sleep extends ML_Common {
     constructor(core, scene, magic) {
         super(core, scene, magic);
         this.use.bind(this);
@@ -10,13 +9,19 @@ class ML_Fireboll extends ML_Common {
             const { value, mp, range } = this.magic;
             // あとで敵も使えるように
             const self = scene.getPlayer();
+            this.addText(`${self.characterName} は、眠りの魔法を使った！`);
+            this.addText(`効果範囲：${range}`);
             const enemys = scene.getEnemiesInRange(self, range);
             for (const enemy of enemys) {
-                // あとでバトルロジックへ移動
-                const point = diceRoll({ diceText: value, status: self });
+                const hit = scene.savingThrow({
+                    offense: self,
+                    defense: enemy,
+                    offenseDiceText: value,
+                    defenseDiceText: '1d20+intl'
+                })
                 scene.showEffect({ key: 'fireboll', x: enemy.cx, y: enemy.cy })
-                enemy.applyDamage({ point, target: self });
-                this.addText(`X: ${enemy.mapX} Y:${enemy.mapY}MP:${mp}DAMAGE:${point}`);
+                if (!hit) continue;
+                enemy.doSleep(); // 眠った
                 break;
             }
             return mp;
@@ -31,4 +36,4 @@ class ML_Fireboll extends ML_Common {
     }
 }
 
-export default ML_Fireboll;
+export default ML_Sleep;

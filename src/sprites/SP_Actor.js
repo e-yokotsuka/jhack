@@ -2,6 +2,7 @@ import { BehaviorTypes } from "../model/MD_Status";
 import { CELL_SIZE } from "../define";
 import { Container } from "pixi.js";
 import { MAGIC_ATTRIBUTE } from "../data/MS_Magics";
+import MS_Effects from "../data/MS_Effects";
 import UI_DIsplayPoint from "../ui/UI_DIsplayPoint";
 import { distance } from "../tools/Calc";
 import { v4 as uuidv4 } from 'uuid';
@@ -20,9 +21,18 @@ class SP_Actor {
     this.mainContainer.addChild(this.uiContainer);
     this.mainContainer.interactive = true;
     this.mainContainer.on('click', _ => {
-      const { addText } = this;
-      addText(`${this.status.targetsIds}`);
+      const { uuid, characterName, hp, maxHp, mp, maxMp, status: { targetsIds } } = this;
+      this.core.setDebugText(4, `name :${characterName} hp:${hp}/${maxHp} mp:${mp}/${maxMp}`);
+      this.core.setDebugText(5, `UUID:${uuid}`);
+      this.core.setDebugText(6, `targetsIds:${targetsIds}`);
+      const effectsString = this.effectsString();
+      this.core.setDebugText(7, `effects:${effectsString}`);
     })
+  }
+
+  effectsString() {
+    const names = this.status.effects.map(e => e.name);
+    return names.join(',')
   }
 
   move(x, y) {
@@ -184,7 +194,9 @@ class SP_Actor {
 
   //罠にはまった
   trappedIn() { console.log("trappedIn") }
-
+  applyEffect(effect) {
+    this.status.effects.push(effect);
+  }
   //アイテムを手に入れた
   getItem(item) {
     const { addText } = this;
@@ -279,6 +291,23 @@ class SP_Actor {
   getCharacterName = _ => this.status.characterName
 
   getPrim = _ => this.mainContainer;
+
+  //=====================
+  // 行動
+  //=====================
+
+  // 眠った
+  doSleep() {
+    // filterは若干重い気がするので必要があればあとで高速化
+    const [effect] = MS_Effects.filter(({ id }) => id === 'sleep')
+    this.applyEffect(effect);
+    this.addText(`${this.characterName} は、眠った`);
+  }
+  // おきた
+  doWakeUp() {
+    this.status.effects = this.status.effects.filter(({ id }) => id !== 'sleep');
+    this.addText(`${this.characterName} は起きた`);
+  }
 
   // パラメタ (シンタックスシュガー)
   // 装備をかえす

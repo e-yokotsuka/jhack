@@ -197,7 +197,7 @@ class GameScene extends CommonScene {
         this.addText(isMute ? 'あたりは静寂につつまれた！' : '音を盛大に鳴らすことになった！');
         if (!isMute) this.play('unmute');
     }
-
+    savingThrow = ({ offense, defense, offenseDiceText, defenseDiceText }) => this.battleLogic.savingThrow({ offense, defense, offenseDiceText, defenseDiceText })
     getEnemiesInRange = (self, range) => this.battleLogic.getEnemiesInRange(self, range)
     isApproachActor = ({ pMapX, pMapY, mMapX, mMapY }) => this.battleLogic.isApproachEnemy({ map: this.currentMap, pMapX, pMapY, mMapX, mMapY })
 

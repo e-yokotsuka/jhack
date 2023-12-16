@@ -103,6 +103,12 @@ class BattleLogic {
         return this.getApproachEnemys(self, actors);
     }
 
+    savingThrow = ({ offense, defense, offenseDiceText, defenseDiceText }) => {
+        const oDexRoll = diceRoll({ diceText: offenseDiceText, status: offense });
+        const dDexRoll = diceRoll({ diceText: defenseDiceText, status: defense });
+        return oDexRoll >= dDexRoll
+    }
+
     findEnemiesInRange = (self, range) => {
         this.scene = this.scene || this.core.getScene(SCENE_ID.GAME);
         const monsters = this.scene.getEnemys();
