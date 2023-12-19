@@ -178,6 +178,7 @@ class SP_Monster extends SP_Actor {
 
   // 敵の行動ロジック
   doSomething() {
+    if (!this.canAct()) return;
     const { status, status:
       { beforeUpdate,
         afterUpdate,

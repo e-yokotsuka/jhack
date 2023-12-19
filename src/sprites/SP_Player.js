@@ -215,7 +215,7 @@ class SP_Player extends SP_Actor {
     // 動いた
     const { virtualX: vx, virtualY: vy } = status;
     handleStepUpdate(vx, vy);
-    this.checkCollision() || this.moveConfirmed(vx, vy);
+    this.checkCollision() && this.canAct() || this.moveConfirmed(vx, vy);
     status.steps++;
     afterUpdate();
   }

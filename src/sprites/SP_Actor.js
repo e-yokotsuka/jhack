@@ -1,4 +1,5 @@
 import { BehaviorTypes } from "../model/MD_Status";
+import { CAN_NOT_ACTION_EFFECTS } from "../define";
 import { CELL_SIZE } from "../define";
 import { Container } from "pixi.js";
 import { MAGIC_ATTRIBUTE } from "../data/MS_Magics";
@@ -92,6 +93,18 @@ class SP_Actor {
     addText(`${targetName}からの攻撃を防具で防いだ！`);
   }
 
+  onDamageReaction() {
+    // 効果の処理を行う
+    let effects = this.status.effects;
+    effects = effects.map(effect => {
+      const { logic } = effect;
+      logic.onDamageReaction();
+      return effect;
+    });
+    // 解除された効果を除外する
+    this.status.effects = effects.filter(effect => !effect.isEffectCleared);
+  }
+
   // ダメージをくらった
   applyDamage({ point, target, silent = false }) {
     const { addText } = this;
@@ -105,6 +118,7 @@ class SP_Actor {
       // 殴られたら敵になる
       this.status.currentBehavior = BehaviorTypes.AGGRESSIVE;
     }
+    this.onDamageReaction();
     this.addDisplayPoint({ x: CELL_SIZE / 2, pointText: `${point}` });
     const hp = this.status.hp - point;
     this.status.hp = Math.max(hp, 0);
@@ -194,9 +208,21 @@ class SP_Actor {
 
   //罠にはまった
   trappedIn() { console.log("trappedIn") }
+
   applyEffect(effect) {
+    effect.logic = new effect.effectLogicClass(this.core, this.scene, effect, this)
     this.status.effects.push(effect);
   }
+
+  clearEffect(effect) {
+    if (this.status.effects.some(e => e.id === effect.id)) {
+      this.status.effects = this.status.effects.filter(e => e.id != effect.id);
+      return true;
+    }
+    return false;
+  }
+
+
   //アイテムを手に入れた
   getItem(item) {
     const { addText } = this;
@@ -300,13 +326,30 @@ class SP_Actor {
   doSleep() {
     // filterは若干重い気がするので必要があればあとで高速化
     const [effect] = MS_Effects.filter(({ id }) => id === 'sleep')
+    const didExist = this.clearEffect(effect); // 同じ状態が存在する場合は後のもので上書きされる
     this.applyEffect(effect);
-    this.addText(`${this.characterName} は、眠った`);
+    !didExist && this.addText(`${this.characterName} は、眠った`);
   }
   // おきた
   doWakeUp() {
     this.status.effects = this.status.effects.filter(({ id }) => id !== 'sleep');
     this.addText(`${this.characterName} は起きた`);
+  }
+
+  // 行動が可能ならtrueを返す
+  canAct() {
+    // 行動できる状態か？
+    // 効果の処理を行う
+    let effects = this.status.effects;
+    effects = effects.map(effect => {
+      const { logic } = effect;
+      logic.stepUpdate()
+      return effect;
+    });
+    // 解除された効果を除外する
+    this.status.effects = effects.filter(effect => !effect.isEffectCleared);
+    // 行動が可能かを判定する。
+    return !this.status.effects.some(effect => CAN_NOT_ACTION_EFFECTS.includes(effect.id));
   }
 
   // パラメタ (シンタックスシュガー)

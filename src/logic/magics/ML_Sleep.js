@@ -17,7 +17,7 @@ class ML_Sleep extends ML_Common {
                     offense: self,
                     defense: enemy,
                     offenseDiceText: value,
-                    defenseDiceText: '1d20+intl'
+                    defenseDiceText: '1d4+intl'
                 })
                 scene.showEffect({ key: 'fireboll', x: enemy.cx, y: enemy.cy })
                 if (!hit) continue;

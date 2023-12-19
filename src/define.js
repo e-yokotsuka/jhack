@@ -15,3 +15,4 @@ export const MESSAGE_BOX_ABS_Y = 64; // 画面下からの絶対位置
 export const MESSAGE_BOX_HEIGHT = 128;
 export const MAX_INFO_MESSAGE_LINES = 7;
 export const PLAYER_MAP_BOUNDS = 15; // プレイヤーを中心として、処理をする範囲（セル数）
+export const CAN_NOT_ACTION_EFFECTS = ['sleep', 'paralysis', 'freeze', 'stone']; // 動けない状態になるステータス
