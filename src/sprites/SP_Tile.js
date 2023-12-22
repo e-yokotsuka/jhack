@@ -2,7 +2,7 @@ import { Sprite } from 'pixi.js';
 
 const SP_Tile = ({ core: { textures: { tx_main } }, name }) => {
   const sprite = new Sprite(tx_main[`${name}`]);
-  sprite.interactive = false;
+  sprite.eventMode = 'auto';
   return sprite;
 }
 

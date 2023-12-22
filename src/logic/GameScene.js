@@ -38,7 +38,7 @@ class GameScene extends CommonScene {
             unmute: './assets/sound/決定ボタンを押す42.mp3',
 
         });
-        await this.effectManager.add({
+        await EffectManager.add({
             fireboll: { path: './assets/particle/fireboll.json', imageId: 'bolt04' },
             taki: { path: './assets/particle/taki.json', imageId: 'bolt04' }
         });
@@ -199,6 +199,7 @@ class GameScene extends CommonScene {
     }
     savingThrow = ({ offense, defense, offenseDiceText, defenseDiceText }) => this.battleLogic.savingThrow({ offense, defense, offenseDiceText, defenseDiceText })
     getEnemiesInRange = (self, range) => this.battleLogic.getEnemiesInRange(self, range)
+    findEnemiesInRange = (self, range) => this.battleLogic.findEnemiesInRange(self, range)
     isApproachActor = ({ pMapX, pMapY, mMapX, mMapY }) => this.battleLogic.isApproachEnemy({ map: this.currentMap, pMapX, pMapY, mMapX, mMapY })
 
     // ステータスプロパティのシンタックスシュガー

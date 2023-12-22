@@ -21,7 +21,7 @@ class SP_Trace {
     const { core, name } = this;
     const { textures: { tx_main } } = core;
     const sprite = new Sprite(tx_main[`${name}`]);
-    sprite.interactive = false;
+    sprite.eventMode = 'auto';
     this.sprite = sprite;
     this.sprite.alpha = this.life / this.maxLife;
   }

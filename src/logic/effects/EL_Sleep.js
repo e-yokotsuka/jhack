@@ -9,9 +9,9 @@ class EL_Sleep extends EL_Common {
 
     stepUpdate() {
         const { target } = this;
-        const oActorRoll = diceRoll({ diceText: `1d6+intl`, status: this.target });
+        const oActorRoll = diceRoll({ diceText: `1d4+intl`, status: this.target });
         const oMagicRoll = diceRoll({ diceText: `1d20` });
-        const isClear = oMagicRoll < oActorRoll || (this.turn-- <= 0);
+        const isClear = oActorRoll > oMagicRoll || (this.turn-- <= 0);
         isClear ? this.addText(`${target.characterName}の目が覚めた！`) : this.addText(`${target.characterName}は寝ている！ぐーすかぴー(${this.turn})`)
         this.effect.isEffectCleared = isClear;
     }
@@ -21,7 +21,7 @@ class EL_Sleep extends EL_Common {
         const oActorRoll = diceRoll({ diceText: `1d20+intl`, status: this.target });
         const oMagicRoll = diceRoll({ diceText: `1d10` });
         const isClear = oMagicRoll < oActorRoll;
-        isClear || this.addText(`痛すぎて ${target.characterName} の目が覚めた！`)
+        isClear && this.addText(`痛すぎて ${target.characterName} の目が覚めた！`)
         this.effect.isEffectCleared = isClear;
     }
 

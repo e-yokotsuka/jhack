@@ -6,7 +6,7 @@ export default [
         id: "sleep",
         name: "睡眠",
         description: "眠っている",
-        value: '1d8+3',//最大12ターン寝る
+        value: '2d20+20',//最大60ターン寝る
         effectLogicClass: EL_Sleep
     },
     {

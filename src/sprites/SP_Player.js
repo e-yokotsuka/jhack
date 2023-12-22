@@ -22,7 +22,7 @@ class SP_Player extends SP_Actor {
     });
     this.healHp.bind(this);
     const sprite = new Sprite(tx_main[`${name}`]);
-    sprite.interactive = false;
+    sprite.eventMode = 'auto';
     this.container.addChild(sprite);
     this.status.modifiers.str = this.diceRoll({ diceText: '1d4+0' });
     this.status.modifiers.dex = this.diceRoll({ diceText: '1d4+0' });

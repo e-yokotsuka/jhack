@@ -11,7 +11,8 @@ class ML_Sleep extends ML_Common {
             const self = scene.getPlayer();
             this.addText(`${self.characterName} は、眠りの魔法を使った！`);
             this.addText(`効果範囲：${range}`);
-            const enemys = scene.getEnemiesInRange(self, range);
+            // 効果範囲は壁なども貫通する
+            const enemys = scene.findEnemiesInRange(self, range);
             for (const enemy of enemys) {
                 const hit = scene.savingThrow({
                     offense: self,
@@ -22,7 +23,6 @@ class ML_Sleep extends ML_Common {
                 scene.showEffect({ key: 'fireboll', x: enemy.cx, y: enemy.cy })
                 if (!hit) continue;
                 enemy.doSleep(); // 眠った
-                break;
             }
             return mp;
         }

@@ -58,7 +58,7 @@ class SP_Monster extends SP_Actor {
     const { core, skin } = this;
     const { textures: { tx_main } } = core;
     const sprite = new Sprite(tx_main[`${skin}`]);
-    sprite.interactive = false;
+    sprite.eventMode = 'auto';
     this.sprite = sprite;
     this.progressHp = new UI_ProgressBar({
       core,

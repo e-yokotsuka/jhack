@@ -1,14 +1,15 @@
 import { EMITTYPE, ParticleEffect, SPAWNTYPE } from "pixi-particle-lib";
 
 class EffectManager {
+    static effects = {};
+
     constructor(core, container) {
         this.core = core;
-        this.effects = {};
         this.effectPrims = {};
         this.container = container;
     }
 
-    async add(_effects = {}) {
+    static async add(_effects = {}) {
         // fetch操作を行うPromiseの配列を作成します
         const fetchPromises = Object.keys(_effects).map(async key => { // asyncを追加
             const { path, imageId } = _effects[key];
@@ -35,12 +36,12 @@ class EffectManager {
         });
     }
 
-    getParam(key) {
+    static getParam(key) {
         return this.effects[key];
     }
 
     setEffectPrim({ key, x, y }) {
-        const param = this.getParam(key);
+        const param = EffectManager.getParam(key);
         if (!(key in this.effectPrims)) this.effectPrims[key] = [];
         const effectPrim = new ParticleEffect({
             param,

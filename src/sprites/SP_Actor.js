@@ -2,6 +2,7 @@ import { BehaviorTypes } from "../model/MD_Status";
 import { CAN_NOT_ACTION_EFFECTS } from "../define";
 import { CELL_SIZE } from "../define";
 import { Container } from "pixi.js";
+import EffectManager from "../logic/EffectManager";
 import { MAGIC_ATTRIBUTE } from "../data/MS_Magics";
 import MS_Effects from "../data/MS_Effects";
 import UI_DIsplayPoint from "../ui/UI_DIsplayPoint";
@@ -13,14 +14,19 @@ class SP_Actor {
     this.core = core;
     this.scene = scene;
     this.status = status;
+    this.centerX = CELL_SIZE / 2;
+    this.centerY = CELL_SIZE / 2;
     this.ui_DIsplayPoint = new UI_DIsplayPoint(core, this)
     this.container = new Container();
     this.uiContainer = new Container();
     this.uiContainer.addChild(this.ui_DIsplayPoint.getPrim())
+    this.effectContainer = new Container();
+    this.effectManager = new EffectManager(core, this.effectContainer);
     this.mainContainer = new Container();
     this.mainContainer.addChild(this.container);
+    this.mainContainer.addChild(this.effectContainer);
     this.mainContainer.addChild(this.uiContainer);
-    this.mainContainer.interactive = true;
+    this.mainContainer.eventMode = 'static';
     this.mainContainer.on('click', _ => {
       const { uuid, characterName, hp, maxHp, mp, maxMp, status: { targetsIds } } = this;
       this.core.setDebugText(4, `name :${characterName} hp:${hp}/${maxHp} mp:${mp}/${maxMp}`);
@@ -56,6 +62,7 @@ class SP_Actor {
 
   update(delta) {
     this.ui_DIsplayPoint.update(delta);
+    this.effectManager.update(delta);
   }
 
   weaponAttack({ offense, defense }) {
@@ -97,8 +104,7 @@ class SP_Actor {
     // 効果の処理を行う
     let effects = this.status.effects;
     effects = effects.map(effect => {
-      const { logic } = effect;
-      logic.onDamageReaction();
+      effect.logic.onDamageReaction();
       return effect;
     });
     // 解除された効果を除外する
@@ -145,6 +151,7 @@ class SP_Actor {
     return this.status.targetsIds?.length;
   }
 
+  showEffect = ({ key, x, y }) => this.effectManager.setEffectPrim({ key, x, y });
 
   selectAttackTarget() {
     const { mapX, mapY, scene, currentBehavior } = this;
@@ -327,7 +334,7 @@ class SP_Actor {
     // filterは若干重い気がするので必要があればあとで高速化
     const [effect] = MS_Effects.filter(({ id }) => id === 'sleep')
     const didExist = this.clearEffect(effect); // 同じ状態が存在する場合は後のもので上書きされる
-    this.applyEffect(effect);
+    this.applyEffect({ ...effect });
     !didExist && this.addText(`${this.characterName} は、眠った`);
   }
   // おきた

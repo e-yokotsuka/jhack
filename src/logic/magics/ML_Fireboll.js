@@ -14,7 +14,7 @@ class ML_Fireboll extends ML_Common {
             for (const enemy of enemys) {
                 // あとでバトルロジックへ移動
                 const point = diceRoll({ diceText: value, status: self });
-                scene.showEffect({ key: 'fireboll', x: enemy.cx, y: enemy.cy })
+                enemy.showEffect({ key: 'fireboll', x: enemy.centerX, y: enemy.centerY })
                 enemy.applyDamage({ point, target: self });
                 this.addText(`X: ${enemy.mapX} Y:${enemy.mapY}MP:${mp}DAMAGE:${point}`);
                 break;
