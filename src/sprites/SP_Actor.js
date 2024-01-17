@@ -5,6 +5,7 @@ import { Container } from "pixi.js";
 import EffectManager from "../logic/EffectManager";
 import { MAGIC_ATTRIBUTE } from "../data/MS_Magics";
 import MS_Effects from "../data/MS_Effects";
+import StateManager from "../logic/StateManager";
 import UI_DIsplayPoint from "../ui/UI_DIsplayPoint";
 import { distance } from "../tools/Calc";
 import { v4 as uuidv4 } from 'uuid';
@@ -16,14 +17,17 @@ class SP_Actor {
     this.status = status;
     this.centerX = CELL_SIZE / 2;
     this.centerY = CELL_SIZE / 2;
-    this.ui_DIsplayPoint = new UI_DIsplayPoint(core, this)
+    this.ui_DisplayPoint = new UI_DIsplayPoint(core, this)
     this.container = new Container();
     this.uiContainer = new Container();
-    this.uiContainer.addChild(this.ui_DIsplayPoint.getPrim())
+    this.uiContainer.addChild(this.ui_DisplayPoint.getPrim())
     this.effectContainer = new Container();
     this.effectManager = new EffectManager(core, this.effectContainer);
+    this.stateContainer = new Container();
+    this.stateManager = new StateManager(core, this.stateContainer);
     this.mainContainer = new Container();
     this.mainContainer.addChild(this.container);
+    this.mainContainer.addChild(this.stateContainer);
     this.mainContainer.addChild(this.effectContainer);
     this.mainContainer.addChild(this.uiContainer);
     this.mainContainer.eventMode = 'static';
@@ -61,8 +65,9 @@ class SP_Actor {
 
 
   update(delta) {
-    this.ui_DIsplayPoint.update(delta);
+    this.ui_DisplayPoint.update(delta);
     this.effectManager.update(delta);
+    this.stateManager.update(delta);
   }
 
   weaponAttack({ offense, defense }) {
@@ -137,7 +142,7 @@ class SP_Actor {
     return false;
   }
 
-  addDisplayPoint = ({ x, y, pointText }) => this.ui_DIsplayPoint.addDisplayPoint({ x, y, pointText });
+  addDisplayPoint = ({ x, y, pointText }) => this.ui_DisplayPoint.addDisplayPoint({ x, y, pointText });
 
   getTargetList() {
     return this.status.targetsIds.map(uuid => this.scene.getEnemyById(uuid));
@@ -219,11 +224,13 @@ class SP_Actor {
   applyEffect(effect) {
     effect.logic = new effect.effectLogicClass(this.core, this.scene, effect, this)
     this.status.effects.push(effect);
+    this.stateManager.updateState(this.status.effects);
   }
 
   clearEffect(effect) {
     if (this.status.effects.some(e => e.id === effect.id)) {
       this.status.effects = this.status.effects.filter(e => e.id != effect.id);
+      this.stateManager.updateState(this.status.effects);
       return true;
     }
     return false;
@@ -355,6 +362,7 @@ class SP_Actor {
     });
     // 解除された効果を除外する
     this.status.effects = effects.filter(effect => !effect.isEffectCleared);
+    this.stateManager.updateState(this.status.effects);
     // 行動が可能かを判定する。
     return !this.status.effects.some(effect => CAN_NOT_ACTION_EFFECTS.includes(effect.id));
   }

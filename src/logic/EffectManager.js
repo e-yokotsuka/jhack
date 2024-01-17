@@ -1,4 +1,4 @@
-import { EMITTYPE, ParticleEffect, SPAWNTYPE } from "pixi-particle-lib";
+import { ParticleEffect } from "pixi-particle-lib";
 
 class EffectManager {
     static effects = {};
