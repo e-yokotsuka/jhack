@@ -11,6 +11,7 @@
     "@pixi/particle-emitter": "^5.0.8",
     "@pixi/sound": "^5.0.0",
     "@pixi/ui": "^0.5.8",
+    "colyseus.js": "^0.15.9",
     "pixi-particle-lib": "github:e-yokotsuka/pixi-particle-lib",
     "pixi.js": "^7.2.4",
     "stats.js": "^0.17.0",
@@ -20,7 +21,8 @@
     "start": "webpack serve --config webpack.config.js",
     "build": "cross-env NODE_ENV=production webpack --mode=production --config webpack.config.js",
     "debug-build": "cross-env NODE_ENV=development webpack --config webpack.config.js",
-    "sprite-pack": "node_modules/.bin/spritesmith --rc ./resource/.spritesmith.js"
+    "sprite-pack": "node_modules/.bin/spritesmith --rc ./resource/.spritesmith.js",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
@@ -30,6 +32,7 @@
     "eslint": "^8.32.0",
     "eslint-webpack-plugin": "^3.2.0",
     "file-loader": "^6.2.0",
+    "gh-pages": "^6.3.0",
     "html-webpack-harddisk-plugin": "^2.0.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.7.2",

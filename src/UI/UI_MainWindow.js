@@ -25,14 +25,13 @@ class UI_MainWindow extends UI_Window {
                 },
                 {
                     label: "すてる", action: _ => {
-                        console.log("すてる")
+                        scene.uiWindowManager.openConfirmWindow(this, () => scene.discardSave());
                     }
                 },
                 {
                     label: "セーブ", action: _ => {
-                        core.save()
-                        console.log("セーブ")
-
+                        scene.save();
+                        scene.uiWindowManager.close();
                     }
                 },
             ]

@@ -1,13 +1,16 @@
 import { Container, Text } from 'pixi.js';
 
 import BattleLogic from './BattleLogic';
+import SaveManager from './SaveManager';
 import CommonScene from './CommonScene';
 import EffectManager from './EffectManager';
 import MP_MapManager from '../map/MP_MapManager';
 import { PLAYER_MAP_BOUNDS } from '../define';
 import { SCENE_ID } from './Core'
 import SP_Player from '../sprites/SP_Player';
+import SP_RemotePlayer from '../sprites/SP_RemotePlayer';
 import SpawnManager from './SpawnManager'
+import UI_DialogWindow from '../ui/UI_DialogWindow';
 import UI_MessageBox from '../ui/UI_MessageBox'
 import UI_Status from '../ui/UI_Status';
 import UI_WindowManager from '../ui/UI_WindowManager';
@@ -27,6 +30,11 @@ class GameScene extends CommonScene {
         this.effectManager = new EffectManager(core, this.effectContainer);
         this.levelMap = [];
         this.frameCounter = 0;
+
+        // マルチプレイ
+        this.networkManager = null;      // 設定されるとマルチプレイモード
+        this.remotePlayers = new Map();  // sessionId → SP_RemotePlayer
+        this.remotePlayerContainer = new Container();
     }
 
     async Load() {
@@ -48,6 +56,7 @@ class GameScene extends CommonScene {
     updateMap = _ => {
         this.traces = [];
         this.monsters = [];
+        this.npcs = [];
         this.mainMap = this.mapManager.getLevelMap(this.level);
         this.mapContainer.removeChildren();
         this.mapContainer.addChild(this.mainMap.getPrim());
@@ -72,6 +81,7 @@ class GameScene extends CommonScene {
         this.sceneContainer.addChild(this.uiContainer);
 
         this.actorContainer.addChild(this.spawnManager.getPrim());
+        this.actorContainer.addChild(this.remotePlayerContainer);
         this.debugTextPrim = new Text('debug key string', {
             fontSize: 20,
             fill: 0xffffff,
@@ -86,6 +96,7 @@ class GameScene extends CommonScene {
         this.player.respawn();
         this.monsters = [];
         this.traces = []; // 痕跡（血とか）
+        this.npcs = [];
 
         this.uiStatus = new UI_Status({ core, scene });
         this.uiContainer.addChild(this.uiStatus.getPrim());
@@ -96,9 +107,149 @@ class GameScene extends CommonScene {
 
         this.uiMessageBox = new UI_MessageBox({ core, scene });
         this.uiContainer.addChild(this.uiMessageBox.getPrim());
+
+        this.npcDialogWindow = new UI_DialogWindow({ core, scene });
+        this.uiContainer.addChild(this.npcDialogWindow.getPrim());
+
+        // セーブデータがあればロード
+        const saveData = SaveManager.load();
+        if (saveData) this._applyLoadData(saveData);
     }
 
     refreshMonsters = _ => this.spawnManager.refreshMonsters();
+    refreshNPCs = _ => this.spawnManager.refreshNPCs();
+
+    // ===== マルチプレイ =====
+
+    // NetworkManager をセットしてマルチプレイモードを有効化
+    enableMultiplayer(networkManager) {
+        this.networkManager = networkManager;
+        this.player.enableMultiplayer(networkManager);
+
+        // マップ同期：ホストはマップ生成後にサーバーへ送信
+        if (networkManager.isHost) {
+            this._sendAllMapData();
+        }
+
+        // プレイヤー追加イベント
+        networkManager.onPlayerJoined = (sessionId, playerState) => {
+            if (sessionId === networkManager.sessionId) return; // 自分
+            this._addRemotePlayer(sessionId, playerState);
+        };
+
+        // プレイヤー削除イベント
+        networkManager.onPlayerLeft = (sessionId) => {
+            this._removeRemotePlayer(sessionId);
+        };
+
+        // tick イベント（戦闘結果・死亡・レベルアップなど）
+        networkManager.onTickEvents = (events) => {
+            this._processTickEvents(events);
+        };
+
+        // サーバー state 変化でリモートプレイヤー更新
+        networkManager.onStateChange = (state) => {
+            this._syncRemotePlayers(state);
+            this._syncMonsters(state);
+        };
+    }
+
+    _sendAllMapData() {
+        const { networkManager, mapManager } = this;
+        if (!networkManager) return;
+        for (let floor = 0; floor < mapManager.levelMap.length; floor++) {
+            const map = mapManager.levelMap[floor];
+            networkManager.sendMapData(floor, this._serializeFloorMap(map));
+        }
+    }
+
+    _serializeFloorMap(map) {
+        const { width, height } = map;
+        const blocked = [];
+        for (let y = 0; y < height; y++) {
+            blocked[y] = [];
+            for (let x = 0; x < width; x++) {
+                blocked[y][x] = map.getTile(x, y)?.isBlocked ?? true;
+            }
+        }
+        return {
+            width, height,
+            blocked,
+            rooms: map.roomArray.map(r => ({ x: r.x, y: r.y, width: r.width, height: r.height })),
+        };
+    }
+
+    _addRemotePlayer(sessionId, playerState) {
+        if (this.remotePlayers.has(sessionId)) return;
+        const { core } = this;
+        const rp = new SP_RemotePlayer({ core, scene: this, sessionId, playerState });
+        this.remotePlayers.set(sessionId, rp);
+        this.remotePlayerContainer.addChild(rp.getPrim());
+    }
+
+    _removeRemotePlayer(sessionId) {
+        const rp = this.remotePlayers.get(sessionId);
+        if (!rp) return;
+        this.remotePlayerContainer.removeChild(rp.getPrim());
+        this.remotePlayers.delete(sessionId);
+    }
+
+    _syncRemotePlayers(state) {
+        // 既存プレイヤーが削除されていたら除去
+        for (const [sid] of this.remotePlayers) {
+            if (!state.players.has(sid)) this._removeRemotePlayer(sid);
+        }
+        // 新規プレイヤーを追加
+        state.players.forEach((ps, sid) => {
+            if (sid === this.networkManager?.sessionId) return;
+            if (!this.remotePlayers.has(sid)) this._addRemotePlayer(sid, ps);
+        });
+    }
+
+    _syncMonsters(_state) {
+        // Colyseus の schema が自動で差分同期するため、
+        // SP_Monster との紐付けは今後拡張予定
+    }
+
+    _processTickEvents(events) {
+        for (const ev of events) {
+            if (ev.type === 'playerAttack' && ev.playerId === this.networkManager?.sessionId) {
+                this.addText(`${ev.dmg} ダメージ！`);
+            }
+            if (ev.type === 'monsterAttack' && ev.playerId === this.networkManager?.sessionId) {
+                this.addText(`${ev.dmg} ダメージをくらった！`);
+                // ローカルHPを反映（サーバー state が正とする）
+                const state = this.networkManager.getState();
+                if (state) {
+                    const ps = state.players.get(this.networkManager.sessionId);
+                    if (ps) this.player.status.hp = ps.hp;
+                }
+            }
+            if (ev.type === 'pk' && ev.defenderId === this.networkManager?.sessionId) {
+                this.addText(`プレイヤーから ${ev.dmg} のダメージ！`);
+            }
+            if (ev.type === 'pkDeath' && ev.defenderId === this.networkManager?.sessionId) {
+                this.addText('PKされた！フロア1に戻される...');
+                this.level = 0;
+                this.updateMap();
+                this.player.setMap(this.mainMap);
+                this.player.teleportation(5, 5);
+                this.mainMap.center(5, 5);
+                this.resetSpawnManager(0);
+            }
+            if (ev.type === 'playerDeath' && ev.playerId === this.networkManager?.sessionId) {
+                this.addText(`${this.player.characterName}は倒れた！`);
+            }
+            if (ev.type === 'levelup' && ev.playerId === this.networkManager?.sessionId) {
+                this.addText(`レベルアップ！ LV ${ev.lv} になった！`);
+            }
+            if (ev.type === 'monsterDeath') {
+                this.refreshMonsters();
+            }
+        }
+    }
+
+    get isMultiplayer() { return !!this.networkManager; }
 
     addTrace = trace => {
         this.spawnManager.addTrace(trace);
@@ -112,8 +263,11 @@ class GameScene extends CommonScene {
         this.player.update(delta);
         this.traces.forEach(({ update }) => { update(delta) });
         this.monsters.forEach(({ update }) => { update(delta) });
+        this.npcs.forEach(({ update }) => { update(delta) });
+        this.remotePlayers.forEach(rp => rp.update(delta));
         this.uiMessageBox.update(delta);
         this.uiWindowManager.update(delta);
+        this.npcDialogWindow.update(delta);
         this.debugTextPrim.text = this.core.getDebugText();
         const { x, y } = this.mainMap.getPosition();
         this.core.setDebugText(1, `Monster Count:${this.monsters.length}`);
@@ -144,6 +298,7 @@ class GameScene extends CommonScene {
     resize(width, height) {
         this.uiStatus.resize(width, height);
         this.uiMessageBox.resize(width, height);
+        this.npcDialogWindow.resize(width, height);
         this.mainMap.center();
     }
     windowOpen = isOpen => this.isWindowOpen = isOpen;
@@ -153,6 +308,8 @@ class GameScene extends CommonScene {
     getPlayerStatus = _ => this.player.status;
     getEnemyById = uuid => this.monsters.find(m => m.uuid == uuid);
     getEnemys = _ => this.monsters;
+    getNpcs = _ => this.npcs;
+    openNPCDialog = npc => this.npcDialogWindow.open(npc);
     spawnEnemy = _ => this.spawnManager.spawnEnemy();
     resetSpawnManager = level => this.spawnManager.reset(level);
     showEffect = ({ key, x, y }) => this.effectManager.setEffectPrim({ key, x, y });
@@ -169,6 +326,7 @@ class GameScene extends CommonScene {
 
         this.spawnEnemy();
         this.monsters.map(monster => monster.doSomething());
+        this.npcs.map(npc => npc.doSomething());
         this.traces.map(trace => trace.doSomething());
     }
 
@@ -185,12 +343,33 @@ class GameScene extends CommonScene {
     }
 
     save = _ => {
-        const ps = this.getPlayerStatus();
-        const str1 = ps.serialize();
-        const str2 = this.mainMap.serialize();
-        console.log(str1);
-        console.log(str2);
-        console.log("save game scene")
+        SaveManager.save({ playerStatus: this.getPlayerStatus(), floor: this.level });
+        this.addText('セーブしました。');
+    }
+
+    discardSave = _ => {
+        SaveManager.deleteSave();
+        location.reload();
+    }
+
+    _applyLoadData(data) {
+        const { player } = this;
+        const p = data.player;
+        const s = player.status;
+        // ステータス復元
+        ['characterName','lv','exp','nextExp','hp','maxHp','mp','maxMp',
+         'str','dex','con','intl','wiz','cha','steps'].forEach(k => { s[k] = p[k]; });
+        s.modifiers = { ...p.modifiers };
+        s.items = p.items;
+        s.equipments = p.equipments;
+        s.magics = p.magics;
+        // 階層・位置復元
+        this.level = data.floor;
+        this.updateMap();
+        player.setMap(this.mainMap);
+        player.teleportation(p.mapX, p.mapY);
+        this.mainMap.center(p.mapX, p.mapY);
+        this.resetSpawnManager(data.floor);
     }
 
     onMute(isMute) {

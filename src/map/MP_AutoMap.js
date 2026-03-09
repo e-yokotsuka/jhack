@@ -1,5 +1,6 @@
 import { ABYSS_LEVEL_INDEX, CELL_SIZE } from "../define";
 
+import { mapRandom, setMapSeed, clearMapSeed } from '../tools/SeededRandom';
 import ConectRoads from '../tools/ConectRoads';
 import { Container } from 'pixi.js';
 import EntranceCreater from '../tools/EntranceCreater';
@@ -23,7 +24,7 @@ import TL_Trap from '../tiles/TL_Trap';
 import TL_Wall from '../tiles/TL_Wall';
 
 class MP_AutoMap {
-  constructor({ core, scene, level, width = 100, height = 50 }) {
+  constructor({ core, scene, level, width = 100, height = 50, mapSeed = 0 }) {
     this.map = null;
     this.isDebugViewCollision = false;
     this.core = core;
@@ -31,6 +32,7 @@ class MP_AutoMap {
     this.level = level;
     this.width = width;
     this.height = height;
+    this._mapSeed = mapSeed;
     this.lastMapX = 0;
     this.lastMapY = 0;
     this.resetCallback = [];
@@ -45,8 +47,10 @@ class MP_AutoMap {
 
   makeAutomap = _ => {
     const { scene: { core } } = this;
+    // シード乱数でフロアごとに同一マップを生成（マルチプレイ対応）
+    setMapSeed(this._mapSeed, this.level);
     this.fill(({ x, y }) => new TL_Blank({ x, y }));
-    this.rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(Math.random() * 10 + 2) });
+    this.rectArray = MapSplitter({ map: this.map, maxRoom: Math.round(mapRandom() * 10 + 2) });
     this.roomArray = RoomCreater(this.rectArray);
     this.roomWallArray = RoomWallCreater(this.roomArray);
     this.roadArray = RoadCreater(this.rectArray, this.roomArray);
@@ -75,6 +79,7 @@ class MP_AutoMap {
 
     this.traps.forEach(({ x, y, trap }) => this.putTile(new TL_Trap({ core, x, y, trap, floor: this.getTile(x, y) })));
     this.downStairs.forEach(({ x, y, isUp }) => this.putTile(new TL_Stairs({ core, x, y, isUp, floor: this.getTile(x, y) })));
+    clearMapSeed();
     this.reset();
   }
 
@@ -109,7 +114,7 @@ class MP_AutoMap {
   fillTilesInRect = ({ x, y, width, height, fnTile = _ => { } }) => {
     for (let ny = y; ny < (y + height); ny++)
       for (let nx = x; nx < (x + width); nx++) {
-        this.map[ny][nx] = fnTile({ nx, ny });
+        this.map[ny][nx] = fnTile({ x: nx, y: ny });
       }
   }
 
@@ -174,7 +179,7 @@ class MP_AutoMap {
 
   getRespawnPosition = (retry = 0) => {
     const { roomArray } = this;
-    // 部屋の抽選
+    // 部屋の抽選（リスポーン位置はシードに依存しない）
     const room = roomArray[Math.floor(Math.random() * roomArray.length)];
     const x = room.x + Math.floor(Math.random() * (room.width - 2)) + 1;
     const y = room.y + Math.floor(Math.random() * (room.height - 2)) + 1;
@@ -209,4 +214,5 @@ class MP_AutoMap {
 
 }
 export default MP_AutoMap;
+
 

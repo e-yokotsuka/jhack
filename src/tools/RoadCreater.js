@@ -1,4 +1,5 @@
 import RectUtil from "./RectUtil";
+import { mapRandom } from './SeededRandom';
 
 const getRoomAttribute = rectArray => {
   const roomAttributeArray = [];
@@ -19,7 +20,7 @@ const getRoomAttribute = rectArray => {
 
 const createHorizontalRoad = (x, y, x2, height, direction) => {
   const yLength = height - 3; //壁分の幅を削除
-  const randY = y + Math.round(Math.random() * yLength) + 1;
+  const randY = y + Math.round(mapRandom() * yLength) + 1;
   return {
     x,
     width: x2 - x,
@@ -33,7 +34,7 @@ const createHorizontalRoad = (x, y, x2, height, direction) => {
 
 const createVerticalRoad = (x, y, y2, width, direction) => {
   const xLength = width - 3; //壁分の幅を削除
-  const randX = x + Math.round(Math.random() * xLength) + 1;
+  const randX = x + Math.round(mapRandom() * xLength) + 1;
   return {
     x: randX,
     width: 1,// 道幅

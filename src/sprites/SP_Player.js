@@ -63,17 +63,19 @@ class SP_Player extends SP_Actor {
     this.learnSpell(MS_Magic[3]);
 
     const { status: { trialMove } } = this;
+    // シングルプレイ用（マルチ時は networkManager 経由で上書き）
     this.inputMap = {
-      'w': _ => trialMove('u'),
-      's': _ => trialMove('d'),
-      'a': _ => trialMove('l'),
-      'd': _ => trialMove('r'),
+      'w': _ => this._action('u', _ => trialMove('u')),
+      's': _ => this._action('d', _ => trialMove('d')),
+      'a': _ => this._action('l', _ => trialMove('l')),
+      'd': _ => this._action('r', _ => trialMove('r')),
       '.': _ => this.status.stay({}),
-      'ArrowUp': _ => trialMove('u'),
-      'ArrowDown': _ => trialMove('d'),
-      'ArrowLeft': _ => trialMove('l'),
-      'ArrowRight': _ => trialMove('r'),
+      'ArrowUp': _ => this._action('u', _ => trialMove('u')),
+      'ArrowDown': _ => this._action('d', _ => trialMove('d')),
+      'ArrowLeft': _ => this._action('l', _ => trialMove('l')),
+      'ArrowRight': _ => this._action('r', _ => trialMove('r')),
     };
+    this.networkManager = null;
   }
 
   setMap = mainMap => {
@@ -82,6 +84,11 @@ class SP_Player extends SP_Actor {
       this.respawn();
     });
   };
+
+  // マルチプレイモードを有効化
+  enableMultiplayer(networkManager) {
+    this.networkManager = networkManager;
+  }
 
   getStatus = _ => this.status;
 
@@ -108,15 +115,30 @@ class SP_Player extends SP_Actor {
     addText(`しかし、発動前にヒョイっと避けた！`);
   }
 
+  // マルチ時はサーバーにアクション送信、シングル時はローカル処理
+  _action(direction, localFn) {
+    if (this.networkManager) {
+      this.networkManager.sendMove(direction);
+    } else {
+      localFn();
+    }
+  }
+
   goToPrevLevel(v) {
     const { addText } = this;
     addText(`上り階段じゃないか！いくぞ！${v}`);
+    if (this.networkManager) {
+      this.networkManager.sendChangeFloor('up');
+    }
     this.scene.goto(v);
   }
 
   goToNextLevel(v) {
     const { addText } = this;
     addText(`下り階段じゃないか！いくぞ！${v}`);
+    if (this.networkManager) {
+      this.networkManager.sendChangeFloor('down');
+    }
     this.scene.goto(v);
   }
 
@@ -180,15 +202,31 @@ class SP_Player extends SP_Actor {
 
     const tile = mainMap.getTile(vx, vy);
     const selfUuid = this.uuid;
+
+    // モンスターとの衝突（戦闘）
     const monsters = this.scene.getEnemys();
-    const collisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
-    collisions.forEach(m => {
+    const monsterCollisions = monsters.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
+    monsterCollisions.forEach(m => {
       const [first, second] = this.determineInitiative([this, m]);
       // WindowOpen中は仕返しが出来ない
       if (!first.isStay) this.weaponAttack({ offense: first, defense: second });
       if (!second.isStay) this.weaponAttack({ offense: second, defense: first });
-    })
-    return tile.hit({ actor: this, status }) || collisions.length
+    });
+
+    // NPCとの衝突（会話または戦闘）
+    const npcs = this.scene.getNpcs();
+    const npcCollisions = npcs.filter(({ uuid, status: { mapX, mapY } }) => uuid != selfUuid && mapX === vx && mapY === vy);
+    npcCollisions.forEach(npc => {
+      if (npc.canTalk()) {
+        npc.tryDialogue();
+      } else {
+        const [first, second] = this.determineInitiative([this, npc]);
+        if (!first.isStay) this.weaponAttack({ offense: first, defense: second });
+        if (!second.isStay) this.weaponAttack({ offense: second, defense: first });
+      }
+    });
+
+    return tile.hit({ actor: this, status }) || monsterCollisions.length || npcCollisions.length;
   }
 
   update = (delta) => {

@@ -1,3 +1,5 @@
+import { mapRandom } from './SeededRandom';
+
 const RETRY_SIZE = 5;
 const MIN_SIZE = 8;
 const MIN_RATIO = 0.4;
@@ -8,7 +10,7 @@ const splitRect = ({ width, height, retry = 0 }) => {
   if (retry > RETRY_SIZE) {
     return [{ x: 0, y: 0, width, height, parent: false }];
   }
-  const a = MIN_RATIO + Math.random() * (MAX_RATIO - MIN_RATIO);
+  const a = MIN_RATIO + mapRandom() * (MAX_RATIO - MIN_RATIO);
   const splitSetting =
     width > height
       ? {

@@ -2,7 +2,7 @@ import { Application, Assets, Sprite, Texture } from 'pixi.js';
 
 import GameScene from './GameScene';
 import Input from './Input';
-import Stats from 'stats.js';
+import StatsOverlay from './StatsOverlay';
 import UI_Common from '../ui/UI_Common';
 import { diceRoll } from '../tools/Calc';
 import { sound } from '@pixi/sound';
@@ -21,11 +21,10 @@ class Core {
       backgroundColor: 0x000000,
       width, height
     });
-    if (isShowStats) {
-      this.stats = new Stats();
-      this.stats.showPanel(0);
-      dom.appendChild(this.stats.dom);
-    }
+    this.statsOverlay = new StatsOverlay({
+      isEnabled: isShowStats,
+      mountPoint: dom,
+    });
     dom.appendChild(this.app.view);
     this.loaded = false;
     this.mainScale = 1;
@@ -104,16 +103,16 @@ class Core {
     const { app } = this;
     this.currentScene.Start();
     app.ticker.add(delta => {
-      const { app, stats, mainScale } = this;
+      const { app, statsOverlay, mainScale } = this;
       app.stage.scale.x = mainScale;
       app.stage.scale.y = mainScale;
       this.input.update();
       this.setDebugText(0, this.input.getDebugString(['w', 'a', 'd', 's', 'z', 'e']));
-      stats.begin();
+      statsOverlay.beginFrame();
       if (this.input.isDown('z')) this.Initialize();
       this.currentScene.main(delta);
       this.uiCommon.update(delta);
-      stats.end();
+      statsOverlay.endFrame();
     });
   }
 

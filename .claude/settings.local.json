@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npm start:*)",
+      "Bash(grep:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(railway version:*)",
+      "Bash(railway:*)",
+      "Bash(flyctl version:*)",
+      "Bash(/c/Users/yokot/.fly/bin/flyctl version:*)",
+      "Bash(/c/Users/yokot/.fly/bin/flyctl auth:*)",
+      "Bash(/c/Users/yokot/.fly/bin/flyctl apps:*)",
+      "Bash(/c/Users/yokot/.fly/bin/flyctl deploy:*)",
+      "Bash(curl:*)",
+      "Bash(gh api:*)"
+    ]
+  }
+}
