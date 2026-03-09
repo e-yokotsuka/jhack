@@ -11,22 +11,11 @@ class UI_EquipmentWindow extends UI_Window {
         });
         this.inputMap = {
             'ArrowLeft': _ => this.closeMenu(),
-            'w': _ => {
-                this.up()
-                this.selected();
-            },
-            's': _ => {
-                this.down()
-                this.selected();
-            },
-            'ArrowUp': _ => {
-                this.up()
-                this.selected();
-            },
-            'ArrowDown': _ => {
-                this.down()
-                this.selected();
-            },
+            'w': _ => this.up(),
+            's': _ => this.down(),
+            'ArrowUp': _ => this.up(),
+            'ArrowDown': _ => this.down(),
+            'ArrowRight': _ => this.selected(),
         };
     }
 
@@ -35,7 +24,23 @@ class UI_EquipmentWindow extends UI_Window {
     open() {
         const player = this.scene.getPlayer();
         const items = player.equipmentItems();
-        const menu = items.length ? items.map((item, index) => {
+        const specialMenu = [
+            {
+                label: 'じどうそうび',
+                action: _ => {
+                    player.equipBest();
+                    this.closeMenu();
+                }
+            },
+            {
+                label: 'そうびをはずす',
+                action: _ => {
+                    player.unequipAll();
+                    this.closeMenu();
+                }
+            },
+        ];
+        const itemMenu = items.length ? items.map((item, index) => {
             const isEquipped = player.isItemEquipped(item);
             return {
                 label: item.itemName,
@@ -56,9 +61,8 @@ class UI_EquipmentWindow extends UI_Window {
                 uiWindowManager.closeEquipmentMenu();
             }
         }];
-        this.setMenu(menu);
+        this.setMenu([...specialMenu, ...itemMenu]);
         super.open();
-        if (items.length) this.selected();
     }
 
 }

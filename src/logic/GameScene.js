@@ -8,7 +8,6 @@ import MP_MapManager from '../map/MP_MapManager';
 import { PLAYER_MAP_BOUNDS } from '../define';
 import { SCENE_ID } from './Core'
 import SP_Player from '../sprites/SP_Player';
-import SP_RemotePlayer from '../sprites/SP_RemotePlayer';
 import SpawnManager from './SpawnManager'
 import UI_DialogWindow from '../ui/UI_DialogWindow';
 import UI_MessageBox from '../ui/UI_MessageBox'
@@ -30,11 +29,6 @@ class GameScene extends CommonScene {
         this.effectManager = new EffectManager(core, this.effectContainer);
         this.levelMap = [];
         this.frameCounter = 0;
-
-        // マルチプレイ
-        this.networkManager = null;      // 設定されるとマルチプレイモード
-        this.remotePlayers = new Map();  // sessionId → SP_RemotePlayer
-        this.remotePlayerContainer = new Container();
     }
 
     async Load() {
@@ -81,7 +75,6 @@ class GameScene extends CommonScene {
         this.sceneContainer.addChild(this.uiContainer);
 
         this.actorContainer.addChild(this.spawnManager.getPrim());
-        this.actorContainer.addChild(this.remotePlayerContainer);
         this.debugTextPrim = new Text('debug key string', {
             fontSize: 20,
             fill: 0xffffff,
@@ -119,138 +112,6 @@ class GameScene extends CommonScene {
     refreshMonsters = _ => this.spawnManager.refreshMonsters();
     refreshNPCs = _ => this.spawnManager.refreshNPCs();
 
-    // ===== マルチプレイ =====
-
-    // NetworkManager をセットしてマルチプレイモードを有効化
-    enableMultiplayer(networkManager) {
-        this.networkManager = networkManager;
-        this.player.enableMultiplayer(networkManager);
-
-        // マップ同期：ホストはマップ生成後にサーバーへ送信
-        if (networkManager.isHost) {
-            this._sendAllMapData();
-        }
-
-        // プレイヤー追加イベント
-        networkManager.onPlayerJoined = (sessionId, playerState) => {
-            if (sessionId === networkManager.sessionId) return; // 自分
-            this._addRemotePlayer(sessionId, playerState);
-        };
-
-        // プレイヤー削除イベント
-        networkManager.onPlayerLeft = (sessionId) => {
-            this._removeRemotePlayer(sessionId);
-        };
-
-        // tick イベント（戦闘結果・死亡・レベルアップなど）
-        networkManager.onTickEvents = (events) => {
-            this._processTickEvents(events);
-        };
-
-        // サーバー state 変化でリモートプレイヤー更新
-        networkManager.onStateChange = (state) => {
-            this._syncRemotePlayers(state);
-            this._syncMonsters(state);
-        };
-    }
-
-    _sendAllMapData() {
-        const { networkManager, mapManager } = this;
-        if (!networkManager) return;
-        for (let floor = 0; floor < mapManager.levelMap.length; floor++) {
-            const map = mapManager.levelMap[floor];
-            networkManager.sendMapData(floor, this._serializeFloorMap(map));
-        }
-    }
-
-    _serializeFloorMap(map) {
-        const { width, height } = map;
-        const blocked = [];
-        for (let y = 0; y < height; y++) {
-            blocked[y] = [];
-            for (let x = 0; x < width; x++) {
-                blocked[y][x] = map.getTile(x, y)?.isBlocked ?? true;
-            }
-        }
-        return {
-            width, height,
-            blocked,
-            rooms: map.roomArray.map(r => ({ x: r.x, y: r.y, width: r.width, height: r.height })),
-        };
-    }
-
-    _addRemotePlayer(sessionId, playerState) {
-        if (this.remotePlayers.has(sessionId)) return;
-        const { core } = this;
-        const rp = new SP_RemotePlayer({ core, scene: this, sessionId, playerState });
-        this.remotePlayers.set(sessionId, rp);
-        this.remotePlayerContainer.addChild(rp.getPrim());
-    }
-
-    _removeRemotePlayer(sessionId) {
-        const rp = this.remotePlayers.get(sessionId);
-        if (!rp) return;
-        this.remotePlayerContainer.removeChild(rp.getPrim());
-        this.remotePlayers.delete(sessionId);
-    }
-
-    _syncRemotePlayers(state) {
-        // 既存プレイヤーが削除されていたら除去
-        for (const [sid] of this.remotePlayers) {
-            if (!state.players.has(sid)) this._removeRemotePlayer(sid);
-        }
-        // 新規プレイヤーを追加
-        state.players.forEach((ps, sid) => {
-            if (sid === this.networkManager?.sessionId) return;
-            if (!this.remotePlayers.has(sid)) this._addRemotePlayer(sid, ps);
-        });
-    }
-
-    _syncMonsters(_state) {
-        // Colyseus の schema が自動で差分同期するため、
-        // SP_Monster との紐付けは今後拡張予定
-    }
-
-    _processTickEvents(events) {
-        for (const ev of events) {
-            if (ev.type === 'playerAttack' && ev.playerId === this.networkManager?.sessionId) {
-                this.addText(`${ev.dmg} ダメージ！`);
-            }
-            if (ev.type === 'monsterAttack' && ev.playerId === this.networkManager?.sessionId) {
-                this.addText(`${ev.dmg} ダメージをくらった！`);
-                // ローカルHPを反映（サーバー state が正とする）
-                const state = this.networkManager.getState();
-                if (state) {
-                    const ps = state.players.get(this.networkManager.sessionId);
-                    if (ps) this.player.status.hp = ps.hp;
-                }
-            }
-            if (ev.type === 'pk' && ev.defenderId === this.networkManager?.sessionId) {
-                this.addText(`プレイヤーから ${ev.dmg} のダメージ！`);
-            }
-            if (ev.type === 'pkDeath' && ev.defenderId === this.networkManager?.sessionId) {
-                this.addText('PKされた！フロア1に戻される...');
-                this.level = 0;
-                this.updateMap();
-                this.player.setMap(this.mainMap);
-                this.player.teleportation(5, 5);
-                this.mainMap.center(5, 5);
-                this.resetSpawnManager(0);
-            }
-            if (ev.type === 'playerDeath' && ev.playerId === this.networkManager?.sessionId) {
-                this.addText(`${this.player.characterName}は倒れた！`);
-            }
-            if (ev.type === 'levelup' && ev.playerId === this.networkManager?.sessionId) {
-                this.addText(`レベルアップ！ LV ${ev.lv} になった！`);
-            }
-            if (ev.type === 'monsterDeath') {
-                this.refreshMonsters();
-            }
-        }
-    }
-
-    get isMultiplayer() { return !!this.networkManager; }
-
     addTrace = trace => {
         this.spawnManager.addTrace(trace);
         this.traces.push(trace);
@@ -264,7 +125,6 @@ class GameScene extends CommonScene {
         this.traces.forEach(({ update }) => { update(delta) });
         this.monsters.forEach(({ update }) => { update(delta) });
         this.npcs.forEach(({ update }) => { update(delta) });
-        this.remotePlayers.forEach(rp => rp.update(delta));
         this.uiMessageBox.update(delta);
         this.uiWindowManager.update(delta);
         this.npcDialogWindow.update(delta);
@@ -315,15 +175,6 @@ class GameScene extends CommonScene {
     showEffect = ({ key, x, y }) => this.effectManager.setEffectPrim({ key, x, y });
     // stepが更新された
     handleStepUpdate = (/* vx, vy*/) => {
-        // プレイヤーの動作を行う（移動、アイテム使用、攻撃など）
-        // 敵のAIによる移動、攻撃などの動作を行う
-        // 衝突判定を行い、プレイヤーと敵が衝突した場合は戦闘処理を行う
-        // 新しい部屋や通路などが必要な場合は生成する
-        // アイテムや敵の出現をランダムに決定する
-        //actionPlayer(); // プレイヤーの動作を行う
-        //moveEnemy() // 敵の移動
-        //actionEnemy() // 敵のアクション
-
         this.spawnEnemy();
         this.monsters.map(monster => monster.doSomething());
         this.npcs.map(npc => npc.doSomething());
@@ -386,8 +237,6 @@ class GameScene extends CommonScene {
     get playerMapY() { return this.getPlayerStatus().mapY }
     get playerUUID() { return this.getPlayerStatus().uuid }
     get currentMap() { return this.mainMap }
-
-
 }
 
 export default GameScene;

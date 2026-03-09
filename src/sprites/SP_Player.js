@@ -1,10 +1,11 @@
-import { AVAILABLE_EQUIP_TYPES } from "../data/MS_Item";
-import { CELL_SIZE } from "../define";
+import { AVAILABLE_EQUIP_TYPES, ITEM_TYPE } from "../data/MS_Item";
+import { CELL_SIZE, EMPTY_ITEM_INDEX, EMPTY_WEPON_INDEX } from "../define";
 import MD_Player from '../model/MD_Player';
 import MS_Item from "../data/MS_Item";
 import MS_Magic from "../data/MS_Magics";
 import SP_Actor from './SP_Actor';
 import { Sprite } from 'pixi.js';
+import { calculateMinMax } from '../tools/Calc';
 
 class SP_Player extends SP_Actor {
 
@@ -63,19 +64,17 @@ class SP_Player extends SP_Actor {
     this.learnSpell(MS_Magic[3]);
 
     const { status: { trialMove } } = this;
-    // シングルプレイ用（マルチ時は networkManager 経由で上書き）
     this.inputMap = {
-      'w': _ => this._action('u', _ => trialMove('u')),
-      's': _ => this._action('d', _ => trialMove('d')),
-      'a': _ => this._action('l', _ => trialMove('l')),
-      'd': _ => this._action('r', _ => trialMove('r')),
+      'w': _ => trialMove('u'),
+      's': _ => trialMove('d'),
+      'a': _ => trialMove('l'),
+      'd': _ => trialMove('r'),
       '.': _ => this.status.stay({}),
-      'ArrowUp': _ => this._action('u', _ => trialMove('u')),
-      'ArrowDown': _ => this._action('d', _ => trialMove('d')),
-      'ArrowLeft': _ => this._action('l', _ => trialMove('l')),
-      'ArrowRight': _ => this._action('r', _ => trialMove('r')),
+      'ArrowUp': _ => trialMove('u'),
+      'ArrowDown': _ => trialMove('d'),
+      'ArrowLeft': _ => trialMove('l'),
+      'ArrowRight': _ => trialMove('r'),
     };
-    this.networkManager = null;
   }
 
   setMap = mainMap => {
@@ -84,11 +83,6 @@ class SP_Player extends SP_Actor {
       this.respawn();
     });
   };
-
-  // マルチプレイモードを有効化
-  enableMultiplayer(networkManager) {
-    this.networkManager = networkManager;
-  }
 
   getStatus = _ => this.status;
 
@@ -115,30 +109,49 @@ class SP_Player extends SP_Actor {
     addText(`しかし、発動前にヒョイっと避けた！`);
   }
 
-  // マルチ時はサーバーにアクション送信、シングル時はローカル処理
-  _action(direction, localFn) {
-    if (this.networkManager) {
-      this.networkManager.sendMove(direction);
+  // 全装備を外す
+  unequipAll() {
+    const { status, addText } = this;
+    status.equipment(MS_Item[EMPTY_WEPON_INDEX], ITEM_TYPE.weapon);
+    status.equipment(MS_Item[EMPTY_ITEM_INDEX], ITEM_TYPE.armour);
+    status.equipment(MS_Item[EMPTY_ITEM_INDEX], ITEM_TYPE.shield);
+    status.equipment(MS_Item[EMPTY_ITEM_INDEX], ITEM_TYPE.ring);
+    addText('全ての装備を外した！');
+  }
+
+  // 所持品から各スロットの最強装備を一括装備する
+  equipBest() {
+    const { status, addText } = this;
+    const equipped = [];
+    for (const type of ['weapon', 'armour', 'shield', 'ring']) {
+      const candidates = status.items.filter(item => item.itemType === type);
+      if (candidates.length === 0) continue;
+      const best = candidates.reduce((best, item) => {
+        const { maxValue } = calculateMinMax({ diceText: item.value, status });
+        const { maxValue: bestMax } = calculateMinMax({ diceText: best.value, status });
+        return maxValue > bestMax ? item : best;
+      });
+      if (!status.isItemEquipped(best)) {
+        status.equipment(best);
+        equipped.push(best.itemName);
+      }
+    }
+    if (equipped.length > 0) {
+      addText(`最強装備に切り替えた！(${equipped.join('、')})`);
     } else {
-      localFn();
+      addText('すでに最強の装備をしている！');
     }
   }
 
   goToPrevLevel(v) {
     const { addText } = this;
     addText(`上り階段じゃないか！いくぞ！${v}`);
-    if (this.networkManager) {
-      this.networkManager.sendChangeFloor('up');
-    }
     this.scene.goto(v);
   }
 
   goToNextLevel(v) {
     const { addText } = this;
     addText(`下り階段じゃないか！いくぞ！${v}`);
-    if (this.networkManager) {
-      this.networkManager.sendChangeFloor('down');
-    }
     this.scene.goto(v);
   }
 
